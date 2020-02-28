@@ -9,7 +9,7 @@ import (
 	paho "github.com/eclipse/paho.mqtt.golang"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
-	"github.com/uhppoted/uhppoted/src/uhppoted-mqtt/auth"
+	"github.com/uhppoted/uhppoted-mqtt/auth"
 	"log"
 	"os"
 	"regexp"
