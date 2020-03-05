@@ -1,6 +1,7 @@
 # uhppote-mqtt
 
-MQTT endpoint for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards. 
+Wraps the `uhppote-core` device API in an MQTT endpoint for use with access control systems based on the 
+*UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards.
 
 Supported operating systems:
 - Linux
@@ -9,10 +10,16 @@ Supported operating systems:
 
 ## Raison d'être
 
-The manufacturer supplied application is 'Windows-only' and provides limited support for integration with other
-systems.
+`uhppoted-mqtt` implements an MQTT endpoint that facilitates integration of the access control function with other 
+systems (e.g. web servers, mobile applications) where the controller boards are located behind a firewall that does
+not allow ingress. 
+
+It also facilitates integration of access control with IoT systems based on [AWS IoT](https://aws.amazon.com/iot) 
+or [Google Cloud IoT](https://cloud.google.com/solutions/iot/).
 
 ## Releases
+
+- v0.5.1: Initial release following restructuring into standalone Go *modules* and *git submodules*
 
 ## Installation
 
@@ -20,14 +27,14 @@ systems.
 
 #### Dependencies
 
-| *Dependency*                        | *Description*                                          |
-| ----------------------------------- | ------------------------------------------------------ |
-| com.github/uhppoted/uhppote-core    | Device level API implementation                        |
-| com.github/uhppoted/uhppoted-api    | External API implementation                            |
-| golang.org/x/sys/windows            | Support for Windows services                           |
-| golang.org/x/lint/golint            | Additional *lint* check for release builds             |
-| github.com/eclipse/paho.mqtt.golang | Eclipse Paho MQTT client                               |
-| github.com/gorilla/websocket        | paho.mqtt.golang dependency                            |
+| *Dependency*                          | *Description*                                          |
+| ------------------------------------- | ------------------------------------------------------ |
+| [com.github/uhppoted/uhppote-core][1] | Device level API implementation                        |
+| [com.github/uhppoted/uhppoted-api][2] | common API for external applications                   |
+| golang.org/x/sys/windows              | Support for Windows services                           |
+| golang.org/x/lint/golint              | Additional *lint* check for release builds             |
+| github.com/eclipse/paho.mqtt.golang   | Eclipse Paho MQTT client                               |
+| github.com/gorilla/websocket          | paho.mqtt.golang dependency                            |
 
 ### Binaries
 
@@ -46,4 +53,7 @@ Defaults to 'run' unless one of the commands below is specified:
 Supported 'run' options:
 - --console
 - --debug
+
+[1]: https://github.com/uhppoted/uhppote-core
+[2]: https://github.com/uhppoted/uhppoted-api
 
