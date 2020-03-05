@@ -15,7 +15,7 @@ systems (e.g. web servers, mobile applications) where the controller boards are 
 not allow ingress. 
 
 It also facilitates integration of access control with IoT systems based on [AWS IoT](https://aws.amazon.com/iot) 
-or [Google Cloud IoT](https://cloud.google.com/solutions/iot/).
+or [Google Cloud IoT](https://cloud.google.com/solutions/iot).
 
 ## Releases
 
