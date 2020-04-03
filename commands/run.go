@@ -106,7 +106,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 	}
 
 	for id, d := range c.Devices {
-		u.Devices[id] = uhppote.NewDevice(id, d.Address, d.Rollover)
+		u.Devices[id] = uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors)
 	}
 
 	permissions, err := auth.NewPermissions(
