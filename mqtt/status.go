@@ -29,7 +29,7 @@ func (m *MQTTD) getStatus(meta metainfo, impl *uhppoted.UHPPOTED, ctx context.Co
 		return nil, ferror(err, fmt.Sprintf("Error retrieving status for %v", *body.DeviceID))
 	}
 
-	if response != nil {
+	if response == nil {
 		return nil, nil
 	}
 
