@@ -226,8 +226,8 @@ put-card:
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO), \
                                                       "card": { "card-number": "$(CARD)", \
-                                                                "valid-from":  "2020-01-01", \
-                                                                "valid-until": "2020-12-31", \
+                                                                "start-date":  "2020-01-01", \
+                                                                "end-date": "2020-12-31", \
                                                                 "doors": [true,false,false,true] } \
                                                     }}}'
 
