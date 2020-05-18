@@ -40,9 +40,7 @@ func (m *MQTTD) getEvents(meta metainfo, impl *uhppoted.UHPPOTED, ctx context.Co
 	response, err := impl.GetEventRange(rq)
 	if err != nil {
 		return nil, ferror(err, fmt.Sprintf("Error retrieving events from %v", *body.DeviceID))
-	}
-
-	if response == nil {
+	} else if response == nil {
 		return nil, nil
 	}
 

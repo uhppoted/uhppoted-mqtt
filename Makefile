@@ -55,8 +55,16 @@ release-tar: release
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	go test ./...
-
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/device/events:get' \
+               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                      "client-id":  "$(CLIENTID)", \
+                                                      "reply-to":   "$(REPLYTO)", \
+                                                      "device-id":  405419896 }}}'
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/device/events:get' \
+               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                      "client-id":  "$(CLIENTID)", \
+                                                      "reply-to":   "$(REPLYTO)", \
+                                                      "device-id":  303986753 }}}'
 version: build
 	./bin/uhppoted-mqtt version
 
