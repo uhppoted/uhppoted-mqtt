@@ -21,6 +21,7 @@ It also facilitates integration of access control with IoT systems based on [AWS
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.2    | Maintenance release to update module dependencies                                         |
 | v0.6.1    | Maintenance release to update module dependencies                                         |
 | v0.6.0    | Maintenance release to update module dependencies                                         |
 | v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
