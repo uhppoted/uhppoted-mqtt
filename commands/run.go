@@ -211,7 +211,12 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 
 	// ... listen
 
-	err = r.listen(&u, &mqttd, &healthcheck, logger, interrupt)
+	devices := []*uhppote.Device{}
+	for id, d := range c.Devices {
+		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors))
+	}
+
+	err = r.listen(&u, &mqttd, devices, &healthcheck, logger, interrupt)
 	if err != nil {
 		logger.Printf("ERROR %v", err)
 	}
@@ -222,6 +227,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 func (r *Run) listen(
 	u *uhppote.UHPPOTE,
 	mqttd *mqtt.MQTTD,
+	devices []*uhppote.Device,
 	healthcheck *monitoring.HealthCheck,
 	logger *log.Logger,
 	interrupt chan os.Signal) error {
@@ -247,7 +253,7 @@ func (r *Run) listen(
 		os.Remove(lockfile)
 	}()
 
-	if err := mqttd.Run(u, logger); err != nil {
+	if err := mqttd.Run(u, devices, logger); err != nil {
 		return err
 	}
 

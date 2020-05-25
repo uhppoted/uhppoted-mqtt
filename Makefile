@@ -4,7 +4,7 @@ DIST   ?= development
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 
 SERIALNO  ?= 405419896
-CARD      ?= 1x327679
+CARD      ?= 1327679
 REQUESTID ?= AH173635G3
 CLIENTID  ?= QWERTY54
 REPLYTO   ?= twystd/uhppoted/reply/97531
@@ -225,7 +225,7 @@ get-card:
                                                         "client-id":   "$(CLIENTID)", \
                                                         "reply-to":    "$(REPLYTO)", \
                                                         "device-id":   $(SERIALNO), \
-                                                        "card-number": "$(CARD)" }}}'
+                                                        "card-number": $(CARD) }}}'
 
 put-card:
 	mqtt publish --topic 'twystd/uhppoted/gateway/requests/device/card:put' \
@@ -233,7 +233,7 @@ put-card:
                                                       "client-id":  "$(CLIENTID)", \
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO), \
-                                                      "card": { "card-number": "$(CARD)", \
+                                                      "card": { "card-number": $(CARD), \
                                                                 "start-date":  "2020-01-01", \
                                                                 "end-date": "2020-12-31", \
                                                                 "doors": [true,false,false,true] } \
@@ -263,4 +263,17 @@ get-event:
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO), \
                                                       "event-id":   50 }}}'
+
+show:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/card:show' \
+                 --message '{ \
+                              "message": { \
+                                  "request": { \
+                                      "card-number": 1327679, \
+                                      "client-id": "QWERTY54", \
+                                      "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                      "request-id": "AH173635G3" \
+                                  } \
+                              } \
+                          }'
 

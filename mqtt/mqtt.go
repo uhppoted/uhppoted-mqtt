@@ -9,7 +9,9 @@ import (
 	paho "github.com/eclipse/paho.mqtt.golang"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-mqtt/acl"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
+	"github.com/uhppoted/uhppoted-mqtt/common"
 	"log"
 	"os"
 	"regexp"
@@ -67,12 +69,19 @@ type fdispatch struct {
 	f      func(*MQTTD, metainfo, *uhppoted.UHPPOTED, context.Context, []byte) (interface{}, error)
 }
 
+type fdispatchx struct {
+	method string
+	f      func(*uhppoted.UHPPOTED, context.Context, []byte) (interface{}, error)
+}
+
 type dispatcher struct {
 	mqttd    *MQTTD
 	uhppoted *uhppoted.UHPPOTED
 	uhppote  *uhppote.UHPPOTE
+	devices  []*uhppote.Device
 	log      *log.Logger
 	table    map[string]fdispatch
+	tablex   map[string]fdispatchx
 }
 
 type request struct {
@@ -104,7 +113,7 @@ var regex = struct {
 	base64: regexp.MustCompile(`^"[A-Za-z0-9+/]*[=]{0,2}"$`),
 }
 
-func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, log *log.Logger) error {
+func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.Logger) error {
 	paho.CRITICAL = log
 	paho.ERROR = log
 	paho.WARN = log
@@ -123,6 +132,7 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, log *log.Logger) error {
 		mqttd:    mqttd,
 		uhppoted: &api,
 		uhppote:  u,
+		devices:  devices,
 		log:      log,
 		table: map[string]fdispatch{
 			mqttd.Topics.Requests + "/devices:get":             fdispatch{"get-devices", (*MQTTD).getDevices},
@@ -141,6 +151,10 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, log *log.Logger) error {
 			mqttd.Topics.Requests + "/device/card:delete":      fdispatch{"delete-card", (*MQTTD).deleteCard},
 			mqttd.Topics.Requests + "/device/events:get":       fdispatch{"get-events", (*MQTTD).getEvents},
 			mqttd.Topics.Requests + "/device/event:get":        fdispatch{"get-event", (*MQTTD).getEvent},
+		},
+
+		tablex: map[string]fdispatchx{
+			mqttd.Topics.Requests + "/acl/card:show": fdispatchx{"acl:show", acl.Show},
 		},
 	}
 
@@ -315,6 +329,60 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 						d.log.Printf("WARN  %-20s %v", fn.method, err)
 					}
 				}
+			}
+
+			if reply != nil {
+				if err := d.mqttd.send(rq.ClientID, replyTo, reply, msgReply, false); err != nil {
+					d.log.Printf("WARN  %-20s %v", fn.method, err)
+				}
+			}
+		}()
+	}
+
+	if fn, ok := d.tablex[msg.Topic()]; ok {
+		msg.Ack()
+
+		d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))
+
+		go func() {
+			rq, err := d.mqttd.unwrap(msg.Payload())
+			if err != nil {
+				d.log.Printf("WARN  %-20s %v", "dispatch", err)
+				return
+			}
+
+			if err := d.mqttd.authorise(rq.ClientID, msg.Topic()); err != nil {
+				d.log.Printf("WARN  %-20s %v", fn.method, fmt.Errorf("Error authorising request (%v)", err))
+				return
+			}
+
+			replyTo := d.mqttd.Topics.Replies
+
+			if rq.ClientID != nil {
+				replyTo = d.mqttd.Topics.Replies + "/" + *rq.ClientID
+			}
+
+			if rq.ReplyTo != nil {
+				replyTo = *rq.ReplyTo
+			}
+
+			meta := common.MetaInfo{
+				RequestID: rq.RequestID,
+				ClientID:  rq.ClientID,
+				ServerID:  d.mqttd.ServerID,
+				Method:    fn.method,
+				Nonce:     func() uint64 { return d.mqttd.Encryption.Nonce.Next() },
+			}
+
+			ctx = context.WithValue(ctx, "devices", d.devices)
+			ctx = context.WithValue(ctx, "request", rq.Request)
+			ctx = context.WithValue(ctx, "method", fn.method)
+			ctx = context.WithValue(ctx, "metainfo", meta)
+
+			reply, err := fn.f(d.uhppoted, ctx, rq.Request)
+
+			if err != nil {
+				d.log.Printf("WARN  %-12s %v", fn.method, err)
 			}
 
 			if reply != nil {
