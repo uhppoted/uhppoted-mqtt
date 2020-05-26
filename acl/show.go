@@ -7,11 +7,9 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
-	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 func Show(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	meta := ctx.Value("metainfo").(common.MetaInfo)
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
 	body := struct {
@@ -60,11 +58,5 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interfa
 		})
 	}
 
-	return struct {
-		common.MetaInfo
-		Permissions
-	}{
-		MetaInfo:    meta,
-		Permissions: response,
-	}, nil
+	return response, nil
 }

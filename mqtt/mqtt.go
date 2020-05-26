@@ -11,7 +11,6 @@ import (
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/acl"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
-	"github.com/uhppoted/uhppoted-mqtt/common"
 	"log"
 	"os"
 	"regexp"
@@ -367,7 +366,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 				replyTo = *rq.ReplyTo
 			}
 
-			meta := common.MetaInfo{
+			meta := metainfo{
 				RequestID: rq.RequestID,
 				ClientID:  rq.ClientID,
 				ServerID:  d.mqttd.ServerID,
@@ -378,7 +377,6 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 			ctx = context.WithValue(ctx, "devices", d.devices)
 			ctx = context.WithValue(ctx, "request", rq.Request)
 			ctx = context.WithValue(ctx, "method", fn.method)
-			ctx = context.WithValue(ctx, "metainfo", meta)
 
 			reply, err := fn.f(d.uhppoted, ctx, rq.Request)
 
@@ -387,7 +385,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 			}
 
 			if reply != nil {
-				if err := d.mqttd.send(rq.ClientID, replyTo, reply, msgReply, false); err != nil {
+				if err := d.mqttd.sendx(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
 					d.log.Printf("WARN  %-20s %v", fn.method, err)
 				}
 			}
@@ -438,6 +436,71 @@ func (mqttd *MQTTD) send(destID *string, topic string, message interface{}, msgt
 	}
 
 	return nil
+}
+
+// TODO: add callback for published/failed
+func (mqttd *MQTTD) sendx(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
+	if mqttd.client == nil || !mqttd.client.IsConnected() {
+		return errors.New("No connection to MQTT broker")
+	}
+
+	content, err := compose(meta, message)
+	if err != nil {
+		return err
+	}
+
+	m, err := mqttd.wrap(msgtype, content, destID)
+	if err != nil {
+		return err
+	} else if m == nil {
+		return errors.New("'wrap' failed to return a publishable message")
+	}
+
+	qos := byte(0)
+	retained := false
+	if critical {
+		qos = mqttd.Alerts.QOS
+		retained = mqttd.Alerts.Retained
+	}
+
+	token := mqttd.client.Publish(topic, qos, retained, string(m))
+	if token.Error() != nil {
+		return token.Error()
+	}
+
+	return nil
+}
+
+// type Reply struct {
+// 	MetaInfo *common.MetaInfo `json:"header"`
+// 	Content  interface{}      `json:"body"`
+// }
+//
+// func (r Reply) MarshalJSON() ([]byte, error) {
+// 	reply := make(map[string]interface{}, 0)
+// 	reply["request-id"] = r.MetaInfo.RequestID
+//
+// 	s := reflect.ValueOf(r.Content)
+// 	N := s.NumField()
+//
+// 	for i := 0; i < N; i++ {
+// 		f := s.Field(i)
+// 		t := s.Type().Field(i)
+// 		tag := t.Tag.Get("json")
+// 		reply[tag] = reflect.ValueOf(f)
+// 	}
+//
+// 	return json.Marshal(reply)
+// }
+
+func compose(meta *metainfo, content interface{}) (interface{}, error) {
+	return struct {
+		*metainfo
+		Content interface{} `json:"body"`
+	}{
+		metainfo: meta,
+		Content:  content,
+	}, nil
 }
 
 func isBase64(request []byte) bool {

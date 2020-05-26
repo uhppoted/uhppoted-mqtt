@@ -3,8 +3,8 @@
 ## IN PROGRESS
 
 - [x] acl::show
-- [ ] acl::grant
-- [ ] inject response metadata in MQTTD
+- [x] acl::grant
+- [x] inject response metadata in MQTTD
 - [ ] acl::revoke
 - [ ] acl::fetch
 - [ ] acl::store

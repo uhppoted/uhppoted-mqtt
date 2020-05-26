@@ -8,11 +8,9 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
-	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 func Grant(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	meta := ctx.Value("metainfo").(common.MetaInfo)
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
 	body := struct {
@@ -59,10 +57,8 @@ func Grant(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interf
 	}
 
 	return struct {
-		common.MetaInfo
 		Granted bool `json:"granted"`
 	}{
-		MetaInfo: meta,
-		Granted:  true,
+		Granted: true,
 	}, nil
 }
