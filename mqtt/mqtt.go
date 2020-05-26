@@ -154,7 +154,8 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		},
 
 		tablex: map[string]fdispatchx{
-			mqttd.Topics.Requests + "/acl/card:show": fdispatchx{"acl:show", acl.Show},
+			mqttd.Topics.Requests + "/acl/card:show":  fdispatchx{"acl:show", acl.Show},
+			mqttd.Topics.Requests + "/acl/card:grant": fdispatchx{"acl:grant", acl.Grant},
 		},
 	}
 

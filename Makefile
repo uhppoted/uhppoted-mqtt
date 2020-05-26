@@ -264,16 +264,22 @@ get-event:
                                                       "device-id":  $(SERIALNO), \
                                                       "event-id":   50 }}}'
 
-show:
+acl-show:
 	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/card:show' \
-                 --message '{ \
-                              "message": { \
-                                  "request": { \
-                                      "card-number": 1327679, \
-                                      "client-id": "QWERTY54", \
-                                      "reply-to": "twystd\/uhppoted\/reply\/97531", \
-                                      "request-id": "AH173635G3" \
-                                  } \
-                              } \
-                          }'
+                 --message '{ "message": { "request": { \
+                                           "card-number": 1327679, \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-grant:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/card:grant' \
+                 --message '{ "message": { "request": { \
+                                           "card-number": 1327679, \
+                                           "start-date": "2020-01-01", \
+                                           "end-date": "2020-12-31", \
+                                           "doors": [ "Entrance", "Upstairs" ], \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
 

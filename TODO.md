@@ -2,6 +2,16 @@
 
 ## IN PROGRESS
 
+- [x] acl::show
+- [ ] acl::grant
+- [ ] inject response metadata in MQTTD
+- [ ] acl::revoke
+- [ ] acl::fetch
+- [ ] acl::store
+- [ ] acl::compare
+- [ ] move device commands to separate package
+- [ ] rework devices commands to match ACL
+
 ## TODO
 
 ### uhppoted-mqtt
