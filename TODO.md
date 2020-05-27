@@ -5,7 +5,7 @@
 - [x] acl::show
 - [x] acl::grant
 - [x] inject response metadata in MQTTD
-- [ ] acl::revoke
+- [x] acl::revoke
 - [ ] acl::fetch
 - [ ] acl::store
 - [ ] acl::compare

@@ -472,29 +472,31 @@ func (mqttd *MQTTD) sendx(destID *string, topic string, meta *metainfo, message 
 	return nil
 }
 
-// type Reply struct {
-// 	MetaInfo *common.MetaInfo `json:"header"`
-// 	Content  interface{}      `json:"body"`
-// }
-//
-// func (r Reply) MarshalJSON() ([]byte, error) {
-// 	reply := make(map[string]interface{}, 0)
-// 	reply["request-id"] = r.MetaInfo.RequestID
-//
-// 	s := reflect.ValueOf(r.Content)
-// 	N := s.NumField()
-//
-// 	for i := 0; i < N; i++ {
-// 		f := s.Field(i)
-// 		t := s.Type().Field(i)
-// 		tag := t.Tag.Get("json")
-// 		reply[tag] = reflect.ValueOf(f)
-// 	}
-//
-// 	return json.Marshal(reply)
-// }
-
 func compose(meta *metainfo, content interface{}) (interface{}, error) {
+	//	reply := make(map[string]interface{})
+	//
+	//	s, err := json.Marshal(meta)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	err = json.Unmarshal(s, &reply)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	s, err = json.Marshal(content)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	err = json.Unmarshal(s, &reply)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	return reply, nil
+
 	return struct {
 		*metainfo
 		Content interface{} `json:"body"`
