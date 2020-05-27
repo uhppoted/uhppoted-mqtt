@@ -6,8 +6,10 @@
 - [x] acl::grant
 - [x] inject response metadata in MQTTD
 - [x] acl::revoke
+- [ ] acl::upload
+      - pass configuration
+      - sign upload
 - [ ] acl::fetch
-- [ ] acl::store
 - [ ] acl::compare
 - [ ] move device commands to separate package
 - [ ] rework devices commands to match ACL

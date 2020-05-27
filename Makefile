@@ -294,3 +294,11 @@ acl-revoke:
                                            "reply-to": "twystd\/uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
 
+acl-upload-file:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:upload' \
+                 --message '{ "message": { "request": { \
+                                           "url": "file://../runtime/mqttd/uhppoted.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
