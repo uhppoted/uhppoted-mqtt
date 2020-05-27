@@ -278,7 +278,18 @@ acl-grant:
                                            "card-number": 1327679, \
                                            "start-date": "2020-01-01", \
                                            "end-date": "2020-12-31", \
-                                           "doors": [ "Entrance", "Upstairs" ], \
+                                           "doors": [ "Entrance", "Upstairs", "Downstairs" ], \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-revoke:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/card:revoke' \
+                 --message '{ "message": { "request": { \
+                                           "card-number": 1327679, \
+                                           "start-date": "2020-01-01", \
+                                           "end-date": "2020-12-31", \
+                                           "doors": [ "Downstairs", "Upstairs" ], \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "twystd\/uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
