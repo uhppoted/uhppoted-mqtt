@@ -148,7 +148,11 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 		Authentication: c.Authentication,
 		Permissions:    *permissions,
 		EventMap:       c.EventIDs,
-		Debug:          r.debug,
+		AWS: mqtt.AWS{
+			Credentials: c.AWS.Credentials,
+			Region:      c.AWS.Region,
+		},
+		Debug: r.debug,
 	}
 
 	// ... TLS

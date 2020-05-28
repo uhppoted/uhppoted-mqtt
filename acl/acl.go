@@ -9,16 +9,23 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
-	//"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-mqtt/auth"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"regexp"
-	"strings"
 	"time"
 )
+
+type ACL struct {
+	RSA         *auth.RSA
+	Credentials *credentials.Credentials
+	Region      string
+	Log         *log.Logger
+}
 
 type Permission struct {
 	Door      string     `json:"door"`
@@ -36,8 +43,14 @@ type Error struct {
 	Message string `json:"message"`
 }
 
-func sign(acl []byte, keyfile string) ([]byte, error) {
-	//	return auth.Sign(acl, keyfile)
+func (a *ACL) info(tag, msg string) {
+	a.Log.Printf("INFO  %-12s %s", tag, msg)
+}
+
+func (a *ACL) sign(acl []byte) ([]byte, error) {
+	if a.RSA != nil {
+		return a.RSA.Sign(acl)
+	}
 
 	return nil, nil
 }
@@ -112,7 +125,7 @@ func storeHTTP(uri string, r io.Reader) error {
 	return nil
 }
 
-func storeS3(uri, awsconfig, region string, r io.Reader) error {
+func storeS3(uri string, credentials *credentials.Credentials, region string, r io.Reader) error {
 	match := regexp.MustCompile("^s3://(.*?)/(.*)").FindStringSubmatch(uri)
 	if len(match) != 3 {
 		return fmt.Errorf("Invalid S3 URI (%s)", uri)
@@ -127,19 +140,12 @@ func storeS3(uri, awsconfig, region string, r io.Reader) error {
 		Body:   r,
 	}
 
-	credentials, err := getAWSCredentials(awsconfig)
-	if err != nil {
-		return err
-	}
-
 	cfg := aws.NewConfig().
 		WithCredentials(credentials).
 		WithRegion(region)
 
 	ss := session.Must(session.NewSession(cfg))
-
-	_, err = s3manager.NewUploader(ss).Upload(&object)
-	if err != nil {
+	if _, err := s3manager.NewUploader(ss).Upload(&object); err != nil {
 		return err
 	}
 
@@ -158,36 +164,4 @@ func storeFile(url string, r io.Reader) error {
 	}
 
 	return ioutil.WriteFile(match[1], b, 0660)
-}
-
-func getAWSCredentials(file string) (*credentials.Credentials, error) {
-	awsKeyID := ""
-	awsSecret := ""
-
-	bytes, err := ioutil.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-
-	re := regexp.MustCompile(`\[default\]\n+aws_access_key_id\s*=\s*(.*?)\n+aws_secret_access_key\s*=\s*(.*)`)
-	if match := re.FindSubmatch(bytes); len(match) == 3 {
-		awsKeyID = strings.TrimSpace(string(match[1]))
-		awsSecret = strings.TrimSpace(string(match[2]))
-	} else {
-		re = regexp.MustCompile(`\[default\]\n+aws_secret_access_key\s*=\s*(.*?)\n+aws_access_key_id\s*=\s*(.*)`)
-		if match := re.FindSubmatch(bytes); len(match) == 3 {
-			awsSecret = strings.TrimSpace(string(match[1]))
-			awsKeyID = strings.TrimSpace(string(match[2]))
-		}
-	}
-
-	if awsKeyID == "" {
-		return nil, fmt.Errorf("Invalid AWS credentials - missing 'aws_access_key_id'")
-	}
-
-	if awsSecret == "" {
-		return nil, fmt.Errorf("Invalid AWS credentials - missing 'aws_secret_access_key'")
-	}
-
-	return credentials.NewStaticCredentials(awsKeyID, awsSecret, ""), nil
 }

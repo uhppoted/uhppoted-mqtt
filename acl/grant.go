@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 )
 
-func Grant(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
+func (a *ACL) Grant(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
 	body := struct {

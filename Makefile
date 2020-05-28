@@ -302,3 +302,19 @@ acl-upload-file:
                                            "reply-to": "twystd\/uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
 
+acl-upload-s3:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:upload' \
+                 --message '{ "message": { "request": { \
+                                           "url": "s3://uhppoted-test/mqttd/uhppoted.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-upload-http:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:upload' \
+                 --message '{ "message": { "request": { \
+                                           "url": "http://localhost:8080/upload/mqttd.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+

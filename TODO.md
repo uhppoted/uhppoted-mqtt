@@ -6,17 +6,16 @@
 - [x] acl::grant
 - [x] inject response metadata in MQTTD
 - [x] acl::revoke
-- [ ] acl::upload
-      - pass configuration
-      - sign upload
+- [x] acl::upload
 - [ ] acl::fetch
+      - unit test for config.AWS.Credentials
 - [ ] acl::compare
 - [ ] move device commands to separate package
 - [ ] rework devices commands to match ACL
 
 ## TODO
 
-### uhppoted-mqtt
+- [ ] Replace values passed in Context with initialised struct
 - [ ] last-will-and-testament (?)
 - [ ] publish add/delete card, etc to event stream
 - [ ] MQTT v5.0

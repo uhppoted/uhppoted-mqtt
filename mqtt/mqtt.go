@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	paho "github.com/eclipse/paho.mqtt.golang"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
@@ -27,6 +28,7 @@ type MQTTD struct {
 	Encryption     Encryption
 	Authentication string
 	Permissions    auth.Permissions
+	AWS            AWS
 	EventMap       string
 	Debug          bool
 
@@ -61,6 +63,11 @@ type Encryption struct {
 	HOTP            *auth.HOTP
 	RSA             *auth.RSA
 	Nonce           auth.Nonce
+}
+
+type AWS struct {
+	Credentials *credentials.Credentials
+	Region      string
 }
 
 type fdispatch struct {
@@ -125,6 +132,13 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		Uhppote:         u,
 		ListenBatchSize: 32,
 		Log:             log,
+	}
+
+	acl := acl.ACL{
+		RSA:         mqttd.Encryption.RSA,
+		Credentials: mqttd.AWS.Credentials,
+		Region:      mqttd.AWS.Region,
+		Log:         log,
 	}
 
 	d := dispatcher{

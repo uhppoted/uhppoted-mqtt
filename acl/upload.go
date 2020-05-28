@@ -9,20 +9,12 @@ import (
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"io"
-	"log"
 	"net/url"
 	"strings"
 )
 
-type uploader struct {
-	keyfile     string
-	credentials string
-	region      string
-}
-
-func Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
+func (a *ACL) Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
 	devices := ctx.Value("devices").([]*uhppote.Device)
-	log := ctx.Value("log").(*log.Logger)
 
 	body := struct {
 		URL *string `json:"url"`
@@ -47,7 +39,7 @@ func Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (inter
 		return Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid upload URI",
-		}, fmt.Errorf("Invalid upload URL '%s' (%w)", body.URL, err)
+		}, fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
 	}
 
 	acl, err := api.GetACL(impl.Uhppote, devices)
@@ -66,16 +58,10 @@ func Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (inter
 	}
 
 	for k, l := range acl {
-		log.Printf("INFO  %v  Retrieved %v records\n", k, len(l))
+		a.info("acl:upload", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
 	}
 
-	u := uploader{
-		keyfile:     DEFAULT_KEYFILE,
-		credentials: DEFAULT_CREDENTIALS,
-		region:      DEFAULT_REGION,
-	}
-
-	if err = u.upload(uri.String(), acl, devices, log); err != nil {
+	if err = a.upload(uri.String(), acl, devices); err != nil {
 		return Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error uploading ACL",
@@ -83,13 +69,13 @@ func Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (inter
 	}
 
 	return struct {
-		Uploaded bool `json:"uploaded"`
+		Uploaded string `json:"uploaded"`
 	}{
-		Uploaded: true,
+		Uploaded: uri.String(),
 	}, nil
 }
 
-func (u *uploader) upload(uri string, acl api.ACL, devices []*uhppote.Device, log *log.Logger) error {
+func (a *ACL) upload(uri string, acl api.ACL, devices []*uhppote.Device) error {
 	var w strings.Builder
 
 	err := api.MakeTSV(acl, devices, &w)
@@ -102,7 +88,7 @@ func (u *uploader) upload(uri string, acl api.ACL, devices []*uhppote.Device, lo
 		"uhppoted.acl": tsv,
 	}
 
-	if signature, err := sign(tsv, u.keyfile); err != nil {
+	if signature, err := a.sign(tsv); err != nil {
 		return err
 	} else if signature != nil {
 		files["signature"] = signature
@@ -118,32 +104,33 @@ func (u *uploader) upload(uri string, acl api.ACL, devices []*uhppote.Device, lo
 		return err
 	}
 
-	log.Printf("INFO  tar'd ACL (%v bytes) and signature (%v bytes): %v bytes", len(files["uhppoted.acl"]), len(files["signature"]), b.Len())
+	a.info("acl:upload", fmt.Sprintf("tar'd ACL (%v bytes) and signature (%v bytes): %v bytes", len(files["uhppoted.acl"]), len(files["signature"]), b.Len()))
 
-	f := u.storeHTTP
+	f := a.storeHTTP
 	if strings.HasPrefix(uri, "s3://") {
-		f = u.storeS3
+		f = a.storeS3
 	} else if strings.HasPrefix(uri, "file://") {
-		f = u.storeFile
+		f = a.storeFile
+	} else {
 	}
 
 	if err := f(uri, bytes.NewReader(b.Bytes())); err != nil {
 		return err
 	}
 
-	log.Printf("INFO  Stored ACL to %v", uri)
+	a.info("acl:upload", fmt.Sprintf("INFO  Stored ACL to %v", uri))
 
 	return nil
 }
 
-func (u *uploader) storeHTTP(url string, r io.Reader) error {
+func (a *ACL) storeHTTP(url string, r io.Reader) error {
 	return storeHTTP(url, r)
 }
 
-func (u *uploader) storeS3(uri string, r io.Reader) error {
-	return storeS3(uri, u.credentials, u.region, r)
+func (a *ACL) storeS3(uri string, r io.Reader) error {
+	return storeS3(uri, a.Credentials, a.Region, r)
 }
 
-func (u *uploader) storeFile(url string, r io.Reader) error {
+func (a *ACL) storeFile(url string, r io.Reader) error {
 	return storeFile(url, r)
 }

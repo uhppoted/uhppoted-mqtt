@@ -9,7 +9,7 @@ import (
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 )
 
-func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
+func (a *ACL) Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
 	body := struct {
