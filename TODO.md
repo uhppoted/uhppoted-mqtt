@@ -7,11 +7,12 @@
 - [x] inject response metadata in MQTTD
 - [x] acl::revoke
 - [x] acl::upload
-- [ ] acl::fetch
-      - unit test for config.AWS.Credentials
+- [x] acl::download
 - [ ] acl::compare
+- [ ] unit test for config.AWS.Credentials
 - [ ] move device commands to separate package
 - [ ] rework devices commands to match ACL
+- [ ] rethink embedding `Error` reply in body
 
 ## TODO
 

@@ -318,3 +318,26 @@ acl-upload-http:
                                            "reply-to": "twystd\/uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
 
+acl-download-file:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:download' \
+                 --message '{ "message": { "request": { \
+                                           "url": "file://../runtime/mqttd/QWERTY54.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-download-s3:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:download' \
+                 --message '{ "message": { "request": { \
+                                           "url": "s3://uhppoted-test/mqttd/QWERTY54.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-download-http:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:download' \
+                 --message '{ "message": { "request": { \
+                                           "url": "https://github.com/uhppoted/uhppoted/blob/master/runtime/simulation/QWERTY54.tar.gz?raw=true", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'

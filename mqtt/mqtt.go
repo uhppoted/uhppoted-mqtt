@@ -139,6 +139,7 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		Credentials: mqttd.AWS.Credentials,
 		Region:      mqttd.AWS.Region,
 		Log:         log,
+		NoVerify:    false,
 	}
 
 	d := dispatcher{
@@ -167,10 +168,11 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		},
 
 		tablex: map[string]fdispatchx{
-			mqttd.Topics.Requests + "/acl/card:show":   fdispatchx{"acl:show", acl.Show},
-			mqttd.Topics.Requests + "/acl/card:grant":  fdispatchx{"acl:grant", acl.Grant},
-			mqttd.Topics.Requests + "/acl/card:revoke": fdispatchx{"acl:revoke", acl.Revoke},
-			mqttd.Topics.Requests + "/acl/acl:upload":  fdispatchx{"acl:upload", acl.Upload},
+			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
+			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},
+			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatchx{"acl:revoke", acl.Revoke},
+			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatchx{"acl:upload", acl.Upload},
+			mqttd.Topics.Requests + "/acl/acl:download": fdispatchx{"acl:download", acl.Download},
 		},
 	}
 
