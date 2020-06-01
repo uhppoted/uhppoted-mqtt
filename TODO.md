@@ -8,6 +8,8 @@
 - [x] acl::revoke
 - [x] acl::upload
 - [x] acl::download
+- [ ] Add report URL to response from acl:compare
+- [ ] Make members of struct returned from Compare a bit less download-y
 - [ ] acl::compare
 - [ ] unit test for config.AWS.Credentials
 - [ ] unit test for GetCardByIndex with return code 0xffffffff
@@ -15,7 +17,6 @@
 - [ ] rework devices commands to match ACL
 - [ ] rethink embedding `Error` reply in body
 - [ ] Move devices to ACL (or UHPPOTED ?)
-- [ ] Make members of struct returned from Compare a bit less download-y
 
 ## TODO
 
