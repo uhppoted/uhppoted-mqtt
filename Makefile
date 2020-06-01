@@ -341,3 +341,37 @@ acl-download-http:
                                            "client-id": "QWERTY54", \
                                            "reply-to": "twystd\/uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
+
+acl-compare-file:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:compare' \
+                 --message '{ "message": { "request": { \
+                                           "url": { \
+                                           	"acl": "file://../runtime/mqttd/QWERTY54.tar.gz", \
+                                           	"report": "file://../runtime/mqttd/report.tar.gz" \
+                                           	}, \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-compare-s3:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:compare' \
+                 --message '{ "message": { "request": { \
+                                           "url": { \
+                                           	"acl": "s3://uhppoted-test/mqttd/QWERTY54.tar.gz", \
+                                           	"report": "s3://uhppoted-test/mqttd/report.tar.gz" \
+                                           	}, \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-compare-http:
+	mqtt publish --topic 'twystd/uhppoted/gateway/requests/acl/acl:compare' \
+                 --message '{ "message": { "request": { \
+                                           "url": { \
+                                           	"acl": "https://github.com/uhppoted/uhppoted/blob/master/runtime/simulation/QWERTY54.tar.gz?raw=true", \
+                                           	"report": "http://localhost:8080/upload/report.tar.gz" \
+                                           	}, \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "twystd\/uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+

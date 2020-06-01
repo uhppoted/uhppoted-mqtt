@@ -1,16 +1,13 @@
 package acl
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
-	//	"io"
 	"net/url"
-	"strings"
 )
 
 func (a *ACL) Download(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
@@ -42,7 +39,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, ctx context.Context, request []b
 		}, fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
 	}
 
-	acl, err := a.download(uri.String(), devices)
+	acl, err := a.fetch("acl:download", uri.String(), devices)
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusBadRequest,
@@ -106,69 +103,4 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, ctx context.Context, request []b
 		Report: summary,
 	}, nil
 
-}
-
-func (a *ACL) download(uri string, devices []*uhppote.Device) (*api.ACL, error) {
-	a.info("acl:download", fmt.Sprintf("Fetching ACL from %v", uri))
-
-	f := a.fetchHTTP
-	if strings.HasPrefix(uri, "s3://") {
-		f = a.fetchS3
-	} else if strings.HasPrefix(uri, "file://") {
-		f = a.fetchFile
-	}
-
-	b, err := f(uri)
-	if err != nil {
-		return nil, err
-	}
-
-	a.info("acl:download", fmt.Sprintf("Fetched ACL from %v (%d bytes)", uri, len(b)))
-
-	x := untar
-	if strings.HasSuffix(uri, ".zip") {
-		x = unzip
-	}
-
-	files, uname, err := x(bytes.NewReader(b))
-	if err != nil {
-		return nil, err
-	}
-
-	tsv, ok := files["ACL"]
-	if !ok {
-		return nil, fmt.Errorf("ACL file missing from tar.gz")
-	}
-
-	signature, ok := files["signature"]
-	if !a.NoVerify && !ok {
-		return nil, fmt.Errorf("'signature' file missing from tar.gz")
-	}
-
-	a.info("acl:download", fmt.Sprintf("Extracted ACL from %v: %v bytes, signature: %v bytes", uri, len(tsv), len(signature)))
-
-	if !a.NoVerify {
-		if err := a.verify(uname, tsv, signature); err != nil {
-			return nil, err
-		}
-	}
-
-	acl, err := api.ParseTSV(bytes.NewReader(tsv), devices)
-	if err != nil {
-		return nil, err
-	}
-
-	return &acl, nil
-}
-
-func (a *ACL) fetchHTTP(url string) ([]byte, error) {
-	return fetchHTTP(url)
-}
-
-func (a *ACL) fetchS3(uri string) ([]byte, error) {
-	return fetchS3(uri, a.Credentials, a.Region)
-}
-
-func (a *ACL) fetchFile(url string) ([]byte, error) {
-	return fetchFile(url)
 }

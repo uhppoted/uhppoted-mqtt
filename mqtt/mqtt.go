@@ -173,6 +173,7 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatchx{"acl:revoke", acl.Revoke},
 			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatchx{"acl:upload", acl.Upload},
 			mqttd.Topics.Requests + "/acl/acl:download": fdispatchx{"acl:download", acl.Download},
+			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatchx{"acl:compare", acl.Compare},
 		},
 	}
 

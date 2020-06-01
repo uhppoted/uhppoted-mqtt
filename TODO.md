@@ -10,9 +10,12 @@
 - [x] acl::download
 - [ ] acl::compare
 - [ ] unit test for config.AWS.Credentials
+- [ ] unit test for GetCardByIndex with return code 0xffffffff
 - [ ] move device commands to separate package
 - [ ] rework devices commands to match ACL
 - [ ] rethink embedding `Error` reply in body
+- [ ] Move devices to ACL (or UHPPOTED ?)
+- [ ] Make members of struct returned from Compare a bit less download-y
 
 ## TODO
 
