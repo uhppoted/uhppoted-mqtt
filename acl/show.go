@@ -1,17 +1,13 @@
 package acl
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 )
 
-func (a *ACL) Show(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	devices := ctx.Value("devices").([]*uhppote.Device)
-
+func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		CardNumber *uint32 `json:"card-number"`
 	}{}
@@ -30,7 +26,7 @@ func (a *ACL) Show(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte)
 		}, fmt.Errorf("Missing/invalid card number")
 	}
 
-	acl, err := api.GetCard(impl.Uhppote, devices, *body.CardNumber)
+	acl, err := api.GetCard(impl.Uhppote, a.Devices, *body.CardNumber)
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusInternalServerError,

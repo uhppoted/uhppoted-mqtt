@@ -1,7 +1,6 @@
 package acl
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -11,7 +10,6 @@ import (
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 )
@@ -37,9 +35,7 @@ type Report struct {
 	Diffs    map[uint32]api.Diff
 }
 
-func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	devices := ctx.Value("devices").([]*uhppote.Device)
-
+func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		URL struct {
 			ACL    *string `json:"acl"`
@@ -84,7 +80,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []by
 		}, fmt.Errorf("Invalid report URL '%v' (%w)", body.URL.Report, err)
 	}
 
-	acl, err := a.fetch("acl:compare", uri.String(), devices)
+	acl, err := a.fetch("acl:compare", uri.String())
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusBadRequest,
@@ -103,7 +99,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []by
 		a.info("acl:compare", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
 	}
 
-	current, err := api.GetACL(impl.Uhppote, devices)
+	current, err := api.GetACL(impl.Uhppote, a.Devices)
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusInternalServerError,
@@ -136,22 +132,22 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []by
 	}
 
 	summary := map[uint32]struct {
-		Same       int `json:"same"`
+		Unchanged  int `json:"unchanged"`
 		Different  int `json:"different"`
 		Missing    int `json:"missing"`
 		Extraneous int `json:"extraneous"`
 	}{}
 
 	for k, v := range diff {
-		a.info("acl:compare", fmt.Sprintf("%v  SUMMARY  same:%v  different:%v  missing:%v  extraneous:%v", k, len(v.Unchanged), len(v.Updated), len(v.Added), len(v.Deleted)))
+		a.info("acl:compare", fmt.Sprintf("%v  SUMMARY  unchanged:%v  different:%v  missing:%v  extraneous:%v", k, len(v.Unchanged), len(v.Updated), len(v.Added), len(v.Deleted)))
 
 		summary[k] = struct {
-			Same       int `json:"same"`
+			Unchanged  int `json:"unchanged"`
 			Different  int `json:"different"`
 			Missing    int `json:"missing"`
 			Extraneous int `json:"extraneous"`
 		}{
-			Same:       len(v.Unchanged),
+			Unchanged:  len(v.Unchanged),
 			Different:  len(v.Updated),
 			Missing:    len(v.Added),
 			Extraneous: len(v.Deleted),
@@ -161,7 +157,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []by
 	return struct {
 		URL    string `json:"url"`
 		Report map[uint32]struct {
-			Same       int `json:"same"`
+			Unchanged  int `json:"unchanged"`
 			Different  int `json:"different"`
 			Missing    int `json:"missing"`
 			Extraneous int `json:"extraneous"`

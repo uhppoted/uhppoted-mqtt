@@ -1,20 +1,16 @@
 package acl
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
 
-	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 )
 
-func (a *ACL) Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	devices := ctx.Value("devices").([]*uhppote.Device)
-
+func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		URL *string `json:"url"`
 	}{}
@@ -41,7 +37,7 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byt
 		}, fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
 	}
 
-	acl, err := api.GetACL(impl.Uhppote, devices)
+	acl, err := api.GetACL(impl.Uhppote, a.Devices)
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusInternalServerError,
@@ -61,7 +57,7 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, ctx context.Context, request []byt
 	}
 
 	var w strings.Builder
-	if err := api.MakeTSV(acl, devices, &w); err != nil {
+	if err := api.MakeTSV(acl, a.Devices, &w); err != nil {
 		return Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error reformatting card access permissions",

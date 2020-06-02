@@ -23,6 +23,7 @@ import (
 )
 
 type ACL struct {
+	Devices     []*uhppote.Device
 	RSA         *auth.RSA
 	Credentials *credentials.Credentials
 	Region      string
@@ -66,7 +67,7 @@ func (a *ACL) verify(uname string, acl, signature []byte) error {
 	return nil
 }
 
-func (a *ACL) fetch(tag, uri string, devices []*uhppote.Device) (*api.ACL, error) {
+func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 	a.info(tag, fmt.Sprintf("Fetching ACL from %v", uri))
 
 	f := a.fetchHTTP
@@ -111,7 +112,7 @@ func (a *ACL) fetch(tag, uri string, devices []*uhppote.Device) (*api.ACL, error
 		}
 	}
 
-	acl, err := api.ParseTSV(bytes.NewReader(tsv), devices)
+	acl, err := api.ParseTSV(bytes.NewReader(tsv), a.Devices)
 	if err != nil {
 		return nil, err
 	}

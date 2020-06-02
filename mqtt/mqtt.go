@@ -77,7 +77,7 @@ type fdispatch struct {
 
 type fdispatchx struct {
 	method string
-	f      func(*uhppoted.UHPPOTED, context.Context, []byte) (interface{}, error)
+	f      func(*uhppoted.UHPPOTED, []byte) (interface{}, error)
 }
 
 type dispatcher struct {
@@ -135,6 +135,7 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 	}
 
 	acl := acl.ACL{
+		Devices:     devices,
 		RSA:         mqttd.Encryption.RSA,
 		Credentials: mqttd.AWS.Credentials,
 		Region:      mqttd.AWS.Region,
@@ -393,11 +394,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 				Nonce:     func() uint64 { return d.mqttd.Encryption.Nonce.Next() },
 			}
 
-			ctx = context.WithValue(ctx, "devices", d.devices)
-			ctx = context.WithValue(ctx, "request", rq.Request)
-			ctx = context.WithValue(ctx, "method", fn.method)
-
-			reply, err := fn.f(d.uhppoted, ctx, rq.Request)
+			reply, err := fn.f(d.uhppoted, rq.Request)
 
 			if err != nil {
 				d.log.Printf("WARN  %-12s %v", fn.method, err)

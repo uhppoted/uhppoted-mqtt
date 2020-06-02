@@ -1,18 +1,14 @@
 package acl
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"net/url"
 )
 
-func (a *ACL) Download(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	devices := ctx.Value("devices").([]*uhppote.Device)
-
+func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		URL *string `json:"url"`
 	}{}
@@ -39,7 +35,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, ctx context.Context, request []b
 		}, fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
 	}
 
-	acl, err := a.fetch("acl:download", uri.String(), devices)
+	acl, err := a.fetch("acl:download", uri.String())
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusBadRequest,

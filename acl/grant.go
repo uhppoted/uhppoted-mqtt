@@ -1,18 +1,14 @@
 package acl
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 )
 
-func (a *ACL) Grant(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte) (interface{}, error) {
-	devices := ctx.Value("devices").([]*uhppote.Device)
-
+func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		CardNumber *uint32     `json:"card-number"`
 		From       *types.Date `json:"start-date"`
@@ -48,7 +44,7 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, ctx context.Context, request []byte
 		}, fmt.Errorf("Missing/invalid end date")
 	}
 
-	err := api.Grant(impl.Uhppote, devices, *body.CardNumber, *body.From, *body.To, body.Doors)
+	err := api.Grant(impl.Uhppote, a.Devices, *body.CardNumber, *body.From, *body.To, body.Doors)
 	if err != nil {
 		return Error{
 			Code:    uhppoted.StatusInternalServerError,
