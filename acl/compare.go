@@ -159,6 +159,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []by
 	}
 
 	return struct {
+		URL    string `json:"url"`
 		Report map[uint32]struct {
 			Same       int `json:"same"`
 			Different  int `json:"different"`
@@ -166,6 +167,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, ctx context.Context, request []by
 			Extraneous int `json:"extraneous"`
 		} `json:"report"`
 	}{
+		URL:    rpt.String(),
 		Report: summary,
 	}, nil
 }
