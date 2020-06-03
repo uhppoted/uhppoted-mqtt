@@ -17,7 +17,6 @@
 - [ ] rework devices commands to match ACL
 - [ ] send `Error` reply as msgError
 - [ ] rethink embedding reply in body
-- [ ] unit test for config.AWS.Credentials
 - [ ] unit test for GetCardByIndex with return code 0xffffffff
 
 ## TODO
