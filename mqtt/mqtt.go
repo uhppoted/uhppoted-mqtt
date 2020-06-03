@@ -6,17 +6,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"regexp"
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	paho "github.com/eclipse/paho.mqtt.golang"
+
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/acl"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
 	"github.com/uhppoted/uhppoted-mqtt/device"
-	"log"
-	"os"
-	"regexp"
-	"time"
 )
 
 type MQTTD struct {
@@ -155,25 +157,25 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		devices:  devices,
 		log:      log,
 		table: map[string]fdispatch{
-			mqttd.Topics.Requests + "/device/status:get":       fdispatch{"get-status", (*MQTTD).getStatus},
-			mqttd.Topics.Requests + "/device/time:get":         fdispatch{"get-time", (*MQTTD).getTime},
-			mqttd.Topics.Requests + "/device/time:set":         fdispatch{"set-time", (*MQTTD).setTime},
-			mqttd.Topics.Requests + "/device/door/delay:get":   fdispatch{"get-door-delay", (*MQTTD).getDoorDelay},
-			mqttd.Topics.Requests + "/device/door/delay:set":   fdispatch{"set-door-delay", (*MQTTD).setDoorDelay},
-			mqttd.Topics.Requests + "/device/door/control:get": fdispatch{"get-door-control", (*MQTTD).getDoorControl},
-			mqttd.Topics.Requests + "/device/door/control:set": fdispatch{"set-door-control", (*MQTTD).setDoorControl},
-			mqttd.Topics.Requests + "/device/cards:get":        fdispatch{"get-cards", (*MQTTD).getCards},
-			mqttd.Topics.Requests + "/device/cards:delete":     fdispatch{"delete-cards", (*MQTTD).deleteCards},
-			mqttd.Topics.Requests + "/device/card:get":         fdispatch{"get-card", (*MQTTD).getCard},
-			mqttd.Topics.Requests + "/device/card:put":         fdispatch{"put-card", (*MQTTD).putCard},
-			mqttd.Topics.Requests + "/device/card:delete":      fdispatch{"delete-card", (*MQTTD).deleteCard},
-			mqttd.Topics.Requests + "/device/events:get":       fdispatch{"get-events", (*MQTTD).getEvents},
-			mqttd.Topics.Requests + "/device/event:get":        fdispatch{"get-event", (*MQTTD).getEvent},
+			mqttd.Topics.Requests + "/device/cards:get":    fdispatch{"get-cards", (*MQTTD).getCards},
+			mqttd.Topics.Requests + "/device/cards:delete": fdispatch{"delete-cards", (*MQTTD).deleteCards},
+			mqttd.Topics.Requests + "/device/card:get":     fdispatch{"get-card", (*MQTTD).getCard},
+			mqttd.Topics.Requests + "/device/card:put":     fdispatch{"put-card", (*MQTTD).putCard},
+			mqttd.Topics.Requests + "/device/card:delete":  fdispatch{"delete-card", (*MQTTD).deleteCard},
+			mqttd.Topics.Requests + "/device/events:get":   fdispatch{"get-events", (*MQTTD).getEvents},
+			mqttd.Topics.Requests + "/device/event:get":    fdispatch{"get-event", (*MQTTD).getEvent},
 		},
 
 		tablex: map[string]fdispatchx{
-			mqttd.Topics.Requests + "/devices:get": fdispatchx{"get-devices", dev.GetDevices},
-			mqttd.Topics.Requests + "/device:get":  fdispatchx{"get-device", dev.GetDevice},
+			mqttd.Topics.Requests + "/devices:get":             fdispatchx{"get-devices", dev.GetDevices},
+			mqttd.Topics.Requests + "/device:get":              fdispatchx{"get-device", dev.GetDevice},
+			mqttd.Topics.Requests + "/device/status:get":       fdispatchx{"get-status", dev.GetStatus},
+			mqttd.Topics.Requests + "/device/time:get":         fdispatchx{"get-time", dev.GetTime},
+			mqttd.Topics.Requests + "/device/time:set":         fdispatchx{"set-time", dev.SetTime},
+			mqttd.Topics.Requests + "/device/door/delay:get":   fdispatchx{"get-door-delay", dev.GetDoorDelay},
+			mqttd.Topics.Requests + "/device/door/delay:set":   fdispatchx{"set-door-delay", dev.SetDoorDelay},
+			mqttd.Topics.Requests + "/device/door/control:get": fdispatchx{"get-door-control", dev.GetDoorControl},
+			mqttd.Topics.Requests + "/device/door/control:set": fdispatchx{"set-door-control", dev.SetDoorControl},
 
 			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
 			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},

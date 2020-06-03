@@ -8,6 +8,7 @@ CARD      ?= 1327679
 REQUESTID ?= AH173635G3
 CLIENTID  ?= QWERTY54
 REPLYTO   ?= twystd/uhppoted/reply/97531
+DATETIME  = $(shell date "+%Y-%m-%d %H:%M:%S")
 
 all: test      \
 	 benchmark \
