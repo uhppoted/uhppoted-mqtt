@@ -12,6 +12,7 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 var templates = struct {
@@ -44,14 +45,14 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Cannot parse request",
 		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.URL.ACL == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid download URL",
 		}, fmt.Errorf("Missing/invalid download URL")
@@ -59,14 +60,14 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	uri, err := url.Parse(*body.URL.ACL)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid download URL",
 		}, fmt.Errorf("Invalid download URL '%v' (%w)", body.URL.ACL, err)
 	}
 
 	if body.URL.Report == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid report URL",
 		}, fmt.Errorf("Missing/invalid report URL")
@@ -74,7 +75,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	rpt, err := url.Parse(*body.URL.Report)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid report URL",
 		}, fmt.Errorf("Invalid report URL '%v' (%w)", body.URL.Report, err)
@@ -82,14 +83,14 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	acl, err := a.fetch("acl:compare", uri.String())
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error downloading ACL",
 		}, err
 	}
 
 	if acl == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error downloading ACL",
 		}, fmt.Errorf("Download return nil ACL")
@@ -101,7 +102,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	current, err := api.GetACL(impl.Uhppote, a.Devices)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error retrieving current ACL",
 		}, err
@@ -109,7 +110,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	diff, err := api.Compare(current, *acl)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error comparing current and downloaded ACL's",
 		}, err
@@ -117,7 +118,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	var w strings.Builder
 	if err := report(diff, templates.report, &w); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error generating ACL compare report",
 		}, err
@@ -125,7 +126,7 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	filename := time.Now().Format("acl-2006-01-02T150405.rpt")
 	if err = a.store("acl:compare", rpt.String(), filename, []byte(w.String())); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error uploading report",
 		}, err

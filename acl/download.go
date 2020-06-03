@@ -3,9 +3,11 @@ package acl
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
+
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
-	"net/url"
+	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
@@ -14,14 +16,14 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Cannot parse request",
 		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.URL == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid download URL",
 		}, fmt.Errorf("Missing/invalid download URL")
@@ -29,7 +31,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 
 	uri, err := url.Parse(*body.URL)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid download URL",
 		}, fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
@@ -37,14 +39,14 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 
 	acl, err := a.fetch("acl:download", uri.String())
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error downloading ACL",
 		}, err
 	}
 
 	if acl == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error downloading ACL",
 		}, fmt.Errorf("Download return nil ACL")
@@ -56,7 +58,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 
 	rpt, err := api.PutACL(impl.Uhppote, *acl)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error updating ACL",
 		}, err

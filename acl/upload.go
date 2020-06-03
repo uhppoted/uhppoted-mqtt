@@ -8,6 +8,7 @@ import (
 
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
@@ -16,14 +17,14 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Cannot parse request",
 		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.URL == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid upload URI",
 		}, fmt.Errorf("Missing/invalid upload URI")
@@ -31,7 +32,7 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 
 	uri, err := url.Parse(*body.URL)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid upload URI",
 		}, fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
@@ -39,14 +40,14 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 
 	acl, err := api.GetACL(impl.Uhppote, a.Devices)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error retrieving ACL",
 		}, err
 	}
 
 	if acl == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error retrieving card access permissions",
 		}, fmt.Errorf("<nil> response to GetCard request")
@@ -58,14 +59,14 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 
 	var w strings.Builder
 	if err := api.MakeTSV(acl, a.Devices, &w); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error reformatting card access permissions",
 		}, err
 	}
 
 	if err = a.store("acl:upload", uri.String(), "uhppoted.acl", []byte(w.String())); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Error uploading ACL",
 		}, err

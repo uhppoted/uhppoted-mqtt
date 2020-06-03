@@ -12,6 +12,7 @@ import (
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/acl"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
+	"github.com/uhppoted/uhppoted-mqtt/device"
 	"log"
 	"os"
 	"regexp"
@@ -134,6 +135,10 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		Log:             log,
 	}
 
+	dev := device.Device{
+		Log: log,
+	}
+
 	acl := acl.ACL{
 		Devices:     devices,
 		RSA:         mqttd.Encryption.RSA,
@@ -150,8 +155,6 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		devices:  devices,
 		log:      log,
 		table: map[string]fdispatch{
-			mqttd.Topics.Requests + "/devices:get":             fdispatch{"get-devices", (*MQTTD).getDevices},
-			mqttd.Topics.Requests + "/device:get":              fdispatch{"get-device", (*MQTTD).getDevice},
 			mqttd.Topics.Requests + "/device/status:get":       fdispatch{"get-status", (*MQTTD).getStatus},
 			mqttd.Topics.Requests + "/device/time:get":         fdispatch{"get-time", (*MQTTD).getTime},
 			mqttd.Topics.Requests + "/device/time:set":         fdispatch{"set-time", (*MQTTD).setTime},
@@ -169,6 +172,9 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		},
 
 		tablex: map[string]fdispatchx{
+			mqttd.Topics.Requests + "/devices:get": fdispatchx{"get-devices", dev.GetDevices},
+			mqttd.Topics.Requests + "/device:get":  fdispatchx{"get-device", dev.GetDevice},
+
 			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
 			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},
 			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatchx{"acl:revoke", acl.Revoke},

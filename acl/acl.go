@@ -42,11 +42,6 @@ type Permissions struct {
 	Permissions []Permission `json:"permissions"`
 }
 
-type Error struct {
-	Code    int    `json:"error-code"`
-	Message string `json:"message"`
-}
-
 func (a *ACL) info(tag, msg string) {
 	a.Log.Printf("INFO  %-12s %s", tag, msg)
 }

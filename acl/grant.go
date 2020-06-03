@@ -3,9 +3,11 @@ package acl
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/uhppoted/uhppote-core/types"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
@@ -17,28 +19,28 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Cannot parse request",
 		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.CardNumber == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid card number",
 		}, fmt.Errorf("Missing/invalid card number")
 	}
 
 	if body.From == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid start date",
 		}, fmt.Errorf("Missing/invalid start date")
 	}
 
 	if body.To == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid end date",
 		}, fmt.Errorf("Missing/invalid end date")
@@ -46,7 +48,7 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 
 	err := api.Grant(impl.Uhppote, a.Devices, *body.CardNumber, *body.From, *body.To, body.Doors)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: err.Error(),
 		}, err

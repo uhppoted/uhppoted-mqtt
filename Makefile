@@ -112,6 +112,7 @@ get-device:
 	mqtt publish --topic 'twystd/uhppoted/gateway/requests/device:get' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
                                                         "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
                                                         "device-id":  $(SERIALNO) }}}'
 
 get-device-hotp:

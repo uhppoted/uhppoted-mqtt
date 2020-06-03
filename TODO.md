@@ -13,11 +13,12 @@
 - [x] Move devices to ACL struct (or UHPPOTED ?)
 - [x] Remove context from handlers
 - [x] Make report from acl:Compare a bit less download-y
+- [ ] rethink `Error` reply
 - [ ] rethink embedding `Error` reply in body
-- [ ] unit test for config.AWS.Credentials
-- [ ] unit test for GetCardByIndex with return code 0xffffffff
 - [ ] move device commands to separate package
 - [ ] rework devices commands to match ACL
+- [ ] unit test for config.AWS.Credentials
+- [ ] unit test for GetCardByIndex with return code 0xffffffff
 
 ## TODO
 

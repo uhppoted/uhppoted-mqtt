@@ -3,8 +3,10 @@ package acl
 import (
 	"encoding/json"
 	"fmt"
+
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
 func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
@@ -13,14 +15,14 @@ func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error)
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Cannot parse request",
 		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.CardNumber == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusBadRequest,
 			Message: "Missing/invalid card number",
 		}, fmt.Errorf("Missing/invalid card number")
@@ -28,14 +30,14 @@ func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error)
 
 	acl, err := api.GetCard(impl.Uhppote, a.Devices, *body.CardNumber)
 	if err != nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error retrieving card access permissions",
 		}, err
 	}
 
 	if acl == nil {
-		return Error{
+		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error retrieving card access permissions",
 		}, fmt.Errorf("<nil> response to GetCard request")
