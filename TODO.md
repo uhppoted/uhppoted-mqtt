@@ -16,6 +16,7 @@
 - [x] Move device commands to separate package
 - [x] Rework devices commands to match ACL
 - [ ] Send `Error` reply as msgError
+- [ ] Move AWS config initialisation out of uhppoted-api:config
 - [ ] Rethink embedding reply in body
 - [ ] Unit test for GetCardByIndex with return code 0xffffffff
 
