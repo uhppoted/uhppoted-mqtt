@@ -156,10 +156,7 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		uhppote:  u,
 		devices:  devices,
 		log:      log,
-		table: map[string]fdispatch{
-			mqttd.Topics.Requests + "/device/events:get": fdispatch{"get-events", (*MQTTD).getEvents},
-			mqttd.Topics.Requests + "/device/event:get":  fdispatch{"get-event", (*MQTTD).getEvent},
-		},
+		table:    map[string]fdispatch{},
 
 		tablex: map[string]fdispatchx{
 			mqttd.Topics.Requests + "/devices:get":             fdispatchx{"get-devices", dev.GetDevices},
@@ -176,6 +173,8 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 			mqttd.Topics.Requests + "/device/card:get":         fdispatchx{"get-card", dev.GetCard},
 			mqttd.Topics.Requests + "/device/card:put":         fdispatchx{"put-card", dev.PutCard},
 			mqttd.Topics.Requests + "/device/card:delete":      fdispatchx{"delete-card", dev.DeleteCard},
+			mqttd.Topics.Requests + "/device/events:get":       fdispatchx{"get-events", dev.GetEvents},
+			mqttd.Topics.Requests + "/device/event:get":        fdispatchx{"get-event", dev.GetEvent},
 
 			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
 			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},

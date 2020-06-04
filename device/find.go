@@ -15,7 +15,7 @@ func (d *Device) GetDevices(impl *uhppoted.UHPPOTED, request []byte) (interface{
 		return common.Error{
 			Code:    uhppoted.StatusInternalServerError,
 			Message: "Error searching for active devices",
-			Debug:   fmt.Errorf("%w: %v", uhppoted.StatusInternalServerError, err),
+			Debug:   err,
 		}, err
 	}
 
