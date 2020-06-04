@@ -75,11 +75,6 @@ type AWS struct {
 
 type fdispatch struct {
 	method string
-	f      func(*MQTTD, metainfo, *uhppoted.UHPPOTED, context.Context, []byte) (interface{}, error)
-}
-
-type fdispatchx struct {
-	method string
 	f      func(*uhppoted.UHPPOTED, []byte) (interface{}, error)
 }
 
@@ -90,7 +85,6 @@ type dispatcher struct {
 	devices  []*uhppote.Device
 	log      *log.Logger
 	table    map[string]fdispatch
-	tablex   map[string]fdispatchx
 }
 
 type request struct {
@@ -156,32 +150,30 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		uhppote:  u,
 		devices:  devices,
 		log:      log,
-		table:    map[string]fdispatch{},
+		table: map[string]fdispatch{
+			mqttd.Topics.Requests + "/devices:get":             fdispatch{"get-devices", dev.GetDevices},
+			mqttd.Topics.Requests + "/device:get":              fdispatch{"get-device", dev.GetDevice},
+			mqttd.Topics.Requests + "/device/status:get":       fdispatch{"get-status", dev.GetStatus},
+			mqttd.Topics.Requests + "/device/time:get":         fdispatch{"get-time", dev.GetTime},
+			mqttd.Topics.Requests + "/device/time:set":         fdispatch{"set-time", dev.SetTime},
+			mqttd.Topics.Requests + "/device/door/delay:get":   fdispatch{"get-door-delay", dev.GetDoorDelay},
+			mqttd.Topics.Requests + "/device/door/delay:set":   fdispatch{"set-door-delay", dev.SetDoorDelay},
+			mqttd.Topics.Requests + "/device/door/control:get": fdispatch{"get-door-control", dev.GetDoorControl},
+			mqttd.Topics.Requests + "/device/door/control:set": fdispatch{"set-door-control", dev.SetDoorControl},
+			mqttd.Topics.Requests + "/device/cards:get":        fdispatch{"get-cards", dev.GetCards},
+			mqttd.Topics.Requests + "/device/cards:delete":     fdispatch{"delete-cards", dev.DeleteCards},
+			mqttd.Topics.Requests + "/device/card:get":         fdispatch{"get-card", dev.GetCard},
+			mqttd.Topics.Requests + "/device/card:put":         fdispatch{"put-card", dev.PutCard},
+			mqttd.Topics.Requests + "/device/card:delete":      fdispatch{"delete-card", dev.DeleteCard},
+			mqttd.Topics.Requests + "/device/events:get":       fdispatch{"get-events", dev.GetEvents},
+			mqttd.Topics.Requests + "/device/event:get":        fdispatch{"get-event", dev.GetEvent},
 
-		tablex: map[string]fdispatchx{
-			mqttd.Topics.Requests + "/devices:get":             fdispatchx{"get-devices", dev.GetDevices},
-			mqttd.Topics.Requests + "/device:get":              fdispatchx{"get-device", dev.GetDevice},
-			mqttd.Topics.Requests + "/device/status:get":       fdispatchx{"get-status", dev.GetStatus},
-			mqttd.Topics.Requests + "/device/time:get":         fdispatchx{"get-time", dev.GetTime},
-			mqttd.Topics.Requests + "/device/time:set":         fdispatchx{"set-time", dev.SetTime},
-			mqttd.Topics.Requests + "/device/door/delay:get":   fdispatchx{"get-door-delay", dev.GetDoorDelay},
-			mqttd.Topics.Requests + "/device/door/delay:set":   fdispatchx{"set-door-delay", dev.SetDoorDelay},
-			mqttd.Topics.Requests + "/device/door/control:get": fdispatchx{"get-door-control", dev.GetDoorControl},
-			mqttd.Topics.Requests + "/device/door/control:set": fdispatchx{"set-door-control", dev.SetDoorControl},
-			mqttd.Topics.Requests + "/device/cards:get":        fdispatchx{"get-cards", dev.GetCards},
-			mqttd.Topics.Requests + "/device/cards:delete":     fdispatchx{"delete-cards", dev.DeleteCards},
-			mqttd.Topics.Requests + "/device/card:get":         fdispatchx{"get-card", dev.GetCard},
-			mqttd.Topics.Requests + "/device/card:put":         fdispatchx{"put-card", dev.PutCard},
-			mqttd.Topics.Requests + "/device/card:delete":      fdispatchx{"delete-card", dev.DeleteCard},
-			mqttd.Topics.Requests + "/device/events:get":       fdispatchx{"get-events", dev.GetEvents},
-			mqttd.Topics.Requests + "/device/event:get":        fdispatchx{"get-event", dev.GetEvent},
-
-			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
-			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},
-			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatchx{"acl:revoke", acl.Revoke},
-			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatchx{"acl:upload", acl.Upload},
-			mqttd.Topics.Requests + "/acl/acl:download": fdispatchx{"acl:download", acl.Download},
-			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatchx{"acl:compare", acl.Compare},
+			mqttd.Topics.Requests + "/acl/card:show":    fdispatch{"acl:show", acl.Show},
+			mqttd.Topics.Requests + "/acl/card:grant":   fdispatch{"acl:grant", acl.Grant},
+			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatch{"acl:revoke", acl.Revoke},
+			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatch{"acl:upload", acl.Upload},
+			mqttd.Topics.Requests + "/acl/acl:download": fdispatch{"acl:download", acl.Download},
+			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatch{"acl:compare", acl.Compare},
 		},
 	}
 
@@ -308,65 +300,6 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 	ctx = context.WithValue(ctx, "log", d.log)
 
 	if fn, ok := d.table[msg.Topic()]; ok {
-		msg.Ack()
-
-		go func() {
-			rq, err := d.mqttd.unwrap(msg.Payload())
-			if err != nil {
-				d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))
-				d.log.Printf("WARN  %-20s %v", "dispatch", err)
-				return
-			}
-
-			if err := d.mqttd.authorise(rq.ClientID, msg.Topic()); err != nil {
-				d.log.Printf("DEBUG %-20s %s", fn.method, string(rq.Request))
-				d.log.Printf("WARN  %-20s %v", fn.method, fmt.Errorf("Error authorising request (%v)", err))
-				return
-			}
-
-			ctx = context.WithValue(ctx, "request", rq.Request)
-			ctx = context.WithValue(ctx, "method", fn.method)
-
-			replyTo := d.mqttd.Topics.Replies
-
-			if rq.ClientID != nil {
-				replyTo = d.mqttd.Topics.Replies + "/" + *rq.ClientID
-			}
-
-			if rq.ReplyTo != nil {
-				replyTo = *rq.ReplyTo
-			}
-
-			meta := metainfo{
-				RequestID: rq.RequestID,
-				ClientID:  rq.ClientID,
-				ServerID:  d.mqttd.ServerID,
-				Method:    fn.method,
-				Nonce:     func() uint64 { return d.mqttd.Encryption.Nonce.Next() },
-			}
-
-			reply, err := fn.f(d.mqttd, meta, d.uhppoted, ctx, rq.Request)
-
-			if err != nil {
-				d.log.Printf("DEBUG %-12s %s", fn.method, string(rq.Request))
-				d.log.Printf("WARN  %-12s %v", fn.method, err)
-
-				if errx, ok := err.(*ierror); ok {
-					if err := d.mqttd.send(rq.ClientID, replyTo, errx, msgError, false); err != nil {
-						d.log.Printf("WARN  %-20s %v", fn.method, err)
-					}
-				}
-			}
-
-			if reply != nil {
-				if err := d.mqttd.send(rq.ClientID, replyTo, reply, msgReply, false); err != nil {
-					d.log.Printf("WARN  %-20s %v", fn.method, err)
-				}
-			}
-		}()
-	}
-
-	if fn, ok := d.tablex[msg.Topic()]; ok {
 		msg.Ack()
 
 		d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))
