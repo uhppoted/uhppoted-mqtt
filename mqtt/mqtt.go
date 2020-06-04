@@ -157,13 +157,8 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 		devices:  devices,
 		log:      log,
 		table: map[string]fdispatch{
-			mqttd.Topics.Requests + "/device/cards:get":    fdispatch{"get-cards", (*MQTTD).getCards},
-			mqttd.Topics.Requests + "/device/cards:delete": fdispatch{"delete-cards", (*MQTTD).deleteCards},
-			mqttd.Topics.Requests + "/device/card:get":     fdispatch{"get-card", (*MQTTD).getCard},
-			mqttd.Topics.Requests + "/device/card:put":     fdispatch{"put-card", (*MQTTD).putCard},
-			mqttd.Topics.Requests + "/device/card:delete":  fdispatch{"delete-card", (*MQTTD).deleteCard},
-			mqttd.Topics.Requests + "/device/events:get":   fdispatch{"get-events", (*MQTTD).getEvents},
-			mqttd.Topics.Requests + "/device/event:get":    fdispatch{"get-event", (*MQTTD).getEvent},
+			mqttd.Topics.Requests + "/device/events:get": fdispatch{"get-events", (*MQTTD).getEvents},
+			mqttd.Topics.Requests + "/device/event:get":  fdispatch{"get-event", (*MQTTD).getEvent},
 		},
 
 		tablex: map[string]fdispatchx{
@@ -176,6 +171,11 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 			mqttd.Topics.Requests + "/device/door/delay:set":   fdispatchx{"set-door-delay", dev.SetDoorDelay},
 			mqttd.Topics.Requests + "/device/door/control:get": fdispatchx{"get-door-control", dev.GetDoorControl},
 			mqttd.Topics.Requests + "/device/door/control:set": fdispatchx{"set-door-control", dev.SetDoorControl},
+			mqttd.Topics.Requests + "/device/cards:get":        fdispatchx{"get-cards", dev.GetCards},
+			mqttd.Topics.Requests + "/device/cards:delete":     fdispatchx{"delete-cards", dev.DeleteCards},
+			mqttd.Topics.Requests + "/device/card:get":         fdispatchx{"get-card", dev.GetCard},
+			mqttd.Topics.Requests + "/device/card:put":         fdispatchx{"put-card", dev.PutCard},
+			mqttd.Topics.Requests + "/device/card:delete":      fdispatchx{"delete-card", dev.DeleteCard},
 
 			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
 			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},

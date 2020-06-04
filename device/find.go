@@ -1,7 +1,6 @@
 package device
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/uhppoted/uhppoted-api/uhppoted"
@@ -28,12 +27,8 @@ func (d *Device) GetDevice(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {

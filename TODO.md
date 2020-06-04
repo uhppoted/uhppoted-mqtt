@@ -13,11 +13,11 @@
 - [x] Move devices to ACL struct (or UHPPOTED ?)
 - [x] Remove context from handlers
 - [x] Make report from acl:Compare a bit less download-y
-- [ ] move device commands to separate package
-- [ ] rework devices commands to match ACL
-- [ ] send `Error` reply as msgError
-- [ ] rethink embedding reply in body
-- [ ] unit test for GetCardByIndex with return code 0xffffffff
+- [ ] Move device commands to separate package
+- [ ] Rework devices commands to match ACL
+- [ ] Send `Error` reply as msgError
+- [ ] Rethink embedding reply in body
+- [ ] Unit test for GetCardByIndex with return code 0xffffffff
 
 ## TODO
 

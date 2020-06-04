@@ -1,7 +1,6 @@
 package device
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -14,12 +13,8 @@ func (d *Device) GetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {
@@ -51,12 +46,8 @@ func (d *Device) SetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 		DateTime *types.DateTime    `json:"date-time"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {

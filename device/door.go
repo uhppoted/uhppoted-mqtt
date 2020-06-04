@@ -1,7 +1,6 @@
 package device
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/uhppoted/uhppoted-api/uhppoted"
@@ -14,12 +13,8 @@ func (d *Device) GetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 		Door     *uint8             `json:"door"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {
@@ -67,12 +62,8 @@ func (d *Device) SetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 		Delay    *uint8             `json:"delay"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {
@@ -134,12 +125,8 @@ func (d *Device) GetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 		Door     *uint8             `json:"door"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {
@@ -187,12 +174,8 @@ func (d *Device) SetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 		Control  *uhppoted.ControlState `json:"control"`
 	}{}
 
-	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
 	}
 
 	if body.DeviceID == nil {
