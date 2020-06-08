@@ -15,10 +15,10 @@
 - [x] Make report from acl:Compare a bit less download-y
 - [x] Move device commands to separate package
 - [x] Rework devices commands to match ACL
-- [ ] Send `Error` reply as msgError
-- [ ] Move AWS config initialisation out of uhppoted-api:config
-- [ ] Rethink embedding reply in body
+- [x] Move AWS config initialisation out of uhppoted-api:config
 - [ ] Unit test for GetCardByIndex with return code 0xffffffff
+- [ ] Send `Error` reply as msgError
+- [ ] Rethink embedding reply in body
 
 ## TODO
 

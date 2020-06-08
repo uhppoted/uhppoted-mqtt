@@ -6,17 +6,20 @@ import (
 	"crypto/x509"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-api/monitoring"
-	"github.com/uhppoted/uhppoted-mqtt/auth"
-	"github.com/uhppoted/uhppoted-mqtt/mqtt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/aws/aws-sdk-go/aws/credentials"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-api/monitoring"
+	"github.com/uhppoted/uhppoted-mqtt/auth"
+	"github.com/uhppoted/uhppoted-mqtt/mqtt"
 )
 
 type Run struct {
@@ -148,11 +151,14 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 		Authentication: c.Authentication,
 		Permissions:    *permissions,
 		EventMap:       c.EventIDs,
-		AWS: mqtt.AWS{
-			Credentials: c.AWS.Credentials,
-			Region:      c.AWS.Region,
-		},
+		AWS:            mqtt.AWS{},
+
 		Debug: r.debug,
+	}
+
+	if c.AWS.Credentials != "" {
+		mqttd.AWS.Credentials = credentials.NewSharedCredentials(c.AWS.Credentials, c.AWS.Profile)
+		mqttd.AWS.Region = c.AWS.Region
 	}
 
 	// ... TLS
