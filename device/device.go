@@ -8,17 +8,18 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
+const (
+	StatusInternalServerError = uhppoted.StatusInternalServerError
+	StatusBadRequest          = uhppoted.StatusBadRequest
+)
+
 type Device struct {
 	Log *log.Logger
 }
 
 func unmarshal(bytes []byte, request interface{}) (interface{}, error) {
 	if err := json.Unmarshal(bytes, request); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), err
 	}
 
 	return nil, nil

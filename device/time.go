@@ -18,10 +18,7 @@ func (d *Device) GetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetTimeRequest{
@@ -30,11 +27,7 @@ func (d *Device) GetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 
 	response, err := impl.GetTime(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve device time for %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve device time for %d", *body.DeviceID), err), err
 	}
 
 	return response, nil
@@ -51,17 +44,11 @@ func (d *Device) SetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.DateTime == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing datetime",
-		}, fmt.Errorf("Invalid/missing datetime")
+		return common.MakeError(StatusBadRequest, "Invalid/missing datetime", nil), fmt.Errorf("Invalid/missing datetime")
 	}
 
 	rq := uhppoted.SetTimeRequest{
@@ -71,11 +58,7 @@ func (d *Device) SetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 
 	response, err := impl.SetTime(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not set device time for %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set device time for %d", *body.DeviceID), err), err
 	}
 
 	if response == nil {

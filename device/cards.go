@@ -18,10 +18,7 @@ func (d *Device) GetCards(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetCardsRequest{
@@ -30,11 +27,7 @@ func (d *Device) GetCards(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 
 	response, err := impl.GetCards(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve cards from %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not retrieve cards from %d", *body.DeviceID), err), err
 	}
 
 	return response, nil
@@ -50,10 +43,7 @@ func (d *Device) DeleteCards(impl *uhppoted.UHPPOTED, request []byte) (interface
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	rq := uhppoted.DeleteCardsRequest{
@@ -62,11 +52,7 @@ func (d *Device) DeleteCards(impl *uhppoted.UHPPOTED, request []byte) (interface
 
 	response, err := impl.DeleteCards(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not delete cards on %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not delete cards on %d", *body.DeviceID), err), err
 	}
 
 	return response, nil
@@ -83,17 +69,11 @@ func (d *Device) GetCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.CardNumber == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing card number",
-		}, fmt.Errorf("Invalid/missing card number")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card number", nil), fmt.Errorf("Invalid/missing card number")
 	}
 
 	rq := uhppoted.GetCardRequest{
@@ -103,11 +83,7 @@ func (d *Device) GetCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 
 	response, err := impl.GetCard(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve card %v from %d", *body.CardNumber, *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not retrieve card %v from %d", *body.CardNumber, *body.DeviceID), err), err
 	}
 
 	return response, nil
@@ -124,17 +100,11 @@ func (d *Device) PutCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.Card == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing card",
-		}, fmt.Errorf("Invalid/missing card")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card", nil), fmt.Errorf("Invalid/missing card")
 	}
 
 	rq := uhppoted.PutCardRequest{
@@ -144,11 +114,7 @@ func (d *Device) PutCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 
 	response, err := impl.PutCard(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not store card %v to %d", body.Card.CardNumber, *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not store card %v to %d", body.Card.CardNumber, *body.DeviceID), err), err
 	}
 
 	return response, nil
@@ -165,17 +131,11 @@ func (d *Device) DeleteCard(impl *uhppoted.UHPPOTED, request []byte) (interface{
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.CardNumber == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing card number",
-		}, fmt.Errorf("Invalid/missing card number")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card number", nil), fmt.Errorf("Invalid/missing card number")
 	}
 
 	rq := uhppoted.DeleteCardRequest{
@@ -185,11 +145,7 @@ func (d *Device) DeleteCard(impl *uhppoted.UHPPOTED, request []byte) (interface{
 
 	response, err := impl.DeleteCard(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not store card %v to %d", *body.CardNumber, *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not store card %v to %d", *body.CardNumber, *body.DeviceID), err), err
 	}
 
 	return response, nil

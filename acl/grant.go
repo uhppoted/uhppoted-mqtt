@@ -19,39 +19,24 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.CardNumber == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid card number",
-		}, fmt.Errorf("Missing/invalid card number")
+		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("Missing/invalid card number")
 	}
 
 	if body.From == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid start date",
-		}, fmt.Errorf("Missing/invalid start date")
+		return common.MakeError(StatusBadRequest, "Missing/invalid start date", nil), fmt.Errorf("Missing/invalid start date")
 	}
 
 	if body.To == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid end date",
-		}, fmt.Errorf("Missing/invalid end date")
+		return common.MakeError(StatusBadRequest, "Missing/invalid end date", nil), fmt.Errorf("Missing/invalid end date")
 	}
 
 	err := api.Grant(impl.Uhppote, a.Devices, *body.CardNumber, *body.From, *body.To, body.Doors)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: err.Error(),
-		}, err
+		return common.MakeError(StatusInternalServerError, err.Error(), nil), err
 	}
 
 	return struct {

@@ -16,40 +16,25 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.URL == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid download URL",
-		}, fmt.Errorf("Missing/invalid download URL")
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", nil), fmt.Errorf("Missing/invalid download URL")
 	}
 
 	uri, err := url.Parse(*body.URL)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid download URL",
-		}, fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
 	}
 
 	acl, err := a.fetch("acl:download", uri.String())
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Error downloading ACL",
-		}, err
+		return common.MakeError(StatusBadRequest, "Error downloading ACL", err), err
 	}
 
 	if acl == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Error downloading ACL",
-		}, fmt.Errorf("Download return nil ACL")
+		return common.MakeError(StatusBadRequest, "Error downloading ACL", nil), fmt.Errorf("Download return nil ACL")
 	}
 
 	for k, l := range *acl {
@@ -58,10 +43,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 
 	rpt, err := api.PutACL(impl.Uhppote, *acl)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error updating ACL",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error updating ACL", err), err
 	}
 
 	summary := map[uint32]struct {

@@ -25,17 +25,11 @@ func (d *Device) GetEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.Start != nil && body.End != nil && time.Time(*body.End).Before(time.Time(*body.Start)) {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid event data range",
-		}, fmt.Errorf("Invalid event date range: %v to %v", body.Start, body.End)
+		return common.MakeError(StatusBadRequest, "Invalid event data range", nil), fmt.Errorf("Invalid event date range: %v to %v", body.Start, body.End)
 	}
 
 	rq := uhppoted.GetEventRangeRequest{
@@ -46,11 +40,7 @@ func (d *Device) GetEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 
 	response, err := impl.GetEventRange(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve events from %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve events from %d", *body.DeviceID), err), err
 	}
 
 	return response, nil
@@ -67,17 +57,11 @@ func (d *Device) GetEvent(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.EventID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing event ID",
-		}, fmt.Errorf("Invalid/missing event ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing event ID", nil), fmt.Errorf("Invalid/missing event ID")
 	}
 
 	rq := uhppoted.GetEventRequest{
@@ -87,11 +71,7 @@ func (d *Device) GetEvent(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 
 	response, err := impl.GetEvent(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve events from %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve events from %d", *body.DeviceID), err), err
 	}
 
 	return response, nil

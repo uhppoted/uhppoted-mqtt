@@ -15,32 +15,20 @@ func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error)
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.CardNumber == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid card number",
-		}, fmt.Errorf("Missing/invalid card number")
+		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("Missing/invalid card number")
 	}
 
 	acl, err := api.GetCard(impl.Uhppote, a.Devices, *body.CardNumber)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error retrieving card access permissions",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error retrieving card access permissions", err), err
 	}
 
 	if acl == nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error retrieving card access permissions",
-		}, fmt.Errorf("<nil> response to GetCard request")
+		return common.MakeError(StatusInternalServerError, "Error retrieving card access permissions", nil), fmt.Errorf("<nil> response to GetCard request")
 	}
 
 	response := Permissions{

@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws/credentials"
+	aws "github.com/aws/aws-sdk-go/aws/credentials"
 	paho "github.com/eclipse/paho.mqtt.golang"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
@@ -69,7 +69,7 @@ type Encryption struct {
 }
 
 type AWS struct {
-	Credentials *credentials.Credentials
+	Credentials *aws.Credentials
 	Region      string
 }
 
@@ -278,7 +278,7 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u *uhppote.UHPPOTE, log *log.Logg
 	}
 
 	handler := func(event uhppoted.EventMessage) bool {
-		if err := m.send(&m.Encryption.EventsKeyID, m.Topics.Events, event, msgEvent, true); err != nil {
+		if err := m.send(&m.Encryption.EventsKeyID, m.Topics.Events, nil, event, msgEvent, true); err != nil {
 			log.Printf("WARN  %-12s %v", "listen", err)
 			return false
 		}
@@ -341,7 +341,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 			}
 
 			if reply != nil {
-				if err := d.mqttd.sendx(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
+				if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
 					d.log.Printf("WARN  %-20s %v", fn.method, err)
 				}
 			}
@@ -367,35 +367,35 @@ func (m *MQTTD) authorise(clientID *string, topic string) error {
 }
 
 // TODO: add callback for published/failed
-func (mqttd *MQTTD) send(destID *string, topic string, message interface{}, msgtype msgType, critical bool) error {
-	if mqttd.client == nil || !mqttd.client.IsConnected() {
-		return errors.New("No connection to MQTT broker")
-	}
-
-	m, err := mqttd.wrap(msgtype, message, destID)
-	if err != nil {
-		return err
-	} else if m == nil {
-		return errors.New("'wrap' failed to return a publishable message")
-	}
-
-	qos := byte(0)
-	retained := false
-	if critical {
-		qos = mqttd.Alerts.QOS
-		retained = mqttd.Alerts.Retained
-	}
-
-	token := mqttd.client.Publish(topic, qos, retained, string(m))
-	if token.Error() != nil {
-		return token.Error()
-	}
-
-	return nil
-}
-
+// func (mqttd *MQTTD) send(destID *string, topic string, message interface{}, msgtype msgType, critical bool) error {
+// 	if mqttd.client == nil || !mqttd.client.IsConnected() {
+// 		return errors.New("No connection to MQTT broker")
+// 	}
+//
+// 	m, err := mqttd.wrap(msgtype, message, destID)
+// 	if err != nil {
+// 		return err
+// 	} else if m == nil {
+// 		return errors.New("'wrap' failed to return a publishable message")
+// 	}
+//
+// 	qos := byte(0)
+// 	retained := false
+// 	if critical {
+// 		qos = mqttd.Alerts.QOS
+// 		retained = mqttd.Alerts.Retained
+// 	}
+//
+// 	token := mqttd.client.Publish(topic, qos, retained, string(m))
+// 	if token.Error() != nil {
+// 		return token.Error()
+// 	}
+//
+// 	return nil
+// }
+//
 // TODO: add callback for published/failed
-func (mqttd *MQTTD) sendx(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
+func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
 	if mqttd.client == nil || !mqttd.client.IsConnected() {
 		return errors.New("No connection to MQTT broker")
 	}
@@ -428,37 +428,37 @@ func (mqttd *MQTTD) sendx(destID *string, topic string, meta *metainfo, message 
 }
 
 func compose(meta *metainfo, content interface{}) (interface{}, error) {
-	//	reply := make(map[string]interface{})
-	//
-	//	s, err := json.Marshal(meta)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	err = json.Unmarshal(s, &reply)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	s, err = json.Marshal(content)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	err = json.Unmarshal(s, &reply)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	return reply, nil
+	reply := make(map[string]interface{})
 
-	return struct {
-		*metainfo
-		Content interface{} `json:"body"`
-	}{
-		metainfo: meta,
-		Content:  content,
-	}, nil
+	s, err := json.Marshal(meta)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(s, &reply)
+	if err != nil {
+		return nil, err
+	}
+
+	s, err = json.Marshal(content)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(s, &reply)
+	if err != nil {
+		return nil, err
+	}
+
+	return reply, nil
+
+	//	return struct {
+	//		*metainfo `json:",omitempty"`
+	//		Content   interface{} `json:"body"`
+	//	}{
+	//		metainfo: meta,
+	//		Content:  content,
+	//	}, nil
 }
 
 func isBase64(request []byte) bool {

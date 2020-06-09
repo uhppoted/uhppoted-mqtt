@@ -45,55 +45,34 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.URL.ACL == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid download URL",
-		}, fmt.Errorf("Missing/invalid download URL")
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", nil), fmt.Errorf("Missing/invalid download URL")
 	}
 
 	uri, err := url.Parse(*body.URL.ACL)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid download URL",
-		}, fmt.Errorf("Invalid download URL '%v' (%w)", body.URL.ACL, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("Invalid download URL '%v' (%w)", body.URL.ACL, err)
 	}
 
 	if body.URL.Report == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid report URL",
-		}, fmt.Errorf("Missing/invalid report URL")
+		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", nil), fmt.Errorf("Missing/invalid report URL")
 	}
 
 	rpt, err := url.Parse(*body.URL.Report)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid report URL",
-		}, fmt.Errorf("Invalid report URL '%v' (%w)", body.URL.Report, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", err), fmt.Errorf("Invalid report URL '%v' (%w)", body.URL.Report, err)
 	}
 
 	acl, err := a.fetch("acl:compare", uri.String())
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Error downloading ACL",
-		}, err
+		return common.MakeError(StatusBadRequest, "Error downloading ACL", err), err
 	}
 
 	if acl == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Error downloading ACL",
-		}, fmt.Errorf("Download return nil ACL")
+		return common.MakeError(StatusBadRequest, "Error downloading ACL", nil), fmt.Errorf("Download return nil ACL")
 	}
 
 	for k, l := range *acl {
@@ -102,34 +81,22 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 
 	current, err := api.GetACL(impl.Uhppote, a.Devices)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error retrieving current ACL",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error retrieving current ACL", err), err
 	}
 
 	diff, err := api.Compare(current, *acl)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error comparing current and downloaded ACL's",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error comparing current and downloaded ACL's", err), err
 	}
 
 	var w strings.Builder
 	if err := report(diff, templates.report, &w); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error generating ACL compare report",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error generating ACL compare report", err), err
 	}
 
 	filename := time.Now().Format("acl-2006-01-02T150405.rpt")
 	if err = a.store("acl:compare", rpt.String(), filename, []byte(w.String())); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Error uploading report",
-		}, err
+		return common.MakeError(StatusBadRequest, "Error uploading report", err), err
 	}
 
 	summary := map[uint32]struct {

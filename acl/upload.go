@@ -17,40 +17,25 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Cannot parse request",
-		}, fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
 	}
 
 	if body.URL == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid upload URI",
-		}, fmt.Errorf("Missing/invalid upload URI")
+		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", nil), fmt.Errorf("Missing/invalid upload URI")
 	}
 
 	uri, err := url.Parse(*body.URL)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Missing/invalid upload URI",
-		}, fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", err), fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
 	}
 
 	acl, err := api.GetACL(impl.Uhppote, a.Devices)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error retrieving ACL",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error retrieving ACL", err), err
 	}
 
 	if acl == nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error retrieving card access permissions",
-		}, fmt.Errorf("<nil> response to GetCard request")
+		return common.MakeError(StatusInternalServerError, "Error retrieving card access permissions", nil), fmt.Errorf("<nil> response to GetCard request")
 	}
 
 	for k, l := range acl {
@@ -59,17 +44,11 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 
 	var w strings.Builder
 	if err := api.MakeTSV(acl, a.Devices, &w); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error reformatting card access permissions",
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error reformatting card access permissions", err), err
 	}
 
 	if err = a.store("acl:upload", uri.String(), "uhppoted.acl", []byte(w.String())); err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Error uploading ACL",
-		}, err
+		return common.MakeError(StatusBadRequest, "Error uploading ACL", err), err
 	}
 
 	return struct {

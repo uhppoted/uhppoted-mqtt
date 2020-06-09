@@ -12,11 +12,7 @@ func (d *Device) GetDevices(impl *uhppoted.UHPPOTED, request []byte) (interface{
 
 	response, err := impl.GetDevices(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: "Error searching for active devices",
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, "Error searching for active devices", err), err
 	}
 
 	return response, nil
@@ -32,10 +28,7 @@ func (d *Device) GetDevice(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetDeviceRequest{
@@ -44,11 +37,7 @@ func (d *Device) GetDevice(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 
 	response, err := impl.GetDevice(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve device information for %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve device information for %d", *body.DeviceID), err), err
 	}
 
 	return response, nil

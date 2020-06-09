@@ -17,10 +17,7 @@ func (d *Device) GetStatus(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetStatusRequest{
@@ -29,11 +26,7 @@ func (d *Device) GetStatus(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 
 	response, err := impl.GetStatus(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve status for %d", *body.DeviceID),
-			Debug:   err,
-		}, err
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not retrieve status for %d", *body.DeviceID), err), err
 	}
 
 	return response, nil

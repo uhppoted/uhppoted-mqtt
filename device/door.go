@@ -18,24 +18,15 @@ func (d *Device) GetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.Door == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", body.Door)
 	}
 
 	if *body.Door < 1 || *body.Door > 4 {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", *body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", *body.Door)
 	}
 
 	rq := uhppoted.GetDoorDelayRequest{
@@ -45,11 +36,7 @@ func (d *Device) GetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 
 	response, err := impl.GetDoorDelay(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve delay for device %d, door %d", *body.DeviceID, *body.Door),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	return response, nil
@@ -67,38 +54,23 @@ func (d *Device) SetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.Door == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", body.Door)
 	}
 
 	if *body.Door < 1 || *body.Door > 4 {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", *body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", *body.Door)
 	}
 
 	if body.Delay == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing delay",
-		}, fmt.Errorf("Invalid/missing delay: %v", body.Delay)
+		return common.MakeError(StatusBadRequest, "Invalid/missing delay", nil), fmt.Errorf("Invalid/missing delay: %v", body.Delay)
 	}
 
 	if *body.Delay == 0 || *body.Door > 60 {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing delay",
-		}, fmt.Errorf("Invalid/missing delay: %v", *body.Delay)
+		return common.MakeError(StatusBadRequest, "Invalid/missing delay", nil), fmt.Errorf("Invalid/missing delay: %v", *body.Delay)
 	}
 
 	rq := uhppoted.SetDoorDelayRequest{
@@ -109,11 +81,7 @@ func (d *Device) SetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 
 	response, err := impl.SetDoorDelay(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	return response, nil
@@ -130,24 +98,15 @@ func (d *Device) GetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.Door == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", body.Door)
 	}
 
 	if *body.Door < 1 || *body.Door > 4 {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", *body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", *body.Door)
 	}
 
 	rq := uhppoted.GetDoorControlRequest{
@@ -157,11 +116,7 @@ func (d *Device) GetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 
 	response, err := impl.GetDoorControl(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not retrieve control state for device %d, door %d", *body.DeviceID, *body.Door),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve control state for device %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	return response, nil
@@ -179,38 +134,23 @@ func (d *Device) SetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 	}
 
 	if body.DeviceID == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing device ID",
-		}, fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
 	if body.Door == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", body.Door)
 	}
 
 	if *body.Door < 1 || *body.Door > 4 {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door",
-		}, fmt.Errorf("Invalid/missing door: %v", *body.Door)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", *body.Door)
 	}
 
 	if body.Control == nil {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing control state",
-		}, fmt.Errorf("Invalid/missing control state: %v", body.Control)
+		return common.MakeError(StatusBadRequest, "Invalid/missing control state", nil), fmt.Errorf("Invalid/missing control state: %v", body.Control)
 	}
 
 	if *body.Control < 1 || *body.Control > 3 {
-		return common.Error{
-			Code:    uhppoted.StatusBadRequest,
-			Message: "Invalid/missing door control state",
-		}, fmt.Errorf("Invalid/missing control state: %v", *body.Control)
+		return common.MakeError(StatusBadRequest, "Invalid/missing door control state", nil), fmt.Errorf("Invalid/missing control state: %v", *body.Control)
 	}
 
 	rq := uhppoted.SetDoorControlRequest{
@@ -221,11 +161,7 @@ func (d *Device) SetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 
 	response, err := impl.SetDoorControl(rq)
 	if err != nil {
-		return common.Error{
-			Code:    uhppoted.StatusInternalServerError,
-			Message: fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door),
-			Debug:   err,
-		}, err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	return response, nil

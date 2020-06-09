@@ -19,7 +19,13 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
+)
+
+const (
+	StatusInternalServerError = uhppoted.StatusInternalServerError
+	StatusBadRequest          = uhppoted.StatusBadRequest
 )
 
 type ACL struct {
