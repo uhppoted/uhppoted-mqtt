@@ -334,13 +334,28 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 				Nonce:     func() uint64 { return d.mqttd.Encryption.Nonce.Next() },
 			}
 
-			reply, err := fn.f(d.uhppoted, rq.Request)
+			response, err := fn.f(d.uhppoted, rq.Request)
 
 			if err != nil {
 				d.log.Printf("WARN  %-12s %v", fn.method, err)
-			}
+				if response != nil {
+					reply := struct {
+						Error interface{} `json:"error"`
+					}{
+						Error: response,
+					}
 
-			if reply != nil {
+					if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgError, false); err != nil {
+						d.log.Printf("WARN  %-20s %v", fn.method, err)
+					}
+				}
+			} else if response != nil {
+				reply := struct {
+					Response interface{} `json:"response"`
+				}{
+					Response: response,
+				}
+
 				if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
 					d.log.Printf("WARN  %-20s %v", fn.method, err)
 				}

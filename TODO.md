@@ -18,8 +18,8 @@
 - [x] Move AWS config initialisation out of uhppoted-api:config
 - [x] Unit test for GetCardByIndexN with return code 0xffffffff
 - [x] Remove references to GetCardByIndex and rename GetCardByIndexN
-- [ ] Send `Error` reply as msgError
-- [ ] Rethink embedding reply in body
+- [x] Send `Error` reply as msgError
+- [x] Rethink embedding reply in body
 
 ## TODO
 

@@ -1,11 +1,9 @@
 package common
 
 type Error struct {
-	Error struct {
-		Code    int    `json:"error-code"`
-		Message string `json:"message,omitempty"`
-		Debug   string `json:"debug,omitempty"`
-	} `json:"error"`
+	Code    int    `json:"code"`
+	Message string `json:"message,omitempty"`
+	Debug   string `json:"debug,omitempty"`
 }
 
 func MakeError(code int, message string, debug error) *Error {
@@ -15,17 +13,9 @@ func MakeError(code int, message string, debug error) *Error {
 		dbg = debug.Error()
 	}
 
-	err := struct {
-		Code    int    `json:"error-code"`
-		Message string `json:"message,omitempty"`
-		Debug   string `json:"debug,omitempty"`
-	}{
+	return &Error{
 		Code:    code,
 		Message: message,
 		Debug:   dbg,
-	}
-
-	return &Error{
-		Error: err,
 	}
 }
