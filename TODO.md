@@ -2,25 +2,6 @@
 
 ## IN PROGRESS
 
-- [x] acl::show
-- [x] acl::grant
-- [x] inject response metadata in MQTTD
-- [x] acl::revoke
-- [x] acl::upload
-- [x] acl::download
-- [x] acl::compare
-- [x] Add report URL to response from acl:compare
-- [x] Move devices to ACL struct (or UHPPOTED ?)
-- [x] Remove context from handlers
-- [x] Make report from acl:Compare a bit less download-y
-- [x] Move device commands to separate package
-- [x] Rework devices commands to match ACL
-- [x] Move AWS config initialisation out of uhppoted-api:config
-- [x] Unit test for GetCardByIndexN with return code 0xffffffff
-- [x] Remove references to GetCardByIndex and rename GetCardByIndexN
-- [x] Send `Error` reply as msgError
-- [x] Rethink embedding reply in body
-
 ## TODO
 
 - [ ] Replace values passed in Context with initialised struct
