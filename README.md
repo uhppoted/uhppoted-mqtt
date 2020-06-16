@@ -1,3 +1,5 @@
+![build](https://github.com/uhppoted/uhppoted-mqtt/workflows/build/badge.svg)
+
 # uhppoted-mqtt
 
 Wraps the `uhppote-core` device API in an MQTT endpoint for use with access control systems based on the 
