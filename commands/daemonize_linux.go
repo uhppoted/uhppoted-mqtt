@@ -100,7 +100,7 @@ func (d *Daemonize) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: uhppoted daemonize [--user <user:group>]")
 	fmt.Println()
-	fmt.Println("    Registers %s as a systemd service/daemon that runs on startup.", SERVICE)
+	fmt.Printf("    Registers %s as a systemd service/daemon that runs on startup.\n", SERVICE)
 	fmt.Println("      Defaults to the user:group uhppoted:uhppoted unless otherwise specified")
 	fmt.Println("      with the --user option")
 	fmt.Println()
