@@ -41,7 +41,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 		a.info("acl:download", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
 	}
 
-	rpt, err := api.PutACL(impl.Uhppote, *acl)
+	rpt, err := api.PutACL(impl.Uhppote, *acl, false)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, "Error updating ACL", err), err
 	}
