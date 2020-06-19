@@ -52,22 +52,33 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 		Added     int `json:"added"`
 		Deleted   int `json:"deleted"`
 		Failed    int `json:"failed"`
+		Errors    int `json:"errors"`
 	}{}
 
 	for k, v := range rpt {
-		a.info("acl:download", fmt.Sprintf("%v  SUMMARY  unchanged:%v  updated:%v  added:%v  deleted:%v  failed:%v", k, v.Unchanged, v.Updated, v.Added, v.Deleted, v.Failed))
+		a.info("acl:download", fmt.Sprintf("%v  SUMMARY  unchanged:%v  updated:%v  added:%v  deleted:%v  failed:%v  errors:%v",
+			k,
+			len(v.Unchanged),
+			len(v.Updated),
+			len(v.Added),
+			len(v.Deleted),
+			len(v.Failed),
+			len(v.Errors)))
+
 		summary[k] = struct {
 			Unchanged int `json:"unchanged"`
 			Updated   int `json:"updated"`
 			Added     int `json:"added"`
 			Deleted   int `json:"deleted"`
 			Failed    int `json:"failed"`
+			Errors    int `json:"errors"`
 		}{
-			Unchanged: v.Unchanged,
-			Updated:   v.Updated,
-			Added:     v.Added,
-			Deleted:   v.Deleted,
-			Failed:    v.Failed,
+			Unchanged: len(v.Unchanged),
+			Updated:   len(v.Updated),
+			Added:     len(v.Added),
+			Deleted:   len(v.Deleted),
+			Failed:    len(v.Failed),
+			Errors:    len(v.Errors),
 		}
 	}
 
@@ -78,6 +89,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 			Added     int `json:"added"`
 			Deleted   int `json:"deleted"`
 			Failed    int `json:"failed"`
+			Errors    int `json:"errors"`
 		} `json:"report"`
 	}{
 		Report: summary,
