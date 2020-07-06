@@ -40,7 +40,7 @@ benchmark: build
 coverage: build
 	go test -cover ./...
 
-release: test vet
+build-all: test vet
 	mkdir -p dist/$(DIST)/windows
 	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/linux
@@ -50,7 +50,7 @@ release: test vet
 	env GOOS=darwin  GOARCH=amd64         go build -o dist/$(DIST)/darwin  ./...
 	env GOOS=windows GOARCH=amd64         go build -o dist/$(DIST)/windows ./...
 
-release-tar: release
+release: release
 	find . -name ".DS_Store" -delete
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)

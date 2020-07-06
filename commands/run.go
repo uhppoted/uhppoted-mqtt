@@ -78,7 +78,7 @@ func (r *Run) execute(ctx context.Context, f func(*config.Config) error) error {
 	if err == nil {
 		return fmt.Errorf("PID lockfile '%v' already in use", r.pidFile)
 	} else if !os.IsNotExist(err) {
-		return fmt.Errorf("Error checking PID lockfile '%v' (%v_)", r.pidFile, err)
+		return fmt.Errorf("Error checking PID lockfile '%v' (%v)", r.pidFile, err)
 	}
 
 	if err := ioutil.WriteFile(r.pidFile, []byte(pid), 0644); err != nil {
