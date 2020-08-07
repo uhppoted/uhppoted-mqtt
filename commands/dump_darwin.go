@@ -7,7 +7,7 @@ import (
 )
 
 var DUMP = Dump{
-	config: "/usr/local/etc/com.github.twystd.uhppoted/uhppoted.conf",
+	config: "/usr/local/etc/com.github.uhppoted/uhppoted.conf",
 }
 
 type Dump struct {

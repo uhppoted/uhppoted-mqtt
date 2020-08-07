@@ -37,3 +37,4 @@
     - Windows: event logging
 5.  Update file watchers to fsnotify when that is merged into the standard library (1.4 ?)
     - https://github.com/golang/go/issues/4068
+6. [Teserakt E2E encryption](https://teserakt.io)

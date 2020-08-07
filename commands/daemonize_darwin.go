@@ -38,11 +38,11 @@ const newsyslog = `#logfilename                                       [owner:gro
 {{end}}`
 
 var DAEMONIZE = Daemonize{
-	plist:   fmt.Sprintf("com.github.twystd.%s.plist", SERVICE),
-	workdir: "/usr/local/var/com.github.twystd.uhppoted",
-	logdir:  "/usr/local/var/com.github.twystd.uhppoted/logs",
-	config:  "/usr/local/etc/com.github.twystd.uhppoted/uhppoted.conf",
-	hotp:    "/usr/local/etc/com.github.twystd.uhppoted/mqtt.hotp.secrets",
+	plist:   fmt.Sprintf("com.github.uhppoted.%s.plist", SERVICE),
+	workdir: "/usr/local/var/com.github.uhppoted",
+	logdir:  "/usr/local/var/com.github.uhppoted/logs",
+	config:  "/usr/local/etc/com.github.uhppoted/uhppoted.conf",
+	hotp:    "/usr/local/etc/com.github.uhppoted/mqtt.hotp.secrets",
 }
 
 type Daemonize struct {
@@ -107,7 +107,7 @@ func (d *Daemonize) execute(ctx context.Context) error {
 	}
 
 	i := info{
-		Label:      fmt.Sprintf("com.github.twystd.%s", SERVICE),
+		Label:      fmt.Sprintf("com.github.uhppoted.%s", SERVICE),
 		Executable: executable,
 		WorkDir:    d.workdir,
 		StdLogFile: filepath.Join(d.logdir, fmt.Sprintf("%s.log", SERVICE)),
@@ -142,7 +142,7 @@ func (d *Daemonize) execute(ctx context.Context) error {
 	fmt.Println()
 	fmt.Println("   The daemon will start automatically on the next system restart - to start it manually, execute the following command:")
 	fmt.Println()
-	fmt.Printf("   sudo launchctl load /Library/LaunchDaemons/com.github.twystd.%s.plist\n", SERVICE)
+	fmt.Printf("   sudo launchctl load /Library/LaunchDaemons/com.github.uhppoted.%s.plist\n", SERVICE)
 	fmt.Println()
 	fmt.Println("   Please replace the default RSA keys for event and system messages:")
 	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "event.pub"))

@@ -14,10 +14,10 @@ import (
 )
 
 var RUN = Run{
-	configuration: "/usr/local/etc/com.github.twystd.uhppoted/uhppoted.conf",
-	dir:           "/usr/local/var/com.github.twystd.uhppoted",
-	pidFile:       fmt.Sprintf("/usr/local/var/com.github.twystd.uhppoted/%s.pid", SERVICE),
-	logFile:       fmt.Sprintf("/usr/local/var/com.github.twystd.uhppoted/logs/%s.log", SERVICE),
+	configuration: "/usr/local/etc/com.github.uhppoted/uhppoted.conf",
+	dir:           "/usr/local/var/com.github.uhppoted",
+	pidFile:       fmt.Sprintf("/usr/local/var/com.github.uhppoted/%s.pid", SERVICE),
+	logFile:       fmt.Sprintf("/usr/local/var/com.github.uhppoted/logs/%s.log", SERVICE),
 	logFileSize:   10,
 	console:       false,
 	debug:         false,
