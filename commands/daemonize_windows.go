@@ -2,16 +2,17 @@ package commands
 
 import (
 	"bufio"
-	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppoted-api/config"
-	"golang.org/x/sys/windows/svc/eventlog"
-	"golang.org/x/sys/windows/svc/mgr"
 	"net"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/sys/windows/svc/eventlog"
+	"golang.org/x/sys/windows/svc/mgr"
+
+	"github.com/uhppoted/uhppoted-api/config"
 )
 
 var DAEMONIZE = Daemonize{
@@ -64,7 +65,7 @@ func (d *Daemonize) Help() {
 	fmt.Println()
 }
 
-func (d *Daemonize) Execute(ctx context.Context) error {
+func (d *Daemonize) Execute(args ...interface{}) error {
 	dir := filepath.Dir(d.config)
 	r := bufio.NewReader(os.Stdin)
 
@@ -81,10 +82,10 @@ func (d *Daemonize) Execute(ctx context.Context) error {
 		return nil
 	}
 
-	return d.execute(ctx)
+	return d.execute()
 }
 
-func (d *Daemonize) execute(ctx context.Context) error {
+func (d *Daemonize) execute() error {
 	fmt.Println()
 	fmt.Println("   ... daemonizing")
 

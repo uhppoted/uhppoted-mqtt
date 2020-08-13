@@ -50,7 +50,7 @@ build-all: test vet
 	env GOOS=darwin  GOARCH=amd64         go build -o dist/$(DIST)/darwin  ./...
 	env GOOS=windows GOARCH=amd64         go build -o dist/$(DIST)/windows ./...
 
-release: release
+release: build-all
 	find . -name ".DS_Store" -delete
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
@@ -85,7 +85,7 @@ config: build
 	./bin/uhppoted-mqtt config
 
 run: build
-	./bin/uhppoted-mqtt --console
+	./bin/uhppoted-mqtt run --console
 
 get-devices:
 	mqtt publish --topic 'uhppoted/gateway/requests/devices:get' \

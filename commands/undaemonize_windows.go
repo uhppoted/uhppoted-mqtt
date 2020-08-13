@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"golang.org/x/sys/windows/svc"
@@ -50,7 +49,7 @@ func (u *Undaemonize) Help() {
 	fmt.Println()
 }
 
-func (u *Undaemonize) Execute(ctx context.Context) error {
+func (u *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
 	if err := u.unregister(); err != nil {

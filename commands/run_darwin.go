@@ -1,16 +1,16 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-api/eventlog"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-api/eventlog"
 )
 
 var RUN = Run{
@@ -37,14 +37,14 @@ func (r *Run) FlagSet() *flag.FlagSet {
 	return flagset
 }
 
-func (r *Run) Execute(ctx context.Context) error {
+func (r *Run) Execute(args ...interface{}) error {
 	log.Printf("%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "MacOS", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.exec(c)
 	}
 
-	return r.execute(ctx, f)
+	return r.execute(f)
 }
 
 func (r *Run) exec(c *config.Config) error {

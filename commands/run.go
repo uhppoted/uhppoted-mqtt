@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"flag"
@@ -34,10 +33,6 @@ type Run struct {
 	watchdogInterval    time.Duration
 }
 
-const (
-	SERVICE = `uhppoted-mqtt`
-)
-
 func (c *Run) Name() string {
 	return "run"
 }
@@ -62,7 +57,7 @@ func (c *Run) Help() {
 	fmt.Println()
 }
 
-func (r *Run) execute(ctx context.Context, f func(*config.Config) error) error {
+func (r *Run) execute(f func(*config.Config) error) error {
 	conf := config.NewConfig()
 	if err := conf.Load(r.configuration); err != nil {
 		log.Printf("WARN  Could not load configuration (%v)", err)

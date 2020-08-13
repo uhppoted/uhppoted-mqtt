@@ -1,15 +1,15 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	xpath "github.com/uhppoted/uhppoted-api/encoding/plist"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"syscall"
+
+	xpath "github.com/uhppoted/uhppoted-api/encoding/plist"
 )
 
 var UNDAEMONIZE = Undaemonize{
@@ -50,7 +50,7 @@ func (u *Undaemonize) Help() {
 	fmt.Println()
 }
 
-func (u *Undaemonize) Execute(ctx context.Context) error {
+func (u *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
 	executable, err := u.launchd()

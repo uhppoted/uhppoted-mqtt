@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
 )
@@ -38,7 +37,7 @@ func (d *Dump) Help() {
 	fmt.Println()
 }
 
-func (d *Dump) Execute(ctx context.Context) error {
+func (d *Dump) Execute(args ...interface{}) error {
 	if err := dump(d.config); err != nil {
 		return err
 	}
