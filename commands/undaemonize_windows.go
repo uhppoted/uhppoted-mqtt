@@ -25,38 +25,40 @@ type Undaemonize struct {
 	config  string
 }
 
-func (u *Undaemonize) Name() string {
+func (cmd *Undaemonize) Name() string {
 	return "undaemonize"
 }
 
-func (u *Undaemonize) FlagSet() *flag.FlagSet {
+func (cmd *Undaemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("undaemonize", flag.ExitOnError)
 }
 
-func (u *Undaemonize) Description() string {
+func (cmd *Undaemonize) Description() string {
 	return fmt.Sprintf("Deregisters %s from the list of Windows services", SERVICE)
 }
 
-func (u *Undaemonize) Usage() string {
+func (cmd *Undaemonize) Usage() string {
 	return ""
 }
 
-func (u *Undaemonize) Help() {
+func (cmd *Undaemonize) Help() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s undaemonize\n", SERVICE)
 	fmt.Println()
 	fmt.Printf("    Deregisters %s from the list of Windows services", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (u *Undaemonize) Execute(args ...interface{}) error {
+func (cmd *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
-	if err := u.unregister(); err != nil {
+	if err := cmd.unregister(); err != nil {
 		return err
 	}
 
-	if err := u.clean(); err != nil {
+	if err := cmd.clean(); err != nil {
 		return err
 	}
 
@@ -66,14 +68,14 @@ func (u *Undaemonize) Execute(args ...interface{}) error {
                working files in %s,
                and log files in %s
                were not removed and should be deleted manually
-`, filepath.Dir(u.config), u.workdir, u.logdir)
+`, filepath.Dir(cmd.config), cmd.workdir, cmd.logdir)
 	fmt.Println()
 
 	return nil
 }
 
-func (u *Undaemonize) unregister() error {
-	fmt.Println("   ... unregistering %s as a Windows service", u.name)
+func (cmd *Undaemonize) unregister() error {
+	fmt.Println("   ... unregistering %s as a Windows service", cmd.name)
 	m, err := mgr.Connect()
 	if err != nil {
 		return err
@@ -81,43 +83,43 @@ func (u *Undaemonize) unregister() error {
 
 	defer m.Disconnect()
 
-	s, err := m.OpenService(u.name)
+	s, err := m.OpenService(cmd.name)
 	if err != nil {
-		return fmt.Errorf("service %s is not installed", u.name)
+		return fmt.Errorf("service %s is not installed", cmd.name)
 	}
 
 	defer s.Close()
 
-	fmt.Printf("   ... stopping %s service\n", u.name)
+	fmt.Printf("   ... stopping %s service\n", cmd.name)
 	status, err := s.Control(svc.Stop)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("   ... %s stopped: %v\n", u.name, status)
+	fmt.Printf("   ... %s stopped: %v\n", cmd.name, status)
 
-	fmt.Printf("   ... deleting %s service\n", u.name)
+	fmt.Printf("   ... deleting %s service\n", cmd.name)
 	err = s.Delete()
 	if err != nil {
 		return err
 	}
 
-	err = eventlog.Remove(u.name)
+	err = eventlog.Remove(cmd.name)
 	if err != nil {
 		return fmt.Errorf("RemoveEventLogSource() failed: %s", err)
 	}
 
-	fmt.Printf("   ... %s unregistered from the list of Windows services\n", u.name)
+	fmt.Printf("   ... %s unregistered from the list of Windows services\n", cmd.name)
 	return nil
 }
 
-func (u *Undaemonize) clean() error {
+func (cmd *Undaemonize) clean() error {
 	files := []string{
-		filepath.Join(u.workdir, fmt.Sprintf("%s.pid", SERVICE)),
+		filepath.Join(cmd.workdir, fmt.Sprintf("%s.pid", SERVICE)),
 	}
 
 	directories := []string{
-		u.logdir,
-		u.workdir,
+		cmd.logdir,
+		cmd.workdir,
 	}
 
 	for _, f := range files {

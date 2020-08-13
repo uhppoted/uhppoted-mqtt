@@ -13,32 +13,34 @@ type Dump struct {
 	config string
 }
 
-func (d *Dump) Name() string {
+func (cmd *Dump) Name() string {
 	return "config"
 }
 
-func (d *Dump) FlagSet() *flag.FlagSet {
+func (cmd *Dump) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("config", flag.ExitOnError)
 }
 
-func (d *Dump) Description() string {
+func (cmd *Dump) Description() string {
 	return fmt.Sprintf("Displays all the configuration information for %s", SERVICE)
 }
 
-func (d *Dump) Usage() string {
+func (cmd *Dump) Usage() string {
 	return ""
 }
 
-func (d *Dump) Help() {
+func (cmd *Dump) Help() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s config\n", SERVICE)
 	fmt.Println()
 	fmt.Printf("    Displays all the configuration information for %s\n", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (d *Dump) Execute(args ...interface{}) error {
-	if err := dump(d.config); err != nil {
+func (cmd *Dump) Execute(args ...interface{}) error {
+	if err := dump(cmd.config); err != nil {
 		return err
 	}
 

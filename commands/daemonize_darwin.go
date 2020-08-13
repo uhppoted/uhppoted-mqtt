@@ -53,32 +53,34 @@ type Daemonize struct {
 	hotp    string
 }
 
-func (d *Daemonize) Name() string {
+func (cmd *Daemonize) Name() string {
 	return "daemonize"
 }
 
-func (d *Daemonize) FlagSet() *flag.FlagSet {
+func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("daemonize", flag.ExitOnError)
 }
 
-func (d *Daemonize) Description() string {
+func (cmd *Daemonize) Description() string {
 	return fmt.Sprintf("Daemonizes %s as a service/daemon", SERVICE)
 }
 
-func (d *Daemonize) Usage() string {
+func (cmd *Daemonize) Usage() string {
 	return ""
 }
 
-func (d *Daemonize) Help() {
+func (cmd *Daemonize) Help() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s daemonize\n", SERVICE)
 	fmt.Println()
 	fmt.Printf("    Daemonizes %s as a service/daemon that runs on startup\n", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (d *Daemonize) Execute(args ...interface{}) error {
-	dir := filepath.Dir(d.config)
+func (cmd *Daemonize) Execute(args ...interface{}) error {
+	dir := filepath.Dir(cmd.config)
 	r := bufio.NewReader(os.Stdin)
 
 	fmt.Println()
@@ -94,10 +96,10 @@ func (d *Daemonize) Execute(args ...interface{}) error {
 		return nil
 	}
 
-	return d.execute()
+	return cmd.execute()
 }
 
-func (d *Daemonize) execute() error {
+func (cmd *Daemonize) execute() error {
 	fmt.Println()
 	fmt.Println("   ... daemonizing")
 
@@ -109,32 +111,32 @@ func (d *Daemonize) execute() error {
 	i := info{
 		Label:      fmt.Sprintf("com.github.uhppoted.%s", SERVICE),
 		Executable: executable,
-		WorkDir:    d.workdir,
-		StdLogFile: filepath.Join(d.logdir, fmt.Sprintf("%s.log", SERVICE)),
-		ErrLogFile: filepath.Join(d.logdir, fmt.Sprintf("%s.err", SERVICE)),
+		WorkDir:    cmd.workdir,
+		StdLogFile: filepath.Join(cmd.logdir, fmt.Sprintf("%s.log", SERVICE)),
+		ErrLogFile: filepath.Join(cmd.logdir, fmt.Sprintf("%s.err", SERVICE)),
 	}
 
-	if err := d.launchd(&i); err != nil {
+	if err := cmd.launchd(&i); err != nil {
 		return err
 	}
 
-	if err := d.mkdirs(); err != nil {
+	if err := cmd.mkdirs(); err != nil {
 		return err
 	}
 
-	if err := d.logrotate(&i); err != nil {
+	if err := cmd.logrotate(&i); err != nil {
 		return err
 	}
 
-	if err := d.firewall(&i); err != nil {
+	if err := cmd.firewall(&i); err != nil {
 		return err
 	}
 
-	if err := d.conf(&i); err != nil {
+	if err := cmd.conf(&i); err != nil {
 		return err
 	}
 
-	if err := d.genkeys(&i); err != nil {
+	if err := cmd.genkeys(&i); err != nil {
 		return err
 	}
 
@@ -145,16 +147,16 @@ func (d *Daemonize) execute() error {
 	fmt.Printf("   sudo launchctl load /Library/LaunchDaemons/com.github.uhppoted.%s.plist\n", SERVICE)
 	fmt.Println()
 	fmt.Println("   Please replace the default RSA keys for event and system messages:")
-	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "event.pub"))
-	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "system.pub"))
+	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "event.pub"))
+	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "system.pub"))
 	fmt.Println()
 	fmt.Println()
 
 	return nil
 }
 
-func (d *Daemonize) launchd(i *info) error {
-	path := filepath.Join("/Library/LaunchDaemons", d.plist)
+func (cmd *Daemonize) launchd(i *info) error {
+	path := filepath.Join("/Library/LaunchDaemons", cmd.plist)
 	_, err := os.Stat(path)
 	if err != nil && !os.IsNotExist(err) {
 		return err
@@ -172,7 +174,7 @@ func (d *Daemonize) launchd(i *info) error {
 	}
 
 	if !os.IsNotExist(err) {
-		current, err := d.parse(path)
+		current, err := cmd.parse(path)
 		if err != nil {
 			return err
 		}
@@ -185,10 +187,10 @@ func (d *Daemonize) launchd(i *info) error {
 		pl.StandardErrorPath = current.StandardErrorPath
 	}
 
-	return d.daemonize(path, pl)
+	return cmd.daemonize(path, pl)
 }
 
-func (d *Daemonize) parse(path string) (*plist, error) {
+func (cmd *Daemonize) parse(path string) (*plist, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -206,7 +208,7 @@ func (d *Daemonize) parse(path string) (*plist, error) {
 	return &p, nil
 }
 
-func (d *Daemonize) daemonize(path string, p interface{}) error {
+func (cmd *Daemonize) daemonize(path string, p interface{}) error {
 	fmt.Printf("   ... creating '%s'\n", path)
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
@@ -223,10 +225,10 @@ func (d *Daemonize) daemonize(path string, p interface{}) error {
 	return nil
 }
 
-func (d *Daemonize) mkdirs() error {
+func (cmd *Daemonize) mkdirs() error {
 	directories := []string{
-		d.workdir,
-		d.logdir,
+		cmd.workdir,
+		cmd.logdir,
 	}
 
 	for _, dir := range directories {
@@ -240,8 +242,8 @@ func (d *Daemonize) mkdirs() error {
 	return nil
 }
 
-func (d *Daemonize) conf(i *info) error {
-	path := d.config
+func (cmd *Daemonize) conf(i *info) error {
+	path := cmd.config
 
 	fmt.Printf("   ... creating '%s'\n", path)
 
@@ -280,8 +282,8 @@ func (d *Daemonize) conf(i *info) error {
 	return cfg.Write(f)
 }
 
-func (c *Daemonize) logrotate(i *info) error {
-	pid := filepath.Join(c.workdir, fmt.Sprintf("%s.pid", SERVICE))
+func (cmd *Daemonize) logrotate(i *info) error {
+	pid := filepath.Join(cmd.workdir, fmt.Sprintf("%s.pid", SERVICE))
 	logfiles := []struct {
 		LogFile string
 		PID     string
@@ -311,7 +313,7 @@ func (c *Daemonize) logrotate(i *info) error {
 	return t.Execute(f, logfiles)
 }
 
-func (c *Daemonize) firewall(i *info) error {
+func (cmd *Daemonize) firewall(i *info) error {
 	fmt.Println()
 	fmt.Println("   ***")
 	fmt.Printf("   *** WARNING: adding '%s' to the application firewall and unblocking incoming connections\n", SERVICE)
@@ -320,37 +322,37 @@ func (c *Daemonize) firewall(i *info) error {
 
 	path := i.Executable
 
-	cmd := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
-	out, err := cmd.CombinedOutput()
+	command := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
+	out, err := command.CombinedOutput()
 	fmt.Printf("   > %s", out)
 	if err != nil {
 		return fmt.Errorf("Failed to retrieve application firewall global state (%v)", err)
 	}
 
 	if strings.Contains(string(out), "State = 1") {
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "off")
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "off")
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to disable the application firewall (%v)", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--add", path)
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--add", path)
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to add 'uhppoted-rest' to the application firewall (%v)", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--unblockapp", path)
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--unblockapp", path)
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to unblock 'uhppoted-rest' on the application firewall (%v)", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to re-enable the application firewall (%v)", err)
@@ -362,6 +364,6 @@ func (c *Daemonize) firewall(i *info) error {
 	return nil
 }
 
-func (d *Daemonize) genkeys(i *info) error {
-	return genkeys(filepath.Dir(d.config), d.hotp)
+func (cmd *Daemonize) genkeys(i *info) error {
+	return genkeys(filepath.Dir(cmd.config), cmd.hotp)
 }

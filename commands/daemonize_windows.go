@@ -41,32 +41,34 @@ type Daemonize struct {
 	hotp        string
 }
 
-func (d *Daemonize) Name() string {
+func (cmd *Daemonize) Name() string {
 	return "daemonize"
 }
 
-func (d *Daemonize) FlagSet() *flag.FlagSet {
+func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("daemonize", flag.ExitOnError)
 }
 
-func (d *Daemonize) Description() string {
+func (cmd *Daemonize) Description() string {
 	return fmt.Sprintf("Registers %s as a Windows service", SERVICE)
 }
 
-func (d *Daemonize) Usage() string {
+func (cmd *Daemonize) Usage() string {
 	return ""
 }
 
-func (d *Daemonize) Help() {
+func (cmd *Daemonize) Help() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s daemonize\n", SERVICE)
 	fmt.Println()
 	fmt.Printf("    Registers %s as a Windows service\n", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (d *Daemonize) Execute(args ...interface{}) error {
-	dir := filepath.Dir(d.config)
+func (cmd *Daemonize) Execute(args ...interface{}) error {
+	dir := filepath.Dir(cmd.config)
 	r := bufio.NewReader(os.Stdin)
 
 	fmt.Println()
@@ -82,10 +84,10 @@ func (d *Daemonize) Execute(args ...interface{}) error {
 		return nil
 	}
 
-	return d.execute()
+	return cmd.execute()
 }
 
-func (d *Daemonize) execute() error {
+func (cmd *Daemonize) execute() error {
 	fmt.Println()
 	fmt.Println("   ... daemonizing")
 
@@ -98,25 +100,25 @@ func (d *Daemonize) execute() error {
 
 	i := info{
 		Executable:       executable,
-		WorkDir:          d.workdir,
-		LogDir:           d.logdir,
+		WorkDir:          cmd.workdir,
+		LogDir:           cmd.logdir,
 		BindAddress:      &bind,
 		BroadcastAddress: &broadcast,
 	}
 
-	if err := d.register(&i); err != nil {
+	if err := cmd.register(&i); err != nil {
 		return err
 	}
 
-	if err := d.mkdirs(&i); err != nil {
+	if err := cmd.mkdirs(&i); err != nil {
 		return err
 	}
 
-	if err := d.conf(&i); err != nil {
+	if err := cmd.conf(&i); err != nil {
 		return err
 	}
 
-	if err := d.genkeys(&i); err != nil {
+	if err := cmd.genkeys(&i); err != nil {
 		return err
 	}
 
@@ -129,17 +131,17 @@ func (d *Daemonize) execute() error {
 	fmt.Printf("     > sc query %s\n", SERVICE)
 	fmt.Println()
 	fmt.Println("   Please replace the default RSA keys for event and system messages:")
-	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "event.pub"))
-	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "system.pub"))
+	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "event.pub"))
+	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "system.pub"))
 	fmt.Println()
 
 	return nil
 }
 
-func (d *Daemonize) register(i *info) error {
+func (cmd *Daemonize) register(i *info) error {
 	config := mgr.Config{
-		DisplayName:      d.name,
-		Description:      d.description,
+		DisplayName:      cmd.name,
+		Description:      cmd.description,
 		StartType:        mgr.StartAutomatic,
 		DelayedAutoStart: true,
 	}
@@ -151,20 +153,20 @@ func (d *Daemonize) register(i *info) error {
 
 	defer m.Disconnect()
 
-	s, err := m.OpenService(d.name)
+	s, err := m.OpenService(cmd.name)
 	if err == nil {
 		s.Close()
-		return fmt.Errorf("service %s already exists", d.Name)
+		return fmt.Errorf("service %s already exists", cmd.Name)
 	}
 
-	s, err = m.CreateService(d.name, i.Executable, config, "is", "auto-started")
+	s, err = m.CreateService(cmd.name, i.Executable, config, "is", "auto-started")
 	if err != nil {
 		return err
 	}
 
 	defer s.Close()
 
-	err = eventlog.InstallAsEventCreate(d.name, eventlog.Error|eventlog.Warning|eventlog.Info)
+	err = eventlog.InstallAsEventCreate(cmd.name, eventlog.Error|eventlog.Warning|eventlog.Info)
 	if err != nil {
 		s.Delete()
 		return fmt.Errorf("InstallAsEventCreate() failed: %v", err)
@@ -173,7 +175,7 @@ func (d *Daemonize) register(i *info) error {
 	return nil
 }
 
-func (d *Daemonize) mkdirs(i *info) error {
+func (cmd *Daemonize) mkdirs(i *info) error {
 	directories := []string{
 		i.WorkDir,
 		i.LogDir,
@@ -194,8 +196,8 @@ func (d *Daemonize) mkdirs(i *info) error {
 	return nil
 }
 
-func (d *Daemonize) conf(i *info) error {
-	path := d.config
+func (cmd *Daemonize) conf(i *info) error {
+	path := cmd.config
 
 	fmt.Printf("   ... creating '%s'\n", path)
 
@@ -249,6 +251,6 @@ func (d *Daemonize) conf(i *info) error {
 	return nil
 }
 
-func (d *Daemonize) genkeys(i *info) error {
-	return genkeys(filepath.Dir(d.config), d.hotp)
+func (cmd *Daemonize) genkeys(i *info) error {
+	return genkeys(filepath.Dir(cmd.config), cmd.hotp)
 }

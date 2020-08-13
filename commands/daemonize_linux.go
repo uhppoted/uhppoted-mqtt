@@ -77,26 +77,26 @@ type Daemonize struct {
 	hotp      string
 }
 
-func (d *Daemonize) Name() string {
+func (cmd *Daemonize) Name() string {
 	return "daemonize"
 }
 
-func (d *Daemonize) FlagSet() *flag.FlagSet {
+func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 	flagset := flag.NewFlagSet("daemonize", flag.ExitOnError)
-	flagset.Var(&d.usergroup, "user", "user:group for uhppoted service")
+	flagset.Var(&cmd.usergroup, "user", "user:group for uhppoted service")
 
 	return flagset
 }
 
-func (d *Daemonize) Description() string {
+func (cmd *Daemonize) Description() string {
 	return fmt.Sprintf("Daemonizes %s as a service/daemon", SERVICE)
 }
 
-func (d *Daemonize) Usage() string {
+func (cmd *Daemonize) Usage() string {
 	return "daemonize [--user <user:group>]"
 }
 
-func (d *Daemonize) Help() {
+func (cmd *Daemonize) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: uhppoted daemonize [--user <user:group>]")
 	fmt.Println()
@@ -104,10 +104,12 @@ func (d *Daemonize) Help() {
 	fmt.Println("      Defaults to the user:group uhppoted:uhppoted unless otherwise specified")
 	fmt.Println("      with the --user option")
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (d *Daemonize) Execute(args ...interface{}) error {
-	dir := filepath.Dir(d.config)
+func (cmd *Daemonize) Execute(args ...interface{}) error {
+	dir := filepath.Dir(cmd.config)
 	r := bufio.NewReader(os.Stdin)
 
 	fmt.Println()
@@ -123,10 +125,10 @@ func (d *Daemonize) Execute(args ...interface{}) error {
 		return nil
 	}
 
-	return d.execute()
+	return cmd.execute()
 }
 
-func (d *Daemonize) execute() error {
+func (cmd *Daemonize) execute() error {
 	fmt.Println()
 	fmt.Println("   ... daemonizing")
 
@@ -135,7 +137,7 @@ func (d *Daemonize) execute() error {
 		return err
 	}
 
-	uid, gid, err := getUserGroup(string(d.usergroup))
+	uid, gid, err := getUserGroup(string(cmd.usergroup))
 	if err != nil {
 		return err
 	}
@@ -154,23 +156,23 @@ func (d *Daemonize) execute() error {
 		LogFiles:      []string{fmt.Sprintf("/var/log/uhppoted/%s.log", SERVICE)},
 	}
 
-	if err := d.systemd(&i); err != nil {
+	if err := cmd.systemd(&i); err != nil {
 		return err
 	}
 
-	if err := d.mkdirs(&i); err != nil {
+	if err := cmd.mkdirs(&i); err != nil {
 		return err
 	}
 
-	if err := d.logrotate(&i); err != nil {
+	if err := cmd.logrotate(&i); err != nil {
 		return err
 	}
 
-	if err := d.conf(&i); err != nil {
+	if err := cmd.conf(&i); err != nil {
 		return err
 	}
 
-	if err := d.genkeys(&i); err != nil {
+	if err := cmd.genkeys(&i); err != nil {
 		return err
 	}
 
@@ -186,14 +188,14 @@ func (d *Daemonize) execute() error {
 	fmt.Printf("     > sudo ufw allow from %s to any port 60000 proto udp\n", bind.IP)
 	fmt.Println()
 	fmt.Println("   Please replace the default RSA keys for event and system messages:")
-	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "event.pub"))
-	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(d.config), "mqtt", "rsa", "encryption", "system.pub"))
+	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "event.pub"))
+	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "system.pub"))
 	fmt.Println()
 
 	return nil
 }
 
-func (d *Daemonize) systemd(i *info) error {
+func (cmd *Daemonize) systemd(i *info) error {
 	service := fmt.Sprintf("%s.service", SERVICE)
 	path := filepath.Join("/etc/systemd/system", service)
 	t := template.Must(template.New(service).Parse(serviceTemplate))
@@ -209,7 +211,7 @@ func (d *Daemonize) systemd(i *info) error {
 	return t.Execute(f, i)
 }
 
-func (d *Daemonize) mkdirs(i *info) error {
+func (cmd *Daemonize) mkdirs(i *info) error {
 	directories := []string{
 		"/var/uhppoted",
 		"/var/log/uhppoted",
@@ -232,7 +234,7 @@ func (d *Daemonize) mkdirs(i *info) error {
 	return nil
 }
 
-func (d *Daemonize) logrotate(i *info) error {
+func (cmd *Daemonize) logrotate(i *info) error {
 	path := filepath.Join("/etc/logrotate.d", SERVICE)
 	t := template.Must(template.New(fmt.Sprintf("%s.logrotate", SERVICE)).Parse(logRotateTemplate))
 
@@ -247,8 +249,8 @@ func (d *Daemonize) logrotate(i *info) error {
 	return t.Execute(f, i)
 }
 
-func (d *Daemonize) conf(i *info) error {
-	path := d.config
+func (cmd *Daemonize) conf(i *info) error {
+	path := cmd.config
 
 	fmt.Printf("   ... creating '%s'\n", path)
 
@@ -287,8 +289,8 @@ func (d *Daemonize) conf(i *info) error {
 	return cfg.Write(f)
 }
 
-func (d *Daemonize) genkeys(i *info) error {
-	return genkeys(filepath.Dir(d.config), d.hotp)
+func (cmd *Daemonize) genkeys(i *info) error {
+	return genkeys(filepath.Dir(cmd.config), cmd.hotp)
 }
 
 // usergroup::flag.Value

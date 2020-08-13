@@ -73,7 +73,10 @@ help: build
 	./bin/uhppoted-mqtt help
 	./bin/uhppoted-mqtt help commands
 	./bin/uhppoted-mqtt help version
-	./bin/uhppoted-mqtt help help
+	./bin/uhppoted-mqtt help run
+	./bin/uhppoted-mqtt help daemonize
+	./bin/uhppoted-mqtt help undaemonize
+	./bin/uhppoted-mqtt help config
 
 daemonize: build
 	sudo ./bin/uhppoted-mqtt daemonize

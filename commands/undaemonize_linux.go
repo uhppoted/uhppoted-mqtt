@@ -22,42 +22,44 @@ type Undaemonize struct {
 	config  string
 }
 
-func (u *Undaemonize) Name() string {
+func (cmd *Undaemonize) Name() string {
 	return "undaemonize"
 }
 
-func (u *Undaemonize) FlagSet() *flag.FlagSet {
+func (cmd *Undaemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("undaemonize", flag.ExitOnError)
 }
 
-func (u *Undaemonize) Description() string {
+func (cmd *Undaemonize) Description() string {
 	return fmt.Sprintf("Deregisters %s as a service/daemon", SERVICE)
 }
 
-func (u *Undaemonize) Usage() string {
+func (cmd *Undaemonize) Usage() string {
 	return ""
 }
 
-func (u *Undaemonize) Help() {
+func (cmd *Undaemonize) Help() {
 	fmt.Println()
 	fmt.Printf("  Usage: %s undaemonize\n", SERVICE)
 	fmt.Println()
 	fmt.Printf("    Deregisters %s from launchd as a service/daemon", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (u *Undaemonize) Execute(args ...interface{}) error {
+func (cmd *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
-	if err := u.systemd(); err != nil {
+	if err := cmd.systemd(); err != nil {
 		return err
 	}
 
-	if err := u.logrotate(); err != nil {
+	if err := cmd.logrotate(); err != nil {
 		return err
 	}
 
-	if err := u.clean(); err != nil {
+	if err := cmd.clean(); err != nil {
 		return err
 	}
 
@@ -67,13 +69,13 @@ func (u *Undaemonize) Execute(args ...interface{}) error {
                working files in %s,
                and log files in %s
                were not removed and should be deleted manually
-`, filepath.Dir(u.config), u.workdir, u.logdir)
+`, filepath.Dir(cmd.config), cmd.workdir, cmd.logdir)
 	fmt.Println()
 
 	return nil
 }
 
-func (u *Undaemonize) systemd() error {
+func (cmd *Undaemonize) systemd() error {
 	path := filepath.Join("/etc/systemd/system", fmt.Sprintf("%s.service", SERVICE))
 	_, err := os.Stat(path)
 	if err != nil && !os.IsNotExist(err) {
@@ -86,8 +88,8 @@ func (u *Undaemonize) systemd() error {
 	}
 
 	fmt.Printf("   ... stopping %s service\n", SERVICE)
-	cmd := exec.Command("systemctl", "stop", SERVICE)
-	out, err := cmd.CombinedOutput()
+	command := exec.Command("systemctl", "stop", SERVICE)
+	out, err := command.CombinedOutput()
 	if strings.TrimSpace(string(out)) != "" {
 		fmt.Printf("   > %s\n", out)
 	}
@@ -104,7 +106,7 @@ func (u *Undaemonize) systemd() error {
 	return nil
 }
 
-func (d *Undaemonize) logrotate() error {
+func (cmd *Undaemonize) logrotate() error {
 	path := filepath.Join("/etc/logrotate.d", SERVICE)
 
 	fmt.Printf("   ... removing '%s'\n", path)
@@ -117,14 +119,14 @@ func (d *Undaemonize) logrotate() error {
 	return nil
 }
 
-func (u *Undaemonize) clean() error {
+func (cmd *Undaemonize) clean() error {
 	files := []string{
-		filepath.Join(u.workdir, fmt.Sprintf("%s.pid", SERVICE)),
+		filepath.Join(cmd.workdir, fmt.Sprintf("%s.pid", SERVICE)),
 	}
 
 	directories := []string{
-		u.logdir,
-		u.workdir,
+		cmd.logdir,
+		cmd.workdir,
 	}
 
 	for _, f := range files {

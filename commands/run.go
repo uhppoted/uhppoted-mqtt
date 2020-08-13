@@ -3,7 +3,6 @@ package commands
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -33,65 +32,61 @@ type Run struct {
 	watchdogInterval    time.Duration
 }
 
-func (c *Run) Name() string {
+func (cmd *Run) Name() string {
 	return "run"
 }
 
-func (c *Run) Description() string {
+func (cmd *Run) Description() string {
 	return fmt.Sprintf("Runs the %s daemon/service until terminated by the system service manager", SERVICE)
 }
 
-func (c *Run) Usage() string {
-	return fmt.Sprintf("%s [--debug] [--config <file>] [--logfile <file>] [--logfilesize <bytes>] [--pid <file>]", SERVICE)
+func (cmd *Run) Usage() string {
+	return fmt.Sprintf("%s [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]", SERVICE)
 }
 
-func (c *Run) Help() {
+func (cmd *Run) Help() {
 	fmt.Println()
-	fmt.Printf("  Usage: %s <options>", SERVICE)
+	fmt.Printf("  Usage: %s  [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]\n", SERVICE)
 	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println()
-	c.FlagSet().VisitAll(func(f *flag.Flag) {
-		fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
-	})
-	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (r *Run) execute(f func(*config.Config) error) error {
+func (cmd *Run) execute(f func(*config.Config) error) error {
 	conf := config.NewConfig()
-	if err := conf.Load(r.configuration); err != nil {
+	if err := conf.Load(cmd.configuration); err != nil {
 		log.Printf("WARN  Could not load configuration (%v)", err)
 	}
 
-	if err := os.MkdirAll(r.dir, os.ModeDir|os.ModePerm); err != nil {
-		return fmt.Errorf("Unable to create working directory '%v': %v", r.dir, err)
+	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
+		return fmt.Errorf("Unable to create working directory '%v': %v", cmd.dir, err)
 	}
 
 	pid := fmt.Sprintf("%d\n", os.Getpid())
 
-	_, err := os.Stat(r.pidFile)
+	_, err := os.Stat(cmd.pidFile)
 	if err == nil {
-		return fmt.Errorf("PID lockfile '%v' already in use", r.pidFile)
+		return fmt.Errorf("PID lockfile '%v' already in use", cmd.pidFile)
 	} else if !os.IsNotExist(err) {
-		return fmt.Errorf("Error checking PID lockfile '%v' (%v)", r.pidFile, err)
+		return fmt.Errorf("Error checking PID lockfile '%v' (%v)", cmd.pidFile, err)
 	}
 
-	if err := ioutil.WriteFile(r.pidFile, []byte(pid), 0644); err != nil {
+	if err := ioutil.WriteFile(cmd.pidFile, []byte(pid), 0644); err != nil {
 		return fmt.Errorf("Unable to create PID lockfile: %v", err)
 	}
 
 	defer func() {
-		os.Remove(r.pidFile)
+		os.Remove(cmd.pidFile)
 	}()
 
 	return f(conf)
 }
 
-func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal) {
+func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal) {
 	logger.Printf("START")
 
-	r.healthCheckInterval = c.HealthCheckInterval
-	r.watchdogInterval = c.WatchdogInterval
+	cmd.healthCheckInterval = c.HealthCheckInterval
+	cmd.watchdogInterval = c.WatchdogInterval
 
 	// ... initialise MQTT
 
@@ -100,7 +95,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 		BroadcastAddress: c.BroadcastAddress,
 		ListenAddress:    c.ListenAddress,
 		Devices:          make(map[uint32]*uhppote.Device),
-		Debug:            r.debug,
+		Debug:            cmd.debug,
 	}
 
 	for id, d := range c.Devices {
@@ -148,7 +143,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 		EventMap:       c.EventIDs,
 		AWS:            mqtt.AWS{},
 
-		Debug: r.debug,
+		Debug: cmd.debug,
 	}
 
 	if c.AWS.Credentials != "" {
@@ -221,7 +216,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal
 		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors))
 	}
 
-	err = r.listen(&u, &mqttd, devices, &healthcheck, logger, interrupt)
+	err = cmd.listen(&u, &mqttd, devices, &healthcheck, logger, interrupt)
 	if err != nil {
 		logger.Printf("ERROR %v", err)
 	}

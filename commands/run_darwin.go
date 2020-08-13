@@ -24,7 +24,7 @@ var RUN = Run{
 }
 
 func (r *Run) FlagSet() *flag.FlagSet {
-	flagset := flag.NewFlagSet("", flag.ExitOnError)
+	flagset := flag.NewFlagSet("run", flag.ExitOnError)
 
 	flagset.StringVar(&r.configuration, "config", r.configuration, "Sets the configuration file path")
 	flagset.StringVar(&r.dir, "dir", r.dir, "Work directory")
