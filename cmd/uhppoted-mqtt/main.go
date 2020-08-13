@@ -9,21 +9,21 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/commands"
 )
 
-var cli = []uhppoted.CommandV{
+var cli = []uhppoted.Command{
 	&commands.RUN,
 	&commands.DAEMONIZE,
 	&commands.UNDAEMONIZE,
 	&commands.DUMP,
-	&uhppoted.VersionV{
+	&uhppoted.Version{
 		Application: commands.SERVICE,
 		Version:     uhppote.VERSION,
 	},
 }
 
-var help = uhppoted.NewHelpV(commands.SERVICE, cli, &commands.RUN)
+var help = uhppoted.NewHelp(commands.SERVICE, cli, &commands.RUN)
 
 func main() {
-	cmd, err := uhppoted.ParseV(cli, &commands.RUN, help)
+	cmd, err := uhppoted.Parse(cli, &commands.RUN, help)
 	if err != nil {
 		fmt.Printf("\nError parsing command line: %v\n\n", err)
 		os.Exit(1)
