@@ -55,6 +55,15 @@ release: build-all
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
+bump:
+	go get -u github.com/uhppoted/uhppote-core
+	go get -u github.com/uhppoted/uhppoted-api
+	go get -u github.com/aws/aws-sdk-go
+	go get -u github.com/eclipse/paho.mqtt.golang
+	go get -u github.com/gorilla/websocket
+	go get -u golang.org/x/net
+	go get -u golang.org/x/sys
+
 debug: build
 	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
