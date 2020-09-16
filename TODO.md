@@ -38,3 +38,4 @@
 5.  Update file watchers to fsnotify when that is merged into the standard library (1.4 ?)
     - https://github.com/golang/go/issues/4068
 6. [Teserakt E2E encryption](https://teserakt.io)
+7. [Fernet encryption](https://asecuritysite.com/encryption/fernet)
