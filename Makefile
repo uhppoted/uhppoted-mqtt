@@ -250,7 +250,7 @@ put-card:
                                                       "card": { "card-number": $(CARD), \
                                                                 "start-date":  "2020-01-01", \
                                                                 "end-date": "2020-12-31", \
-                                                                "doors": [true,false,false,true] } \
+                                                                "doors": { "1":true, "2":false, "3": false, "4": true } } \
                                                     }}}'
 
 delete-card:

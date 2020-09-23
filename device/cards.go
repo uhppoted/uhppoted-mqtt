@@ -92,7 +92,7 @@ func (d *Device) GetCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 func (d *Device) PutCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
-		Card     *types.Card        `json:"card"`
+		Card     *types.CardX       `json:"card"`
 	}{}
 
 	if response, err := unmarshal(request, &body); err != nil {
