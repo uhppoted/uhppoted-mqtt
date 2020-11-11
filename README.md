@@ -22,6 +22,8 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
+| v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
 | v0.6.3    | Implements ACL commands                                                                   |
 | v0.6.2    | Maintenance release to update module dependencies                                         |
 | v0.6.1    | Maintenance release to update module dependencies                                         |
