@@ -39,3 +39,4 @@
     - https://github.com/golang/go/issues/4068
 6. [Teserakt E2E encryption](https://teserakt.io)
 7. [Fernet encryption](https://asecuritysite.com/encryption/fernet)
+8. [IoT standards](https://iot.stackexchange.com/questions/5363/mqtt-json-format-for-process-automation-industry)
