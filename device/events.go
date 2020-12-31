@@ -13,6 +13,41 @@ import (
 type startdate time.Time
 type enddate time.Time
 
+func (d *Device) RecordSpecialEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID *uhppoted.DeviceID `json:"device-id"`
+		Enabled  *bool              `json:"enabled"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	}
+
+	if body.Enabled == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing 'enabled'", nil), fmt.Errorf("Invalid/missing 'enabled'")
+	}
+
+	rq := uhppoted.RecordSpecialEventsRequest{
+		DeviceID: *body.DeviceID,
+		Enable:   *body.Enabled,
+	}
+
+	response, err := impl.RecordSpecialEvents(rq)
+	if err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not update 'record special events' flag for %d", *body.DeviceID), err), err
+	}
+
+	if response == nil {
+		return nil, nil
+	}
+
+	return response, nil
+}
+
 func (d *Device) GetEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`

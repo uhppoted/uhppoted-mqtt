@@ -261,6 +261,14 @@ delete-card:
                                                       "device-id":  $(SERIALNO), \
                                                       "card-number": $(CARD) }}}'
 
+record-special-events:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
+                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                        "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
+                                                        "device-id":  $(SERIALNO), \
+                                                        "enabled":    true }}}'
+
 get-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
