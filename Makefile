@@ -75,6 +75,9 @@ debug: build
                                                       "client-id":  "$(CLIENTID)", \
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  303986753 }}}'
+godoc:
+	godoc -http=:80	-index_interval=60s
+
 version: build
 	./bin/uhppoted-mqtt version
 

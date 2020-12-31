@@ -13,6 +13,9 @@ import (
 type startdate time.Time
 type enddate time.Time
 
+// Handler for the special-events MQTT message. Extracts the 'enabled' value from the request
+// and invokes the uhppoted-api.RecordSpecialEvents API function to update the controller
+// 'record special events' flag.
 func (d *Device) RecordSpecialEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
