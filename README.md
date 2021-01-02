@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.7    | Implements `special-events` message to enable/disable door events                         |
 | v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
 | v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
 | v0.6.3    | Implements ACL commands                                                                   |
@@ -34,8 +35,8 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 Executables for all the supported operating systems are packaged in the [releases](https://github.com/uhppoted/uhppoted-rest/releases):
 
-- [tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.3/uhppoted-mqttd_v0.6.3.tar.gz)
-- [zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.3/uhppoted-mqttd_v0.6.3.zip)
+- [tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.7/uhppoted-mqttd_v0.6.7.tar.gz)
+- [zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.7/uhppoted-mqttd_v0.6.7.zip)
 
 The above archives contain the executables for all the operating systems - OS specific tarballs with all the _uhppoted_ components can be found in [uhpppoted](https://github.com/uhppoted/uhppoted/releases) releases.
 

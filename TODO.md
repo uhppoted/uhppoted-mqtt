@@ -42,3 +42,4 @@
 6. [Teserakt E2E encryption](https://teserakt.io)
 7. [Fernet encryption](https://asecuritysite.com/encryption/fernet)
 8. [IoT standards](https://iot.stackexchange.com/questions/5363/mqtt-json-format-for-process-automation-industry)
+9. [StackExchange: MQTT security tests](https://iot.stackexchange.com/questions/452/what-simple-security-tests-can-i-perform-on-my-mqtt-network)
