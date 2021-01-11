@@ -2,8 +2,6 @@
 
 ## IN PROGRESS
 
-- [x] Implement record-special-events
-
 ## TODO
 
 - [ ] Replace values passed in Context with initialised struct

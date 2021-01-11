@@ -25,6 +25,10 @@ github.com/uhppoted/uhppote-core v0.6.6-0.20201231203202-5eebca2ae38a h1:/WU2f/r
 github.com/uhppoted/uhppote-core v0.6.6-0.20201231203202-5eebca2ae38a/go.mod h1:CDoDTRrLF5pPI2G6PxpJ+AXDg/yvMDE+XGsYA0WUY1g=
 github.com/uhppoted/uhppote-core v0.6.7 h1:XHEBOGUaVmRrE/eThaXL1uwCns+AQYodNkeuHkfUVNA=
 github.com/uhppoted/uhppote-core v0.6.7/go.mod h1:CDoDTRrLF5pPI2G6PxpJ+AXDg/yvMDE+XGsYA0WUY1g=
+github.com/uhppoted/uhppote-core v0.6.8-0.20210105235034-44f022257138 h1:nGFguBykVFIRRsqRweMtqJomh25FIJY7aaap/6nS1Tg=
+github.com/uhppoted/uhppote-core v0.6.8-0.20210105235034-44f022257138/go.mod h1:CDoDTRrLF5pPI2G6PxpJ+AXDg/yvMDE+XGsYA0WUY1g=
+github.com/uhppoted/uhppote-core v0.6.8 h1:mcFPc9HOav2hMM2yDtuvEaD5q++vidL1XWTMZZ83b7g=
+github.com/uhppoted/uhppote-core v0.6.8/go.mod h1:CDoDTRrLF5pPI2G6PxpJ+AXDg/yvMDE+XGsYA0WUY1g=
 github.com/uhppoted/uhppoted-api v0.6.4 h1:Unstyut/LvUNcM+O6c/UHp2QwVme7M1PCQMqBntOE7A=
 github.com/uhppoted/uhppoted-api v0.6.4/go.mod h1:0j8UJvF8dn/SiEfqbZ9ofAqpSKkb3Xqy+jjhFX5dwU0=
 github.com/uhppoted/uhppoted-api v0.6.5 h1:lF4XO1oD2tZxqNkEEfFlLNWpwpNOXlpZfFSjJxSdKs0=
@@ -35,6 +39,10 @@ github.com/uhppoted/uhppoted-api v0.6.6-0.20201231213247-e9ff9917e127 h1:0ZIysa9
 github.com/uhppoted/uhppoted-api v0.6.6-0.20201231213247-e9ff9917e127/go.mod h1:WeNFm57bvkaYpXyqTEC8Zo6QvO735FTzSIF3iAvlISs=
 github.com/uhppoted/uhppoted-api v0.6.7 h1:LhPVnCh/VIVOKDbKWfXMeXIUosE4WQMB4lR33SQS6bM=
 github.com/uhppoted/uhppoted-api v0.6.7/go.mod h1:9rPkwogpRh57/RoyTJOrmyngvYNersHBqsrBjx0hiho=
+github.com/uhppoted/uhppoted-api v0.6.8-0.20210111195553-5a0a73769b1f h1:UCPnrEYEhMmgKHiF/osLoOYHB0YravsaDeO2c1wOV/k=
+github.com/uhppoted/uhppoted-api v0.6.8-0.20210111195553-5a0a73769b1f/go.mod h1:9sKi+8TKKNJ8Utht9oDxyGr/wmsA20v0dciTLejehpc=
+github.com/uhppoted/uhppoted-api v0.6.8 h1:AwIuMJZRAlfE3KPl1UL5aVQxgk+6/dvMV0sgEx/ghwY=
+github.com/uhppoted/uhppoted-api v0.6.8/go.mod h1:K0LpMUKu/mExDu9d5ndUeF+5MIaqUmtre2jmE/iOzmU=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
