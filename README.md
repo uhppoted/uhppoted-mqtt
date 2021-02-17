@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
 | v0.6.8    | Maintenance release for version compatibility with `uhppote-core` `v0.6.8`                |
 | v0.6.7    | Implements `special-events` message to enable/disable door events                         |
 | v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
