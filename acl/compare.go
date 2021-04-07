@@ -78,8 +78,9 @@ func (a *ACL) Compare(impl *uhppoted.UHPPOTED, request []byte) (interface{}, err
 		a.info("acl:compare", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
 	}
 
-	current, err := api.GetACL(impl.Uhppote, a.Devices)
-	if err != nil {
+	current, errors := api.GetACL(impl.Uhppote, a.Devices)
+	if len(errors) > 0 {
+		err := fmt.Errorf("%v", errors)
 		return common.MakeError(StatusInternalServerError, "Error retrieving current ACL", err), err
 	}
 
