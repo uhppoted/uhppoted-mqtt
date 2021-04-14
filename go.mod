@@ -8,8 +8,8 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/stretchr/testify v1.5.1 // indirect
-	github.com/uhppoted/uhppote-core v0.6.11-0.20210409192926-b3e9a6a47275
-	github.com/uhppoted/uhppoted-api v0.6.11-0.20210409202212-3c99874b82d9
+	github.com/uhppoted/uhppote-core v0.6.11-0.20210414184825-1b6ea6243eaa
+	github.com/uhppoted/uhppoted-api v0.6.11-0.20210414190510-681cd5fb6f24
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
 	golang.org/x/sys v0.0.0-20210217105451-b926d437f341
 )
