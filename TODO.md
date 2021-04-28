@@ -1,6 +1,8 @@
-## v0.6.x
+## v0.6.12
 
 ## IN PROGRESS
+
+- [x] Add handling for `nil` events in response to `get-status`
 
 ## TODO
 
