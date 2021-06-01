@@ -34,7 +34,7 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 		return common.MakeError(StatusBadRequest, "Missing/invalid end date", nil), fmt.Errorf("Missing/invalid end date")
 	}
 
-	err := api.Grant(impl.Uhppote, a.Devices, *body.CardNumber, *body.From, *body.To, body.Doors)
+	err := api.Grant(impl.UHPPOTE, a.Devices, *body.CardNumber, *body.From, *body.To, 0, body.Doors)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, err.Error(), nil), err
 	}

@@ -90,17 +90,28 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 
 	// ... initialise MQTT
 
-	u := uhppote.UHPPOTE{
-		BindAddress:      c.BindAddress,
-		BroadcastAddress: c.BroadcastAddress,
-		ListenAddress:    c.ListenAddress,
-		Devices:          make(map[uint32]*uhppote.Device),
-		Debug:            cmd.debug,
+	bind, broadcast, listen := config.DefaultIpAddresses()
+
+	if c.BindAddress != nil {
+		bind = *c.BindAddress
 	}
 
-	for id, d := range c.Devices {
-		u.Devices[id] = uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors)
+	if c.BroadcastAddress != nil {
+		broadcast = *c.BroadcastAddress
 	}
+
+	if c.ListenAddress != nil {
+		listen = *c.ListenAddress
+	}
+
+	devices := []uhppote.Device{}
+	for id, d := range c.Devices {
+		if device := uhppote.NewDevice(d.Name, id, d.Address, d.Rollover, d.Doors); device != nil {
+			devices = append(devices, *device)
+		}
+	}
+
+	u := uhppote.NewUHPPOTE(bind, broadcast, listen, c.Timeout, devices, cmd.debug)
 
 	permissions, err := auth.NewPermissions(
 		c.MQTT.Permissions.Enabled,
@@ -207,16 +218,11 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 
 	// ... monitoring
 
-	healthcheck := monitoring.NewHealthCheck(&u, c.HealthCheckIdle, c.HealthCheckIgnore, logger)
+	healthcheck := monitoring.NewHealthCheck(u, c.HealthCheckIdle, c.HealthCheckIgnore, logger)
 
 	// ... listen
 
-	devices := []*uhppote.Device{}
-	for id, d := range c.Devices {
-		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors))
-	}
-
-	err = cmd.listen(&u, &mqttd, devices, &healthcheck, logger, interrupt)
+	err = cmd.listen(u, &mqttd, devices, &healthcheck, logger, interrupt)
 	if err != nil {
 		logger.Printf("ERROR %v", err)
 	}
@@ -225,9 +231,9 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 }
 
 func (r *Run) listen(
-	u *uhppote.UHPPOTE,
+	u uhppote.IUHPPOTE,
 	mqttd *mqtt.MQTTD,
-	devices []*uhppote.Device,
+	devices []uhppote.Device,
 	healthcheck *monitoring.HealthCheck,
 	logger *log.Logger,
 	interrupt chan os.Signal) error {

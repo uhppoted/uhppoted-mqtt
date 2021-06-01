@@ -29,7 +29,7 @@ func (a *ACL) Upload(impl *uhppoted.UHPPOTED, request []byte) (interface{}, erro
 		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", err), fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
 	}
 
-	acl, errors := api.GetACL(impl.Uhppote, a.Devices)
+	acl, errors := api.GetACL(impl.UHPPOTE, a.Devices)
 	if len(errors) > 0 {
 		err := fmt.Errorf("%v", errors)
 		return common.MakeError(StatusInternalServerError, "Error retrieving ACL", err), err

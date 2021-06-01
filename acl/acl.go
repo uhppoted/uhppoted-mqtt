@@ -29,7 +29,7 @@ const (
 )
 
 type ACL struct {
-	Devices     []*uhppote.Device
+	Devices     []uhppote.Device
 	RSA         *auth.RSA
 	Credentials *credentials.Credentials
 	Region      string

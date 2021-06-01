@@ -1,4 +1,4 @@
-VERSION = v0.6.12
+VERSION = v0.7.x
 DEBUG  ?= --debug
 DIST   ?= development
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
@@ -263,6 +263,14 @@ delete-card:
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO), \
                                                       "card-number": $(CARD) }}}'
+
+get-time-profile:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profile:get' \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)", \
+                                                        "reply-to":    "$(REPLYTO)", \
+                                                        "device-id":   $(SERIALNO), \
+                                                        "profile-id":  55 }}}'
 
 record-special-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \

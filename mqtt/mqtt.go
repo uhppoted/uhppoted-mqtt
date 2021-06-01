@@ -81,8 +81,7 @@ type fdispatch struct {
 type dispatcher struct {
 	mqttd    *MQTTD
 	uhppoted *uhppoted.UHPPOTED
-	uhppote  *uhppote.UHPPOTE
-	devices  []*uhppote.Device
+	devices  []uhppote.Device
 	log      *log.Logger
 	table    map[string]fdispatch
 }
@@ -116,7 +115,7 @@ var regex = struct {
 	base64: regexp.MustCompile(`^"[A-Za-z0-9+/]*[=]{0,2}"$`),
 }
 
-func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.Logger) error {
+func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, log *log.Logger) error {
 	paho.CRITICAL = log
 	paho.ERROR = log
 	paho.WARN = log
@@ -126,7 +125,7 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 	}
 
 	api := uhppoted.UHPPOTED{
-		Uhppote:         u,
+		UHPPOTE:         u,
 		ListenBatchSize: 32,
 		Log:             log,
 	}
@@ -147,7 +146,6 @@ func (mqttd *MQTTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, log *log.
 	d := dispatcher{
 		mqttd:    mqttd,
 		uhppoted: &api,
-		uhppote:  u,
 		devices:  devices,
 		log:      log,
 		table: map[string]fdispatch{
@@ -269,8 +267,8 @@ func (m *MQTTD) subscribeAndServe(d *dispatcher, log *log.Logger) (paho.Client, 
 	return client, nil
 }
 
-func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u *uhppote.UHPPOTE, log *log.Logger) error {
-	log.Printf("%-5s %-12s %v", "INFO", "mqttd", fmt.Sprintf("Listening on %v", u.ListenAddress))
+func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE, log *log.Logger) error {
+	log.Printf("%-5s %-12s %v", "INFO", "mqttd", fmt.Sprintf("Listening on %v", u.ListenAddr()))
 	log.Printf("%-5s %-12s %v", "INFO", "mqttd", fmt.Sprintf("Publishing events to %s", m.Topics.Events))
 
 	last := uhppoted.NewEventMap(m.EventMap)

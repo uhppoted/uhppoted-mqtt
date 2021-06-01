@@ -1,7 +1,18 @@
-## v0.6.12
+## v0.7.x
 
 ## IN PROGRESS
 
+- [ ] `get-time-profile`
+- [ ] `set-time-profile`
+- [ ] `clear-time-profiles`
+- [ ] `get-time-profiles`
+- [ ] `set-time-profiles`
+- [ ] `get-acl` with time-profiles
+- [ ] `set-acl` with time-profiles
+- [ ] `show` with time-profiles
+- [ ] `grant` with time-profiles
+
+- [x] Update to latest `uhppote-core` and `uhppoted-api`
 - [x] Add handling for `nil` events in response to `get-status`
 
 ## TODO
