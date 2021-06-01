@@ -2,8 +2,6 @@
 
 ## IN PROGRESS
 
-- [ ] `get-time-profile`
-- [ ] `set-time-profile`
 - [ ] `clear-time-profiles`
 - [ ] `get-time-profiles`
 - [ ] `set-time-profiles`
@@ -12,6 +10,8 @@
 - [ ] `show` with time-profiles
 - [ ] `grant` with time-profiles
 
+- [x] `set-time-profile`
+- [x] `get-time-profile`
 - [x] Update to latest `uhppote-core` and `uhppoted-api`
 - [x] Add handling for `nil` events in response to `get-status`
 

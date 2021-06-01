@@ -3,6 +3,7 @@ package device
 import (
 	"fmt"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
@@ -33,6 +34,37 @@ func (d *Device) GetTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interf
 	response, err := impl.GetTimeProfile(rq)
 	if err != nil {
 		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not retrieve time profile %v from %d", *body.ProfileID, *body.DeviceID), err), err
+	}
+
+	return response, nil
+}
+
+func (d *Device) PutTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID *uint32            `json:"device-id"`
+		Profile  *types.TimeProfile `json:"profile"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	}
+
+	if body.Profile == nil {
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing time profile", nil), fmt.Errorf("Invalid/missing time profile")
+	}
+
+	rq := uhppoted.SetTimeProfileRequest{
+		DeviceID:    *body.DeviceID,
+		TimeProfile: *body.Profile,
+	}
+
+	response, err := impl.SetTimeProfile(rq)
+	if err != nil {
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not store time profile %v to %d", body.Profile.ID, *body.DeviceID), err), err
 	}
 
 	return response, nil

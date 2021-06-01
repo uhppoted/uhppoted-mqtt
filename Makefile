@@ -166,13 +166,6 @@ get-device-encrypted-old:
                               "hmac": "46410fe2d18183452982ed22cec52dedf843436263d1097074454c3c30caa75a" }'
 
 
-get-status:
-	mqtt publish --topic 'uhppoted/gateway/requests/device/status:get' \
-                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                        "client-id":  "$(CLIENTID)", \
-                                                        "reply-to":   "$(REPLYTO)", \
-                                                        "device-id":  $(SERIALNO) }}}'
-
 get-time:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/time:get' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
@@ -222,6 +215,13 @@ set-door-control:
                                                      "door":       3, \
                                                      "control":    "normally closed" }}}'
 
+get-status:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/status:get' \
+                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                        "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
+                                                        "device-id":  $(SERIALNO) }}}'
+
 get-cards:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/cards:get' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
@@ -270,7 +270,40 @@ get-time-profile:
                                                         "client-id":   "$(CLIENTID)", \
                                                         "reply-to":    "$(REPLYTO)", \
                                                         "device-id":   $(SERIALNO), \
-                                                        "profile-id":  55 }}}'
+                                                        "profile-id":  29 }}}'
+
+set-time-profile:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profile:set' \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)", \
+                                                        "reply-to":    "$(REPLYTO)", \
+                                                        "device-id":   $(SERIALNO), \
+                                                        "profile":     { "id": 29, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Monday,Wednesday,Thursday", \
+                                                                         "segments": [ \
+                                                                            { "start": "08:15", "end": "11:30" }, \
+                                                                            { "start": "14:05", "end": "17:45" }  \
+                                                                         ], \
+                                                                         "linked-profile": 3 } \
+                                                         }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profile:set' \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)", \
+                                                        "reply-to":    "$(REPLYTO)", \
+                                                        "device-id":   $(SERIALNO), \
+                                                        "profile":     { "id": 3, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Monday,Wednesday,Thursday", \
+                                                                         "segments": [ \
+                                                                            { "start": "08:15", "end": "11:30" }, \
+                                                                            { "start": "14:05", "end": "17:45" }  \
+                                                                         ] } \
+                                                         }}}'
+
 
 record-special-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
