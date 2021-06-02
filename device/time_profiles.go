@@ -57,14 +57,46 @@ func (d *Device) PutTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interf
 		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing time profile", nil), fmt.Errorf("Invalid/missing time profile")
 	}
 
-	rq := uhppoted.SetTimeProfileRequest{
+	rq := uhppoted.PutTimeProfileRequest{
 		DeviceID:    *body.DeviceID,
 		TimeProfile: *body.Profile,
 	}
 
-	response, err := impl.SetTimeProfile(rq)
+	response, err := impl.PutTimeProfile(rq)
 	if err != nil {
 		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not store time profile %v to %d", body.Profile.ID, *body.DeviceID), err), err
+	}
+
+	return response, nil
+}
+
+func (d *Device) GetTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID *uint32 `json:"device-id"`
+		From     int     `json:"from"`
+		To       int     `json:"to"`
+	}{
+		From: 2,
+		To:   254,
+	}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	}
+
+	rq := uhppoted.GetTimeProfilesRequest{
+		DeviceID: *body.DeviceID,
+		From:     body.From,
+		To:       body.To,
+	}
+
+	response, err := impl.GetTimeProfiles(rq)
+	if err != nil {
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not retrieve time profiles from %d", *body.DeviceID), err), err
 	}
 
 	return response, nil

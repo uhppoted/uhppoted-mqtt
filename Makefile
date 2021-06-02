@@ -289,21 +289,14 @@ set-time-profile:
                                                                          "linked-profile": 3 } \
                                                          }}}'
 
-	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profile:set' \
+get-time-profiles:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profiles:get'          \
                  --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
-                                                        "client-id":   "$(CLIENTID)", \
-                                                        "reply-to":    "$(REPLYTO)", \
-                                                        "device-id":   $(SERIALNO), \
-                                                        "profile":     { "id": 3, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
-                                                                         "weekdays":   "Monday,Wednesday,Thursday", \
-                                                                         "segments": [ \
-                                                                            { "start": "08:15", "end": "11:30" }, \
-                                                                            { "start": "14:05", "end": "17:45" }  \
-                                                                         ] } \
-                                                         }}}'
-
+                                                        "client-id":   "$(CLIENTID)",  \
+                                                        "reply-to":    "$(REPLYTO)",   \
+                                                        "device-id":   $(SERIALNO),    \
+                                                        "from":        200,            \
+                                                        "to":          250 }}}'
 
 record-special-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
