@@ -70,6 +70,30 @@ func (d *Device) PutTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interf
 	return response, nil
 }
 
+func (d *Device) ClearTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID *uint32 `json:"device-id"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	}
+
+	rq := uhppoted.ClearTimeProfilesRequest{
+		DeviceID: *body.DeviceID,
+	}
+
+	response, err := impl.ClearTimeProfiles(rq)
+	if err != nil {
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not clear time profiles from %d", *body.DeviceID), err), err
+	}
+
+	return response, nil
+}
 func (d *Device) GetTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uint32 `json:"device-id"`

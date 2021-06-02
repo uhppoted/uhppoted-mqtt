@@ -2,14 +2,14 @@
 
 ## IN PROGRESS
 
-- [ ] `clear-time-profiles`
-- [ ] `get-time-profiles`
 - [ ] `set-time-profiles`
 - [ ] `get-acl` with time-profiles
 - [ ] `set-acl` with time-profiles
 - [ ] `show` with time-profiles
 - [ ] `grant` with time-profiles
 
+- [x] `clear-time-profiles`
+- [x] `get-time-profiles`
 - [x] `set-time-profile`
 - [x] `get-time-profile`
 - [x] Update to latest `uhppote-core` and `uhppoted-api`

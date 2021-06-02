@@ -289,6 +289,13 @@ set-time-profile:
                                                                          "linked-profile": 3 } \
                                                          }}}'
 
+clear-time-profiles:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profiles:delete'          \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)",  \
+                                                        "reply-to":    "$(REPLYTO)",   \
+                                                        "device-id":   $(SERIALNO) }}}'
+
 get-time-profiles:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profiles:get'          \
                  --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
