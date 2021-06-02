@@ -305,6 +305,49 @@ get-time-profiles:
                                                         "from":        200,            \
                                                         "to":          250 }}}'
 
+set-time-profiles:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profiles:set'          \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)",  \
+                                                        "reply-to":    "$(REPLYTO)",   \
+                                                        "device-id":   $(SERIALNO),    \
+                                                        "profiles":    [ \
+                                                                         { "id": 29, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Monday,Wednesday,Thursday", \
+                                                                         "segments": [ \
+                                                                            { "start": "08:15", "end": "11:30" }, \
+                                                                            { "start": "14:05", "end": "17:45" }  \
+                                                                         ], \
+                                                                         "linked-profile": 30 }, \
+                                                                         { "id": 31, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Monday,Wednesday,Thursday", \
+                                                                         "segments": [ \
+                                                                            { "start": "08:15", "end": "11:30" }, \
+                                                                            { "start": "14:05", "end": "17:45" }  \
+                                                                         ], \
+                                                                         "linked-profile": 32 }, \
+                                                                         { "id": 32, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Monday,Wednesday", \
+                                                                         "segments": [ \
+                                                                            { "start": "08:30", "end": "15:30" } \
+                                                                         ], \
+                                                                         "linked-profile": 33 }, \
+                                                                         { "id": 33, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Saturday,Sunday", \
+                                                                         "segments": [ \
+                                                                            { "start": "10:30", "end": "17:30" } \
+                                                                         ]} \
+                                                                       ]\
+                                                         }}}'
+
 record-special-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \

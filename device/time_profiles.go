@@ -125,3 +125,41 @@ func (d *Device) GetTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (inter
 
 	return response, nil
 }
+
+func (d *Device) PutTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID *uint32             `json:"device-id"`
+		Profiles []types.TimeProfile `json:"profiles"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	}
+
+	rq := uhppoted.PutTimeProfilesRequest{
+		DeviceID: *body.DeviceID,
+		Profiles: body.Profiles,
+	}
+
+	response, _, err := impl.PutTimeProfiles(rq)
+	if err != nil {
+		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not store time profile set to %d", *body.DeviceID), err), err
+	}
+
+	warnings := []string{}
+	for _, w := range response.Warnings {
+		warnings = append(warnings, fmt.Sprintf("%v", w))
+	}
+
+	return struct {
+		DeviceID uint32   `json:"device-id"`
+		Warnings []string `json:"warnings"`
+	}{
+		DeviceID: uint32(response.DeviceID),
+		Warnings: warnings,
+	}, nil
+}

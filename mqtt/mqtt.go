@@ -166,6 +166,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, log *log.L
 			mqttd.Topics.Requests + "/device/time-profile:get":     fdispatch{"get-time-profile", dev.GetTimeProfile},
 			mqttd.Topics.Requests + "/device/time-profile:set":     fdispatch{"set-time-profile", dev.PutTimeProfile},
 			mqttd.Topics.Requests + "/device/time-profiles:get":    fdispatch{"get-time-profiles", dev.GetTimeProfiles},
+			mqttd.Topics.Requests + "/device/time-profiles:set":    fdispatch{"get-time-profiles", dev.PutTimeProfiles},
 			mqttd.Topics.Requests + "/device/time-profiles:delete": fdispatch{"clear-time-profiles", dev.ClearTimeProfiles},
 			mqttd.Topics.Requests + "/device/events:get":           fdispatch{"get-events", dev.GetEvents},
 			mqttd.Topics.Requests + "/device/event:get":            fdispatch{"get-event", dev.GetEvent},
