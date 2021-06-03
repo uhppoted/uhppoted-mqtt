@@ -41,6 +41,7 @@ func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error)
 			Door:      k,
 			StartDate: v.From,
 			EndDate:   v.To,
+			Profile:   v.Profile,
 		})
 	}
 

@@ -376,7 +376,7 @@ get-event:
 acl-show:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:show' \
                  --message '{ "message": { "request": { \
-                                           "card-number": 1327679, \
+                                           "card-number": 8165538, \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
@@ -384,10 +384,10 @@ acl-show:
 acl-grant:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:grant' \
                  --message '{ "message": { "request": { \
-                                           "card-number": 1327679, \
-                                           "start-date": "2020-01-01", \
-                                           "end-date": "2020-12-31", \
-                                           "doors": [ "Entrance", "Upstairs", "Downstairs" ], \
+                                           "card-number": 8165538, \
+                                           "start-date": "2021-01-01", \
+                                           "end-date": "2021-12-31", \
+                                           "doors": [ "Gryffindor", "Slytherin", "Dungeon:29" ], \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'

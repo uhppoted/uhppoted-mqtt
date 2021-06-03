@@ -41,6 +41,7 @@ type Permission struct {
 	Door      string     `json:"door"`
 	StartDate types.Date `json:"start-date"`
 	EndDate   types.Date `json:"end-date"`
+	Profile   int        `json:"profile,omitempty"`
 }
 
 type Permissions struct {
