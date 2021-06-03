@@ -2,11 +2,12 @@
 
 ## IN PROGRESS
 
-- [ ] `get-acl` with time-profiles
 - [ ] `set-acl` with time-profiles
-- [ ] `show` with time-profiles
-- [ ] `grant` with time-profiles
+- [ ] `open-door` with time profile
 
+- [x] `get-acl` with time-profiles
+- [x] `grant` with time-profiles
+- [x] `show` with time-profiles
 - [x] `clear-time-profiles`
 - [x] `set-time-profiles`
 - [x] `get-time-profiles`

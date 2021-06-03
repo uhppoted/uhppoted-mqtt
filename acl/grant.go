@@ -15,6 +15,7 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 		CardNumber *uint32     `json:"card-number"`
 		From       *types.Date `json:"start-date"`
 		To         *types.Date `json:"end-date"`
+		Profile    int         `json:"profile"`
 		Doors      []string    `json:"doors"`
 	}{}
 
@@ -34,7 +35,11 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 		return common.MakeError(StatusBadRequest, "Missing/invalid end date", nil), fmt.Errorf("Missing/invalid end date")
 	}
 
-	err := api.Grant(impl.UHPPOTE, a.Devices, *body.CardNumber, *body.From, *body.To, 0, body.Doors)
+	if body.Profile != 0 && (body.Profile < 2 || body.Profile > 254) {
+		return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid time profile (%v)", body.Profile), nil), fmt.Errorf("Invalid time profile (%v)", body.Profile)
+	}
+
+	err := api.Grant(impl.UHPPOTE, a.Devices, *body.CardNumber, *body.From, *body.To, body.Profile, body.Doors)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, err.Error(), nil), err
 	}

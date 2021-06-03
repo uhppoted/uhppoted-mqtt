@@ -382,23 +382,33 @@ acl-show:
                                            "request-id": "AH173635G3" }}}'
 
 acl-grant:
-	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:grant' \
-                 --message '{ "message": { "request": { \
-                                           "card-number": 8165538, \
+	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:grant'    \
+                 --message '{ "message": { "request": {                \
+                                           "card-number": 8165538,     \
                                            "start-date": "2021-01-01", \
-                                           "end-date": "2021-12-31", \
-                                           "doors": [ "Gryffindor", "Slytherin", "Dungeon:29" ], \
-                                           "client-id": "QWERTY54", \
+                                           "end-date": "2021-12-31",   \
+                                           "doors": [ "Gryffindor", "Slytherin" ], \
+                                           "client-id": "QWERTY54",              \
+                                           "reply-to": "uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:grant'    \
+                 --message '{ "message": { "request": {                \
+                                           "card-number": 8165538,     \
+                                           "start-date": "2021-01-01", \
+                                           "end-date": "2021-12-31",   \
+                                           "profile": 29,              \
+                                           "doors": [ "Dungeon" ], \
+                                           "client-id": "QWERTY54",              \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
 
 acl-revoke:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:revoke' \
                  --message '{ "message": { "request": { \
-                                           "card-number": 1327679, \
+                                           "card-number": 8165538, \
                                            "start-date": "2020-01-01", \
                                            "end-date": "2020-12-31", \
-                                           "doors": [ "Downstairs", "Upstairs" ], \
+                                           "doors": [ "Dungeon" ], \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
