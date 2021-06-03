@@ -83,6 +83,18 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 		}
 	}
 
+	warnings := []string{}
+	duplicates := map[string]bool{}
+	for k, v := range rpt {
+		for _, err := range v.Errors {
+			warning := fmt.Sprintf("%v: %v", k, err)
+			if _, ok := duplicates[warning]; !ok {
+				warnings = append(warnings, warning)
+				duplicates[warning] = true
+			}
+		}
+	}
+
 	return struct {
 		Report map[uint32]struct {
 			Unchanged int `json:"unchanged"`
@@ -92,8 +104,10 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 			Failed    int `json:"failed"`
 			Errors    int `json:"errors"`
 		} `json:"report"`
+		Warnings []string `json:"warnings,omitempty"`
 	}{
-		Report: summary,
+		Report:   summary,
+		Warnings: warnings,
 	}, nil
 
 }

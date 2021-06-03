@@ -86,12 +86,12 @@ func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 
 	a.info(tag, fmt.Sprintf("Fetched ACL from %v (%d bytes)", uri, len(b)))
 
-	x := untar
+	extract := untar
 	if strings.HasSuffix(uri, ".zip") {
-		x = unzip
+		extract = unzip
 	}
 
-	files, uname, err := x(bytes.NewReader(b))
+	files, uname, err := extract(bytes.NewReader(b))
 	if err != nil {
 		return nil, err
 	}

@@ -2,9 +2,9 @@
 
 ## IN PROGRESS
 
-- [ ] `set-acl` with time-profiles
 - [ ] `open-door` with time profile
 
+- [x] `set-acl` with time-profiles
 - [x] `get-acl` with time-profiles
 - [x] `grant` with time-profiles
 - [x] `show` with time-profiles
