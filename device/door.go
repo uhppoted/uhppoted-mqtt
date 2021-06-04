@@ -2,6 +2,7 @@ package device
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -196,7 +197,7 @@ func (d *Device) OpenDoor(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 	card := *body.Card
 	door := *body.Door
 
-	if !authorized(card) {
+	if !d.authorized(card) {
 		return common.MakeError(StatusUnauthorized, fmt.Sprintf("Card %v is not authorized for door %v", card, door), nil),
 			fmt.Errorf("Card %v is not authorized for device %v, door %v", card, deviceID, door)
 	}
@@ -219,17 +220,15 @@ func (d *Device) OpenDoor(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 	return response, nil
 }
 
-func authorized(card uint32) bool {
-	//	cards := ctx.Value("authorized-cards").([]string)
-	//	c := fmt.Sprintf("%v", cardNumber)
-	//	for _, re := range cards {
-	//		if ok, err := regexp.MatchString(re, c); ok && err == nil {
-	//			return true
-	//		}
-	//	}
-	//
-	//	return false
-	return true
+func (d *Device) authorized(card uint32) bool {
+	c := fmt.Sprintf("%v", card)
+	for _, re := range d.AuthorizedCards {
+		if ok, err := regexp.MatchString(re, c); ok && err == nil {
+			return true
+		}
+	}
+
+	return false
 }
 
 func validate(impl *uhppoted.UHPPOTED, deviceID uint32, cardNumber uint32, door uint8) error {

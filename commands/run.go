@@ -1,10 +1,11 @@
 package commands
 
 import (
+	"bufio"
+	"bytes"
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -71,7 +72,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 		return fmt.Errorf("Error checking PID lockfile '%v' (%v)", cmd.pidFile, err)
 	}
 
-	if err := ioutil.WriteFile(cmd.pidFile, []byte(pid), 0644); err != nil {
+	if err := os.WriteFile(cmd.pidFile, []byte(pid), 0644); err != nil {
 		return fmt.Errorf("Unable to create PID lockfile: %v", err)
 	}
 
@@ -165,7 +166,7 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 	// ... TLS
 
 	if strings.HasPrefix(mqttd.Connection.Broker, "tls:") {
-		pem, err := ioutil.ReadFile(c.Connection.BrokerCertificate)
+		pem, err := os.ReadFile(c.Connection.BrokerCertificate)
 		if err != nil {
 			logger.Printf("ERROR: %v", err)
 		} else {
@@ -220,9 +221,16 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 
 	healthcheck := monitoring.NewHealthCheck(u, c.HealthCheckIdle, c.HealthCheckIgnore, logger)
 
+	// ... authorized card list
+
+	cards, err := authorized(c.MQTT.Cards)
+	if err != nil {
+		logger.Printf("WARN  %v", err)
+	}
+
 	// ... listen
 
-	err = cmd.listen(u, &mqttd, devices, &healthcheck, logger, interrupt)
+	err = cmd.listen(u, &mqttd, devices, &healthcheck, cards, logger, interrupt)
 	if err != nil {
 		logger.Printf("ERROR %v", err)
 	}
@@ -235,6 +243,7 @@ func (r *Run) listen(
 	mqttd *mqtt.MQTTD,
 	devices []uhppote.Device,
 	healthcheck *monitoring.HealthCheck,
+	authorized []string,
 	logger *log.Logger,
 	interrupt chan os.Signal) error {
 
@@ -251,7 +260,7 @@ func (r *Run) listen(
 		return fmt.Errorf("Error checking MQTT client lockfile '%v' (%v_)", lockfile, err)
 	}
 
-	if err := ioutil.WriteFile(lockfile, []byte(pid), 0644); err != nil {
+	if err := os.WriteFile(lockfile, []byte(pid), 0644); err != nil {
 		return fmt.Errorf("Unable to create MQTT client lockfile: %v", err)
 	}
 
@@ -259,7 +268,7 @@ func (r *Run) listen(
 		os.Remove(lockfile)
 	}()
 
-	if err := mqttd.Run(u, devices, logger); err != nil {
+	if err := mqttd.Run(u, devices, authorized, logger); err != nil {
 		return err
 	}
 
@@ -298,4 +307,19 @@ func (r *Run) listen(
 			return nil
 		}
 	}
+}
+
+func authorized(file string) ([]string, error) {
+	b, err := os.ReadFile(file)
+	if err != nil {
+		return []string{}, err
+	}
+
+	lines := []string{}
+	scanner := bufio.NewScanner(bytes.NewBuffer(b))
+	for scanner.Scan() {
+		lines = append(lines, strings.TrimSpace(scanner.Text()))
+	}
+
+	return lines, scanner.Err()
 }

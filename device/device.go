@@ -11,11 +11,12 @@ import (
 const (
 	StatusInternalServerError = uhppoted.StatusInternalServerError
 	StatusBadRequest          = uhppoted.StatusBadRequest
-	StatusUnauthorized       = uhppoted.StatusUnauthorized
+	StatusUnauthorized        = uhppoted.StatusUnauthorized
 )
 
 type Device struct {
-	Log *log.Logger
+	AuthorizedCards []string
+	Log             *log.Logger
 }
 
 func unmarshal(bytes []byte, request interface{}) (interface{}, error) {

@@ -115,7 +115,7 @@ var regex = struct {
 	base64: regexp.MustCompile(`^"[A-Za-z0-9+/]*[=]{0,2}"$`),
 }
 
-func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, log *log.Logger) error {
+func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized []string, log *log.Logger) error {
 	paho.CRITICAL = log
 	paho.ERROR = log
 	paho.WARN = log
@@ -131,7 +131,8 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, log *log.L
 	}
 
 	dev := device.Device{
-		Log: log,
+		AuthorizedCards: authorized,
+		Log:             log,
 	}
 
 	acl := acl.ACL{
