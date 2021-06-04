@@ -158,6 +158,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, log *log.L
 			mqttd.Topics.Requests + "/device/door/delay:set":       fdispatch{"set-door-delay", dev.SetDoorDelay},
 			mqttd.Topics.Requests + "/device/door/control:get":     fdispatch{"get-door-control", dev.GetDoorControl},
 			mqttd.Topics.Requests + "/device/door/control:set":     fdispatch{"set-door-control", dev.SetDoorControl},
+			mqttd.Topics.Requests + "/device/door/lock:open":       fdispatch{"open-door", dev.OpenDoor},
 			mqttd.Topics.Requests + "/device/cards:get":            fdispatch{"get-cards", dev.GetCards},
 			mqttd.Topics.Requests + "/device/cards:delete":         fdispatch{"delete-cards", dev.DeleteCards},
 			mqttd.Topics.Requests + "/device/card:get":             fdispatch{"get-card", dev.GetCard},

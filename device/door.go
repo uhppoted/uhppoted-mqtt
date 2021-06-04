@@ -2,7 +2,9 @@ package device
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
@@ -165,4 +167,161 @@ func (d *Device) SetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 	}
 
 	return response, nil
+}
+
+func (d *Device) OpenDoor(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID *uhppoted.DeviceID `json:"device-id"`
+		Card     *uint32            `json:"card-number"`
+		Door     *uint8             `json:"door"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	}
+
+	if body.Card == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing card", nil), fmt.Errorf("Invalid/missing card")
+	}
+
+	if body.Door == nil || *body.Door < 1 || *body.Door > 4 {
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("Invalid/missing door: %v", *body.Door)
+	}
+
+	deviceID := uint32(*body.DeviceID)
+	card := *body.Card
+	door := *body.Door
+
+	if !authorized(card) {
+		return common.MakeError(StatusUnauthorized, fmt.Sprintf("Card %v is not authorized for door %v", card, door), nil),
+			fmt.Errorf("Card %v is not authorized for device %v, door %v", card, deviceID, door)
+	}
+
+	if err := validate(impl, deviceID, card, door); err != nil {
+		return common.MakeError(StatusUnauthorized, fmt.Sprintf("Card %v is not authorized for door %v", card, door), nil),
+			fmt.Errorf("Failed to validate access for card %v to device %v, door %v (%v)", card, deviceID, door, err)
+	}
+
+	rq := uhppoted.OpenDoorRequest{
+		DeviceID: *body.DeviceID,
+		Door:     *body.Door,
+	}
+
+	response, err := impl.OpenDoor(rq)
+	if err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not open device %d, door %d with card %v", *body.DeviceID, *body.Door, *body.Card), err), err
+	}
+
+	return response, nil
+}
+
+func authorized(card uint32) bool {
+	//	cards := ctx.Value("authorized-cards").([]string)
+	//	c := fmt.Sprintf("%v", cardNumber)
+	//	for _, re := range cards {
+	//		if ok, err := regexp.MatchString(re, c); ok && err == nil {
+	//			return true
+	//		}
+	//	}
+	//
+	//	return false
+	return true
+}
+
+func validate(impl *uhppoted.UHPPOTED, deviceID uint32, cardNumber uint32, door uint8) error {
+	rq := uhppoted.GetCardRequest{
+		DeviceID:   uhppoted.DeviceID(deviceID),
+		CardNumber: cardNumber,
+	}
+
+	response, err := impl.GetCard(rq)
+	if err != nil {
+		return err
+	} else if response == nil {
+		return fmt.Errorf("GetCard returned <nil> for card %v, device %v", cardNumber, deviceID)
+	}
+
+	card := response.Card
+
+	// Check start/end validity dates
+	today := types.Date(time.Now())
+	if card.From == nil || card.To == nil || today.Before(*card.From) || today.After(*card.To) {
+		return fmt.Errorf("Card %v is not valid for %v", card.CardNumber, today)
+	}
+
+	// Check door permissions
+	if card.Doors[door] < 1 || card.Doors[door] > 254 {
+		return fmt.Errorf("Card %v is does not have permission for %v, door %v", cardNumber, deviceID, door)
+	}
+
+	// Check time profile
+	if card.Doors[door] >= 2 && card.Doors[door] <= 254 {
+		profileID := uint8(card.Doors[door])
+		checked := map[uint8]bool{}
+
+		for {
+			profile, err := getTimeProfile(impl, deviceID, profileID)
+			if err != nil {
+				return err
+			}
+
+			if profile == nil {
+				return fmt.Errorf("GetTimeProfile received <nil> response for time profile %v associated with card %v, door %v from device %v", profileID, cardNumber, door, deviceID)
+			}
+
+			if err = checkTimeProfile(deviceID, cardNumber, card.Doors[door], *profile); err == nil {
+				break
+			}
+
+			if profile.LinkedProfileID < 2 || profile.LinkedProfileID > 254 || checked[profile.LinkedProfileID] {
+				return err
+			}
+
+			checked[profileID] = true
+			profileID = profile.LinkedProfileID
+		}
+	}
+
+	return nil
+}
+
+func getTimeProfile(impl *uhppoted.UHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+	rq := uhppoted.GetTimeProfileRequest{
+		DeviceID:  deviceID,
+		ProfileID: profileID,
+	}
+
+	response, err := impl.GetTimeProfile(rq)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.TimeProfile, nil
+}
+
+func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.TimeProfile) error {
+	now := time.Now()
+	today := types.Date(now)
+
+	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
+		return fmt.Errorf("Card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
+	}
+
+	if !profile.Weekdays[today.Weekday()] {
+		return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, today.Weekday())
+	}
+
+	for _, p := range []uint8{1, 2, 3} {
+		if segment, ok := profile.Segments[p]; ok {
+			if !segment.Start.After(now) && !segment.End.Before(now) {
+				return nil
+			}
+		}
+	}
+
+	return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, types.HHmm(now))
 }

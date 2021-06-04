@@ -2,8 +2,9 @@
 
 ## IN PROGRESS
 
-- [ ] `open-door` with time profile
+- [ ] auth card list for open door
 
+- [x] `open-door` with time profile
 - [x] `set-acl` with time-profiles
 - [x] `get-acl` with time-profiles
 - [x] `grant` with time-profiles

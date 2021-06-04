@@ -11,6 +11,7 @@ import (
 const (
 	StatusInternalServerError = uhppoted.StatusInternalServerError
 	StatusBadRequest          = uhppoted.StatusBadRequest
+	StatusUnauthorized       = uhppoted.StatusUnauthorized
 )
 
 type Device struct {

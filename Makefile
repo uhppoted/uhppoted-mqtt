@@ -215,6 +215,15 @@ set-door-control:
                                                      "door":       3, \
                                                      "control":    "normally closed" }}}'
 
+open-door:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/door/lock:open' \
+               --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                      "client-id":   "$(CLIENTID)",  \
+                                                      "reply-to":    "$(REPLYTO)",   \
+                                                      "device-id":   $(SERIALNO),    \
+                                                      "card-number": $(CARD),        \
+                                                      "door":        3 }}}'
+
 get-status:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/status:get' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
@@ -247,13 +256,13 @@ get-card:
 put-card:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/card:put' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                      "client-id":  "$(CLIENTID)", \
-                                                      "reply-to":   "$(REPLYTO)", \
-                                                      "device-id":  $(SERIALNO), \
-                                                      "card": { "card-number": $(CARD), \
-                                                                "start-date":  "2020-01-01", \
-                                                                "end-date": "2020-12-31", \
-                                                                "doors": { "1":true, "2":false, "3": false, "4": true } } \
+                                                      "client-id":  "$(CLIENTID)",  \
+                                                      "reply-to":   "$(REPLYTO)",   \
+                                                      "device-id":  $(SERIALNO),    \
+                                                      "card": { "card-number": $(CARD),      \
+                                                                "start-date":  "2021-01-01", \
+                                                                "end-date": "2021-12-31",    \
+                                                                "doors": { "1":true, "2":false, "3":55, "4":false } } \
                                                     }}}'
 
 delete-card:
