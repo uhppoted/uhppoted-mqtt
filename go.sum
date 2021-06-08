@@ -22,6 +22,8 @@ github.com/uhppoted/uhppote-core v0.6.13-0.20210604162622-00706b956401 h1:tAcewk
 github.com/uhppoted/uhppote-core v0.6.13-0.20210604162622-00706b956401/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
 github.com/uhppoted/uhppote-core v0.6.13-0.20210607182513-a4d1cb4f0f7f h1:8FgyCCMjVHv41XT55Kxs1QD2mzorUxWQEi9OOSOWAgs=
 github.com/uhppoted/uhppote-core v0.6.13-0.20210607182513-a4d1cb4f0f7f/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
+github.com/uhppoted/uhppote-core v0.6.13-0.20210608173129-01558a7d3430 h1:YvuNZtwz/dEvS0n8mph8FXV5ow1h8T8Cwpbd7GrkCAg=
+github.com/uhppoted/uhppote-core v0.6.13-0.20210608173129-01558a7d3430/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604185635-f199791d91e6 h1:Mx3dYthRsQh3GHVU9c2UEg0kZCouIxP6xFe2C2vgxb4=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604185635-f199791d91e6/go.mod h1:zCF6aRCO9S/qOMDPO8ASCdvCMYGHPlxOigkYMTmoQcs=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604191426-94d17e744d62 h1:lUpRjsh3NPRDnOElDA6Y4QXwfpfxcrBz+W0sRLCuJk8=
@@ -30,6 +32,8 @@ github.com/uhppoted/uhppoted-api v0.6.13-0.20210604192501-a6c20123e564 h1:Fix0pW
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604192501-a6c20123e564/go.mod h1:zCF6aRCO9S/qOMDPO8ASCdvCMYGHPlxOigkYMTmoQcs=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210607190257-f754dd905380 h1:5r0ogMQggxYm2kl2QY9CtfPgESvgNcbxl5g9o+HwMXY=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210607190257-f754dd905380/go.mod h1:1K8QsO41oSsjYk7yA7j9J/RNpbQMPxpV34Fvp7El4hY=
+github.com/uhppoted/uhppoted-api v0.6.13-0.20210608173423-fca12dfcd076 h1:91LWWDg/So0GVvK1HVIzQA24y1OGzKmmpmY0czQ1C9Y=
+github.com/uhppoted/uhppoted-api v0.6.13-0.20210608173423-fca12dfcd076/go.mod h1:SKX07DPv1NUJvB3CUkLgq5v1LWgFzDHeJuDObqyLTDU=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
