@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.0    | Added support time profiles from the extended API                                         |
 | v0.6.12   | Added support for `nil` events in response to `get-status`                                |
 | v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
 | v0.6.8    | Maintenance release for version compatibility with `uhppote-core` `v0.6.8`                |

@@ -1,6 +1,4 @@
-## v0.7.x
-
-## IN PROGRESS
+## v0.7.0
 
 - [x] authorized card list for open door
 - [x] `open-door` with time profile
