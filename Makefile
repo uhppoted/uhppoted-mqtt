@@ -215,14 +215,13 @@ set-door-control:
                                                      "door":       3, \
                                                      "control":    "normally closed" }}}'
 
-open-door:
-	mqtt publish --topic 'uhppoted/gateway/requests/device/door/lock:open' \
-               --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
-                                                      "client-id":   "$(CLIENTID)",  \
-                                                      "reply-to":    "$(REPLYTO)",   \
-                                                      "device-id":   $(SERIALNO),    \
-                                                      "card-number": $(CARD),        \
-                                                      "door":        3 }}}'
+record-special-events:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
+                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                        "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
+                                                        "device-id":  $(SERIALNO), \
+                                                        "enabled":    true }}}'
 
 get-status:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/status:get' \
@@ -357,13 +356,23 @@ set-time-profiles:
                                                                        ]\
                                                          }}}'
 
-record-special-events:
-	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
-                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                        "client-id":  "$(CLIENTID)", \
-                                                        "reply-to":   "$(REPLYTO)", \
-                                                        "device-id":  $(SERIALNO), \
-                                                        "enabled":    true }}}'
+set-task-list:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/tasklist:set'               \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)",  \
+                                                        "reply-to":    "$(REPLYTO)",   \
+                                                        "device-id":   $(SERIALNO),    \
+                                                        "tasks":       [ \
+                                                                         { \
+                                                                           "task": "trigger once",     \
+                                                                           "door": 3,                  \
+                                                                           "start-date": "2021-01-01", \
+                                                                           "end-date":   "2021-12-31", \
+                                                                           "weekdays":   "Monday,Wednesday,Friday", \
+                                                                           "start":      "08:27" \
+                                                                         } \
+                                                                       ]\
+                                                         }}}'
 
 get-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
@@ -381,6 +390,15 @@ get-event:
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO), \
                                                       "event-id":   50 }}}'
+
+open-door:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/door/lock:open' \
+               --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                      "client-id":   "$(CLIENTID)",  \
+                                                      "reply-to":    "$(REPLYTO)",   \
+                                                      "device-id":   $(SERIALNO),    \
+                                                      "card-number": $(CARD),        \
+                                                      "door":        3 }}}'
 
 acl-show:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:show' \

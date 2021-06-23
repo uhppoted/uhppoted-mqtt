@@ -1,6 +1,13 @@
 ## v0.7.x
 
-- [ ] `set-task-list`
+- [x] `set-task-list`
+- [ ] Fix date/time
+```
+      2021/06/23 08:14:08 DEBUG set-time     request  {DeviceID:405419896 DateTime:{wall:0 ext:63760058047 loc:0x1d216a0}}
+      2021/06/23 08:14:08 DEBUG set-time     response {DeviceID:405419896 DateTime:{wall:0 ext:63760058047 loc:0x1d216a0}}
+      2021/06/23 08:14:09 INFO  UTC0311-L0x 405419896  system time synchronized:{0 63760058047 0x1d216a0} (2s)
+      2021/06/23 08:14:09 WARN  health-check 1 error, 2 warnings
+```
 
 ## TODO
 

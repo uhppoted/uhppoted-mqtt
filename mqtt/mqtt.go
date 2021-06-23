@@ -78,12 +78,18 @@ type fdispatch struct {
 	f      func(*uhppoted.UHPPOTED, []byte) (interface{}, error)
 }
 
+type fdispatchx struct {
+	method string
+	f      func(uhppoted.IUHPPOTED, []byte) (interface{}, error)
+}
+
 type dispatcher struct {
 	mqttd    *MQTTD
 	uhppoted *uhppoted.UHPPOTED
 	devices  []uhppote.Device
 	log      *log.Logger
 	table    map[string]fdispatch
+	tablex   map[string]fdispatchx
 }
 
 type request struct {
@@ -180,6 +186,9 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatch{"acl:upload", acl.Upload},
 			mqttd.Topics.Requests + "/acl/acl:download": fdispatch{"acl:download", acl.Download},
 			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatch{"acl:compare", acl.Compare},
+		},
+		tablex: map[string]fdispatchx{
+			mqttd.Topics.Requests + "/device/tasklist:set": fdispatchx{"set-task-list", dev.PutTaskList},
 		},
 	}
 
@@ -306,6 +315,70 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 	ctx = context.WithValue(ctx, "log", d.log)
 
 	if fn, ok := d.table[msg.Topic()]; ok {
+		msg.Ack()
+
+		d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))
+
+		go func() {
+			rq, err := d.mqttd.unwrap(msg.Payload())
+			if err != nil {
+				d.log.Printf("WARN  %-20s %v", "dispatch", err)
+				return
+			}
+
+			if err := d.mqttd.authorise(rq.ClientID, msg.Topic()); err != nil {
+				d.log.Printf("WARN  %-20s %v", fn.method, fmt.Errorf("Error authorising request (%v)", err))
+				return
+			}
+
+			replyTo := d.mqttd.Topics.Replies
+
+			if rq.ClientID != nil {
+				replyTo = d.mqttd.Topics.Replies + "/" + *rq.ClientID
+			}
+
+			if rq.ReplyTo != nil {
+				replyTo = *rq.ReplyTo
+			}
+
+			meta := metainfo{
+				RequestID: rq.RequestID,
+				ClientID:  rq.ClientID,
+				ServerID:  d.mqttd.ServerID,
+				Method:    fn.method,
+				Nonce:     func() uint64 { return d.mqttd.Encryption.Nonce.Next() },
+			}
+
+			response, err := fn.f(d.uhppoted, rq.Request)
+
+			if err != nil {
+				d.log.Printf("WARN  %-12s %v", fn.method, err)
+				if response != nil {
+					reply := struct {
+						Error interface{} `json:"error"`
+					}{
+						Error: response,
+					}
+
+					if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgError, false); err != nil {
+						d.log.Printf("WARN  %-20s %v", fn.method, err)
+					}
+				}
+			} else if response != nil {
+				reply := struct {
+					Response interface{} `json:"response"`
+				}{
+					Response: response,
+				}
+
+				if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
+					d.log.Printf("WARN  %-20s %v", fn.method, err)
+				}
+			}
+		}()
+	}
+
+	if fn, ok := d.tablex[msg.Topic()]; ok {
 		msg.Ack()
 
 		d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))
