@@ -310,8 +310,8 @@ get-time-profiles:
                                                         "client-id":   "$(CLIENTID)",  \
                                                         "reply-to":    "$(REPLYTO)",   \
                                                         "device-id":   $(SERIALNO),    \
-                                                        "from":        200,            \
-                                                        "to":          250 }}}'
+                                                        "from":        2,            \
+                                                        "to":          254 }}}'
 
 set-time-profiles:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profiles:set'          \

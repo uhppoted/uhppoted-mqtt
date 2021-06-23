@@ -8,7 +8,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetTimeProfile(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID  *uint32 `json:"device-id"`
 		ProfileID *uint8  `json:"profile-id"`
@@ -39,7 +39,7 @@ func (d *Device) GetTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interf
 	return response, nil
 }
 
-func (d *Device) PutTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) PutTimeProfile(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uint32            `json:"device-id"`
 		Profile  *types.TimeProfile `json:"profile"`
@@ -70,7 +70,7 @@ func (d *Device) PutTimeProfile(impl *uhppoted.UHPPOTED, request []byte) (interf
 	return response, nil
 }
 
-func (d *Device) ClearTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) ClearTimeProfiles(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uint32 `json:"device-id"`
 	}{}
@@ -94,7 +94,8 @@ func (d *Device) ClearTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (int
 
 	return response, nil
 }
-func (d *Device) GetTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+
+func (d *Device) GetTimeProfiles(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uint32 `json:"device-id"`
 		From     int     `json:"from"`
@@ -126,7 +127,7 @@ func (d *Device) GetTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (inter
 	return response, nil
 }
 
-func (d *Device) PutTimeProfiles(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) PutTimeProfiles(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uint32             `json:"device-id"`
 		Profiles []types.TimeProfile `json:"profiles"`
