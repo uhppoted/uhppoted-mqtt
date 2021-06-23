@@ -90,7 +90,7 @@ The above commands build the `'uhppoted-mqtt` executable to the `bin` directory.
 | *Dependency*                                             | *Description*                                          |
 | -------------------------------------------------------- | ------------------------------------------------------ |
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
-| [uhppoted-api](https://github.com/uhppoted/uhppoted-api) | common API for external applications                   |
+| [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) | common API for external applications                   |
 | golang.org/x/sys/windows                                 | Support for Windows services                           |
 | golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 | github.com/eclipse/paho.mqtt.golang                      | Eclipse Paho MQTT client                               |

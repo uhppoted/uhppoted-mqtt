@@ -3,7 +3,7 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/uhppoted/uhppoted-api/kvs"
+	"github.com/uhppoted/uhppoted-lib/kvs"
 	"log"
 	"strconv"
 )

@@ -1,18 +1,6 @@
-## v0.7.0
+## v0.7.x
 
-- [x] authorized card list for open door
-- [x] `open-door` with time profile
-- [x] `set-acl` with time-profiles
-- [x] `get-acl` with time-profiles
-- [x] `grant` with time-profiles
-- [x] `show` with time-profiles
-- [x] `clear-time-profiles`
-- [x] `set-time-profiles`
-- [x] `get-time-profiles`
-- [x] `set-time-profile`
-- [x] `get-time-profile`
-- [x] Update to latest `uhppote-core` and `uhppoted-api`
-- [x] Add handling for `nil` events in response to `get-status`
+- [ ] `set-task-list`
 
 ## TODO
 

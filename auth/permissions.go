@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppoted-api/kvs"
+	"github.com/uhppoted/uhppoted-lib/kvs"
 	"log"
 	"regexp"
 	"strings"

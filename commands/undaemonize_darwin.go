@@ -9,7 +9,7 @@ import (
 	"strings"
 	"syscall"
 
-	xpath "github.com/uhppoted/uhppoted-api/encoding/plist"
+	xpath "github.com/uhppoted/uhppoted-lib/encoding/plist"
 )
 
 var UNDAEMONIZE = Undaemonize{

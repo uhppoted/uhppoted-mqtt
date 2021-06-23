@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 

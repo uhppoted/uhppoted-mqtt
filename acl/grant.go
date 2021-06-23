@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/uhppoted/uhppote-core/types"
-	api "github.com/uhppoted/uhppoted-api/acl"
-	"github.com/uhppoted/uhppoted-api/uhppoted"
+	api "github.com/uhppoted/uhppoted-lib/acl"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 

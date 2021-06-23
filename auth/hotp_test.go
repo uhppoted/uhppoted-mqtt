@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/uhppoted/uhppoted-api/kvs"
+	"github.com/uhppoted/uhppoted-lib/kvs"
 	"log"
 	"strconv"
 	"testing"

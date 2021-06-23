@@ -1,4 +1,4 @@
-VERSION = v0.7.0
+VERSION = v0.7.x
 DEBUG  ?= --debug
 DIST   ?= development
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
@@ -57,7 +57,7 @@ release: build-all
 
 bump:
 	go get -u github.com/uhppoted/uhppote-core
-	go get -u github.com/uhppoted/uhppoted-api
+	go get -u github.com/uhppoted/uhppoted-lib
 	go get -u github.com/aws/aws-sdk-go
 	go get -u github.com/eclipse/paho.mqtt.golang
 	go get -u github.com/gorilla/websocket

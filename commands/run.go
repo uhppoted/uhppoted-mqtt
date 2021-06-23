@@ -15,8 +15,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-api/monitoring"
+	"github.com/uhppoted/uhppoted-lib/config"
+	"github.com/uhppoted/uhppoted-lib/monitoring"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
 	"github.com/uhppoted/uhppoted-mqtt/mqtt"
 )
