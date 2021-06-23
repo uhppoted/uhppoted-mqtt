@@ -29,6 +29,8 @@ github.com/uhppoted/uhppote-core v0.7.0/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9
 github.com/uhppoted/uhppote-core v0.7.1-0.20210622173347-e3d69060241f/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
 github.com/uhppoted/uhppote-core v0.7.1-0.20210622191425-5cda8b1b391b h1:JW+Z96tHGOgjcyYRsMUMXvRxxG38ySR47XkIPB5hm2A=
 github.com/uhppoted/uhppote-core v0.7.1-0.20210622191425-5cda8b1b391b/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
+github.com/uhppoted/uhppote-core v0.7.1-0.20210623161242-f4224d2856e6 h1:m+v8QQjbMsQt2m7XHa4lwW/UOLcAyAEmc+xei/RbyyI=
+github.com/uhppoted/uhppote-core v0.7.1-0.20210623161242-f4224d2856e6/go.mod h1:trhONXGxYU0V5kOzBShTedYcRY98p9uV99JBZ7F1M0k=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604185635-f199791d91e6 h1:Mx3dYthRsQh3GHVU9c2UEg0kZCouIxP6xFe2C2vgxb4=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604185635-f199791d91e6/go.mod h1:zCF6aRCO9S/qOMDPO8ASCdvCMYGHPlxOigkYMTmoQcs=
 github.com/uhppoted/uhppoted-api v0.6.13-0.20210604191426-94d17e744d62 h1:lUpRjsh3NPRDnOElDA6Y4QXwfpfxcrBz+W0sRLCuJk8=
@@ -45,6 +47,8 @@ github.com/uhppoted/uhppoted-api v0.7.1-0.20210617163927-bf6f84c8f223 h1:DMFP5iC
 github.com/uhppoted/uhppoted-api v0.7.1-0.20210617163927-bf6f84c8f223/go.mod h1:RqewY0tqV0hJ1m/0jePMi98d5NwrlH/yjfg68m6W7qE=
 github.com/uhppoted/uhppoted-lib v0.0.0-20210622184436-351bb2297791 h1:iltMOxBE83i3Omnww0HQLlHfHKhQGJB+NFX0IRmKbck=
 github.com/uhppoted/uhppoted-lib v0.0.0-20210622184436-351bb2297791/go.mod h1:LEu51XbW4hgkkRKFt8ZUydVBN75B12FQYjcQu4TrMiI=
+github.com/uhppoted/uhppoted-lib v0.0.0-20210623162011-384ba65c43e5 h1:4OqK81wboo4z2MrW9+TwP+75ajkXVGfzW6Sdp3ZOOEo=
+github.com/uhppoted/uhppoted-lib v0.0.0-20210623162011-384ba65c43e5/go.mod h1:0bT6T3w1ja+eR2I3uxwqVbP81Et5uzJZq5cTOzhbpnY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
