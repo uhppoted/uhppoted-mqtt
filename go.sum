@@ -55,6 +55,8 @@ github.com/uhppoted/uhppoted-lib v0.0.0-20210623162746-a5cdb2f229da h1:s+O92FPhO
 github.com/uhppoted/uhppoted-lib v0.0.0-20210623162746-a5cdb2f229da/go.mod h1:0bT6T3w1ja+eR2I3uxwqVbP81Et5uzJZq5cTOzhbpnY=
 github.com/uhppoted/uhppoted-lib v0.0.0-20210623164025-64369097cee4 h1:k9/iMvYaFLfuq2P2djv/fhWIb4z9jAbcQGKcpLKGJow=
 github.com/uhppoted/uhppoted-lib v0.0.0-20210623164025-64369097cee4/go.mod h1:KQdxTbdj4bNZDO+BRy4Jk6aN1ntoGy/sEOEXk6uOtlE=
+github.com/uhppoted/uhppoted-lib v0.0.0-20210625185341-ca218ff10054 h1:teBW1mN05lcdi+qWaXBs8AePXW6aBUuurYWG9RxXZTQ=
+github.com/uhppoted/uhppoted-lib v0.0.0-20210625185341-ca218ff10054/go.mod h1:KQdxTbdj4bNZDO+BRy4Jk6aN1ntoGy/sEOEXk6uOtlE=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=

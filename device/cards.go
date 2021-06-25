@@ -8,7 +8,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetCards(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetCards(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 	}{}
@@ -33,7 +33,7 @@ func (d *Device) GetCards(impl *uhppoted.UHPPOTED, request []byte) (interface{},
 	return response, nil
 }
 
-func (d *Device) DeleteCards(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) DeleteCards(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 	}{}
@@ -58,7 +58,7 @@ func (d *Device) DeleteCards(impl *uhppoted.UHPPOTED, request []byte) (interface
 	return response, nil
 }
 
-func (d *Device) GetCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID   *uhppoted.DeviceID `json:"device-id"`
 		CardNumber *uint32            `json:"card-number"`
@@ -89,7 +89,7 @@ func (d *Device) GetCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	return response, nil
 }
 
-func (d *Device) PutCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	type card struct {
 		CardNumber uint32                `json:"card-number"`
 		From       *types.Date           `json:"start-date"`
@@ -176,7 +176,7 @@ func (d *Device) PutCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	}, nil
 }
 
-func (d *Device) DeleteCard(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) DeleteCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID   *uhppoted.DeviceID `json:"device-id"`
 		CardNumber *uint32            `json:"card-number"`

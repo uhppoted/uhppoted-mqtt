@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Door     *uint8             `json:"door"`
@@ -45,7 +45,7 @@ func (d *Device) GetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 	return response, nil
 }
 
-func (d *Device) SetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Door     *uint8             `json:"door"`
@@ -90,7 +90,7 @@ func (d *Device) SetDoorDelay(impl *uhppoted.UHPPOTED, request []byte) (interfac
 	return response, nil
 }
 
-func (d *Device) GetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Door     *uint8             `json:"door"`
@@ -125,7 +125,7 @@ func (d *Device) GetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 	return response, nil
 }
 
-func (d *Device) SetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID     `json:"device-id"`
 		Door     *uint8                 `json:"door"`
@@ -170,7 +170,7 @@ func (d *Device) SetDoorControl(impl *uhppoted.UHPPOTED, request []byte) (interf
 	return response, nil
 }
 
-func (d *Device) OpenDoor(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) OpenDoor(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Card     *uint32            `json:"card-number"`
@@ -231,7 +231,7 @@ func (d *Device) authorized(card uint32) bool {
 	return false
 }
 
-func validate(impl *uhppoted.UHPPOTED, deviceID uint32, cardNumber uint32, door uint8) error {
+func validate(impl uhppoted.IUHPPOTED, deviceID uint32, cardNumber uint32, door uint8) error {
 	rq := uhppoted.GetCardRequest{
 		DeviceID:   uhppoted.DeviceID(deviceID),
 		CardNumber: cardNumber,
@@ -288,7 +288,7 @@ func validate(impl *uhppoted.UHPPOTED, deviceID uint32, cardNumber uint32, door 
 	return nil
 }
 
-func getTimeProfile(impl *uhppoted.UHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+func getTimeProfile(impl uhppoted.IUHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
 	rq := uhppoted.GetTimeProfileRequest{
 		DeviceID:  deviceID,
 		ProfileID: profileID,

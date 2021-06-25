@@ -75,12 +75,12 @@ type AWS struct {
 
 type fdispatch struct {
 	method string
-	f      func(*uhppoted.UHPPOTED, []byte) (interface{}, error)
+	f      func(uhppoted.IUHPPOTED, []byte) (interface{}, error)
 }
 
 type fdispatchx struct {
 	method string
-	f      func(uhppoted.IUHPPOTED, []byte) (interface{}, error)
+	f      func(*uhppoted.UHPPOTED, []byte) (interface{}, error)
 }
 
 type dispatcher struct {
@@ -155,6 +155,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		uhppoted: &api,
 		devices:  devices,
 		log:      log,
+
 		table: map[string]fdispatch{
 			mqttd.Topics.Requests + "/devices:get":               fdispatch{"get-devices", dev.GetDevices},
 			mqttd.Topics.Requests + "/device:get":                fdispatch{"get-device", dev.GetDevice},
@@ -166,30 +167,33 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 			mqttd.Topics.Requests + "/device/door/control:get":   fdispatch{"get-door-control", dev.GetDoorControl},
 			mqttd.Topics.Requests + "/device/door/control:set":   fdispatch{"set-door-control", dev.SetDoorControl},
 			mqttd.Topics.Requests + "/device/door/lock:open":     fdispatch{"open-door", dev.OpenDoor},
-			mqttd.Topics.Requests + "/device/cards:get":          fdispatch{"get-cards", dev.GetCards},
-			mqttd.Topics.Requests + "/device/cards:delete":       fdispatch{"delete-cards", dev.DeleteCards},
-			mqttd.Topics.Requests + "/device/card:get":           fdispatch{"get-card", dev.GetCard},
-			mqttd.Topics.Requests + "/device/card:put":           fdispatch{"put-card", dev.PutCard},
-			mqttd.Topics.Requests + "/device/card:delete":        fdispatch{"delete-card", dev.DeleteCard},
-			mqttd.Topics.Requests + "/device/events:get":         fdispatch{"get-events", dev.GetEvents},
-			mqttd.Topics.Requests + "/device/event:get":          fdispatch{"get-event", dev.GetEvent},
 			mqttd.Topics.Requests + "/device/special-events:set": fdispatch{"record-special-events", dev.RecordSpecialEvents},
 
-			mqttd.Topics.Requests + "/acl/card:show":    fdispatch{"acl:show", acl.Show},
-			mqttd.Topics.Requests + "/acl/card:grant":   fdispatch{"acl:grant", acl.Grant},
-			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatch{"acl:revoke", acl.Revoke},
-			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatch{"acl:upload", acl.Upload},
-			mqttd.Topics.Requests + "/acl/acl:download": fdispatch{"acl:download", acl.Download},
-			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatch{"acl:compare", acl.Compare},
+			mqttd.Topics.Requests + "/device/cards:get":    fdispatch{"get-cards", dev.GetCards},
+			mqttd.Topics.Requests + "/device/cards:delete": fdispatch{"delete-cards", dev.DeleteCards},
+			mqttd.Topics.Requests + "/device/card:get":     fdispatch{"get-card", dev.GetCard},
+			mqttd.Topics.Requests + "/device/card:put":     fdispatch{"put-card", dev.PutCard},
+			mqttd.Topics.Requests + "/device/card:delete":  fdispatch{"delete-card", dev.DeleteCard},
+
+			mqttd.Topics.Requests + "/device/time-profile:get":     fdispatch{"get-time-profile", dev.GetTimeProfile},
+			mqttd.Topics.Requests + "/device/time-profile:set":     fdispatch{"set-time-profile", dev.PutTimeProfile},
+			mqttd.Topics.Requests + "/device/time-profiles:get":    fdispatch{"get-time-profiles", dev.GetTimeProfiles},
+			mqttd.Topics.Requests + "/device/time-profiles:set":    fdispatch{"get-time-profiles", dev.PutTimeProfiles},
+			mqttd.Topics.Requests + "/device/time-profiles:delete": fdispatch{"clear-time-profiles", dev.ClearTimeProfiles},
+
+			mqttd.Topics.Requests + "/device/tasklist:set": fdispatch{"set-task-list", dev.PutTaskList},
+
+			mqttd.Topics.Requests + "/device/events:get": fdispatch{"get-events", dev.GetEvents},
+			mqttd.Topics.Requests + "/device/event:get":  fdispatch{"get-event", dev.GetEvent},
 		},
 
 		tablex: map[string]fdispatchx{
-			mqttd.Topics.Requests + "/device/time-profile:get":     fdispatchx{"get-time-profile", dev.GetTimeProfile},
-			mqttd.Topics.Requests + "/device/time-profile:set":     fdispatchx{"set-time-profile", dev.PutTimeProfile},
-			mqttd.Topics.Requests + "/device/time-profiles:get":    fdispatchx{"get-time-profiles", dev.GetTimeProfiles},
-			mqttd.Topics.Requests + "/device/time-profiles:set":    fdispatchx{"get-time-profiles", dev.PutTimeProfiles},
-			mqttd.Topics.Requests + "/device/time-profiles:delete": fdispatchx{"clear-time-profiles", dev.ClearTimeProfiles},
-			mqttd.Topics.Requests + "/device/tasklist:set":         fdispatchx{"set-task-list", dev.PutTaskList},
+			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
+			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},
+			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatchx{"acl:revoke", acl.Revoke},
+			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatchx{"acl:upload", acl.Upload},
+			mqttd.Topics.Requests + "/acl/acl:download": fdispatchx{"acl:download", acl.Download},
+			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatchx{"acl:compare", acl.Compare},
 		},
 	}
 

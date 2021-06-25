@@ -7,7 +7,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetDevices(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetDevices(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	rq := uhppoted.GetDevicesRequest{}
 
 	response, err := impl.GetDevices(rq)
@@ -18,7 +18,7 @@ func (d *Device) GetDevices(impl *uhppoted.UHPPOTED, request []byte) (interface{
 	return response, nil
 }
 
-func (d *Device) GetDevice(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetDevice(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 	}{}

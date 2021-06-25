@@ -8,7 +8,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetTime(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 	}{}
@@ -33,7 +33,7 @@ func (d *Device) GetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, 
 	return response, nil
 }
 
-func (d *Device) SetTime(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetTime(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		DateTime *types.DateTime    `json:"date-time"`

@@ -1,8 +1,9 @@
 ## v0.7.x
 
+- [ ] Migrate dispatch to use IUHPPOTED
+- [ ] Make reconnect time configurable
 - [x] `set-task-list`
 - [x] Fix log/debug request datetime
-- [ ] Migrate dispatch to use IUHPPOTED
 
 ## TODO
 

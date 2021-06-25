@@ -16,7 +16,7 @@ type enddate time.Time
 // Handler for the special-events MQTT message. Extracts the 'enabled' value from the request
 // and invokes the uhppoted-lib.RecordSpecialEvents API function to update the controller
 // 'record special events' flag.
-func (d *Device) RecordSpecialEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Enabled  *bool              `json:"enabled"`
@@ -51,7 +51,7 @@ func (d *Device) RecordSpecialEvents(impl *uhppoted.UHPPOTED, request []byte) (i
 	return response, nil
 }
 
-func (d *Device) GetEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Start    *startdate         `json:"start"`
@@ -84,7 +84,7 @@ func (d *Device) GetEvents(impl *uhppoted.UHPPOTED, request []byte) (interface{}
 	return response, nil
 }
 
-func (d *Device) GetEvent(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		EventID  *uint32            `json:"event-id"`
