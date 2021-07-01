@@ -9,7 +9,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (a *ACL) Show(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		CardNumber *uint32 `json:"card-number"`
 	}{}
@@ -22,7 +22,7 @@ func (a *ACL) Show(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error)
 		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("Missing/invalid card number")
 	}
 
-	acl, err := api.GetCard(impl.UHPPOTE, a.Devices, *body.CardNumber)
+	acl, err := api.GetCard(a.UHPPOTE, a.Devices, *body.CardNumber)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, "Error retrieving card access permissions", err), err
 	}

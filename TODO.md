@@ -1,12 +1,12 @@
 ## v0.7.x
 
-- [ ] Migrate dispatch to use IUHPPOTED
-- [ ] Make reconnect time configurable
+- [x] Migrate ACL dispatch to use IUHPPOTED
 - [x] `set-task-list`
 - [x] Fix log/debug request datetime
 
 ## TODO
 
+- [ ] Make reconnect time configurable
 - [ ] Replace values passed in Context with initialised struct
 - [ ] last-will-and-testament (?)
 - [ ] publish add/delete card, etc to event stream

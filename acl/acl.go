@@ -29,6 +29,7 @@ const (
 )
 
 type ACL struct {
+	UHPPOTE     uhppote.IUHPPOTE
 	Devices     []uhppote.Device
 	RSA         *auth.RSA
 	Credentials *credentials.Credentials

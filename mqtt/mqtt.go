@@ -78,18 +78,12 @@ type fdispatch struct {
 	f      func(uhppoted.IUHPPOTED, []byte) (interface{}, error)
 }
 
-type fdispatchx struct {
-	method string
-	f      func(*uhppoted.UHPPOTED, []byte) (interface{}, error)
-}
-
 type dispatcher struct {
 	mqttd    *MQTTD
 	uhppoted *uhppoted.UHPPOTED
 	devices  []uhppote.Device
 	log      *log.Logger
 	table    map[string]fdispatch
-	tablex   map[string]fdispatchx
 }
 
 type request struct {
@@ -142,6 +136,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 	}
 
 	acl := acl.ACL{
+		UHPPOTE:     u,
 		Devices:     devices,
 		RSA:         mqttd.Encryption.RSA,
 		Credentials: mqttd.AWS.Credentials,
@@ -157,43 +152,37 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		log:      log,
 
 		table: map[string]fdispatch{
-			mqttd.Topics.Requests + "/devices:get":               fdispatch{"get-devices", dev.GetDevices},
-			mqttd.Topics.Requests + "/device:get":                fdispatch{"get-device", dev.GetDevice},
-			mqttd.Topics.Requests + "/device/status:get":         fdispatch{"get-status", dev.GetStatus},
-			mqttd.Topics.Requests + "/device/time:get":           fdispatch{"get-time", dev.GetTime},
-			mqttd.Topics.Requests + "/device/time:set":           fdispatch{"set-time", dev.SetTime},
-			mqttd.Topics.Requests + "/device/door/delay:get":     fdispatch{"get-door-delay", dev.GetDoorDelay},
-			mqttd.Topics.Requests + "/device/door/delay:set":     fdispatch{"set-door-delay", dev.SetDoorDelay},
-			mqttd.Topics.Requests + "/device/door/control:get":   fdispatch{"get-door-control", dev.GetDoorControl},
-			mqttd.Topics.Requests + "/device/door/control:set":   fdispatch{"set-door-control", dev.SetDoorControl},
-			mqttd.Topics.Requests + "/device/door/lock:open":     fdispatch{"open-door", dev.OpenDoor},
-			mqttd.Topics.Requests + "/device/special-events:set": fdispatch{"record-special-events", dev.RecordSpecialEvents},
-
-			mqttd.Topics.Requests + "/device/cards:get":    fdispatch{"get-cards", dev.GetCards},
-			mqttd.Topics.Requests + "/device/cards:delete": fdispatch{"delete-cards", dev.DeleteCards},
-			mqttd.Topics.Requests + "/device/card:get":     fdispatch{"get-card", dev.GetCard},
-			mqttd.Topics.Requests + "/device/card:put":     fdispatch{"put-card", dev.PutCard},
-			mqttd.Topics.Requests + "/device/card:delete":  fdispatch{"delete-card", dev.DeleteCard},
-
+			mqttd.Topics.Requests + "/devices:get":                 fdispatch{"get-devices", dev.GetDevices},
+			mqttd.Topics.Requests + "/device:get":                  fdispatch{"get-device", dev.GetDevice},
+			mqttd.Topics.Requests + "/device/status:get":           fdispatch{"get-status", dev.GetStatus},
+			mqttd.Topics.Requests + "/device/time:get":             fdispatch{"get-time", dev.GetTime},
+			mqttd.Topics.Requests + "/device/time:set":             fdispatch{"set-time", dev.SetTime},
+			mqttd.Topics.Requests + "/device/door/delay:get":       fdispatch{"get-door-delay", dev.GetDoorDelay},
+			mqttd.Topics.Requests + "/device/door/delay:set":       fdispatch{"set-door-delay", dev.SetDoorDelay},
+			mqttd.Topics.Requests + "/device/door/control:get":     fdispatch{"get-door-control", dev.GetDoorControl},
+			mqttd.Topics.Requests + "/device/door/control:set":     fdispatch{"set-door-control", dev.SetDoorControl},
+			mqttd.Topics.Requests + "/device/door/lock:open":       fdispatch{"open-door", dev.OpenDoor},
+			mqttd.Topics.Requests + "/device/special-events:set":   fdispatch{"record-special-events", dev.RecordSpecialEvents},
+			mqttd.Topics.Requests + "/device/cards:get":            fdispatch{"get-cards", dev.GetCards},
+			mqttd.Topics.Requests + "/device/cards:delete":         fdispatch{"delete-cards", dev.DeleteCards},
+			mqttd.Topics.Requests + "/device/card:get":             fdispatch{"get-card", dev.GetCard},
+			mqttd.Topics.Requests + "/device/card:put":             fdispatch{"put-card", dev.PutCard},
+			mqttd.Topics.Requests + "/device/card:delete":          fdispatch{"delete-card", dev.DeleteCard},
 			mqttd.Topics.Requests + "/device/time-profile:get":     fdispatch{"get-time-profile", dev.GetTimeProfile},
 			mqttd.Topics.Requests + "/device/time-profile:set":     fdispatch{"set-time-profile", dev.PutTimeProfile},
 			mqttd.Topics.Requests + "/device/time-profiles:get":    fdispatch{"get-time-profiles", dev.GetTimeProfiles},
 			mqttd.Topics.Requests + "/device/time-profiles:set":    fdispatch{"get-time-profiles", dev.PutTimeProfiles},
 			mqttd.Topics.Requests + "/device/time-profiles:delete": fdispatch{"clear-time-profiles", dev.ClearTimeProfiles},
+			mqttd.Topics.Requests + "/device/tasklist:set":         fdispatch{"set-task-list", dev.PutTaskList},
+			mqttd.Topics.Requests + "/device/events:get":           fdispatch{"get-events", dev.GetEvents},
+			mqttd.Topics.Requests + "/device/event:get":            fdispatch{"get-event", dev.GetEvent},
 
-			mqttd.Topics.Requests + "/device/tasklist:set": fdispatch{"set-task-list", dev.PutTaskList},
-
-			mqttd.Topics.Requests + "/device/events:get": fdispatch{"get-events", dev.GetEvents},
-			mqttd.Topics.Requests + "/device/event:get":  fdispatch{"get-event", dev.GetEvent},
-		},
-
-		tablex: map[string]fdispatchx{
-			mqttd.Topics.Requests + "/acl/card:show":    fdispatchx{"acl:show", acl.Show},
-			mqttd.Topics.Requests + "/acl/card:grant":   fdispatchx{"acl:grant", acl.Grant},
-			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatchx{"acl:revoke", acl.Revoke},
-			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatchx{"acl:upload", acl.Upload},
-			mqttd.Topics.Requests + "/acl/acl:download": fdispatchx{"acl:download", acl.Download},
-			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatchx{"acl:compare", acl.Compare},
+			mqttd.Topics.Requests + "/acl/card:show":    fdispatch{"acl:show", acl.Show},
+			mqttd.Topics.Requests + "/acl/card:grant":   fdispatch{"acl:grant", acl.Grant},
+			mqttd.Topics.Requests + "/acl/card:revoke":  fdispatch{"acl:revoke", acl.Revoke},
+			mqttd.Topics.Requests + "/acl/acl:upload":   fdispatch{"acl:upload", acl.Upload},
+			mqttd.Topics.Requests + "/acl/acl:download": fdispatch{"acl:download", acl.Download},
+			mqttd.Topics.Requests + "/acl/acl:compare":  fdispatch{"acl:compare", acl.Compare},
 		},
 	}
 
@@ -320,70 +309,6 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 	ctx = context.WithValue(ctx, "log", d.log)
 
 	if fn, ok := d.table[msg.Topic()]; ok {
-		msg.Ack()
-
-		d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))
-
-		go func() {
-			rq, err := d.mqttd.unwrap(msg.Payload())
-			if err != nil {
-				d.log.Printf("WARN  %-20s %v", "dispatch", err)
-				return
-			}
-
-			if err := d.mqttd.authorise(rq.ClientID, msg.Topic()); err != nil {
-				d.log.Printf("WARN  %-20s %v", fn.method, fmt.Errorf("Error authorising request (%v)", err))
-				return
-			}
-
-			replyTo := d.mqttd.Topics.Replies
-
-			if rq.ClientID != nil {
-				replyTo = d.mqttd.Topics.Replies + "/" + *rq.ClientID
-			}
-
-			if rq.ReplyTo != nil {
-				replyTo = *rq.ReplyTo
-			}
-
-			meta := metainfo{
-				RequestID: rq.RequestID,
-				ClientID:  rq.ClientID,
-				ServerID:  d.mqttd.ServerID,
-				Method:    fn.method,
-				Nonce:     func() uint64 { return d.mqttd.Encryption.Nonce.Next() },
-			}
-
-			response, err := fn.f(d.uhppoted, rq.Request)
-
-			if err != nil {
-				d.log.Printf("WARN  %-12s %v", fn.method, err)
-				if response != nil {
-					reply := struct {
-						Error interface{} `json:"error"`
-					}{
-						Error: response,
-					}
-
-					if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgError, false); err != nil {
-						d.log.Printf("WARN  %-20s %v", fn.method, err)
-					}
-				}
-			} else if response != nil {
-				reply := struct {
-					Response interface{} `json:"response"`
-				}{
-					Response: response,
-				}
-
-				if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
-					d.log.Printf("WARN  %-20s %v", fn.method, err)
-				}
-			}
-		}()
-	}
-
-	if fn, ok := d.tablex[msg.Topic()]; ok {
 		msg.Ack()
 
 		d.log.Printf("DEBUG %-20s %s", "dispatch", string(msg.Payload()))

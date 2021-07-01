@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (a *ACL) Grant(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		CardNumber *uint32     `json:"card-number"`
 		From       *types.Date `json:"start-date"`
@@ -39,7 +39,7 @@ func (a *ACL) Grant(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error
 		return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid time profile (%v)", body.Profile), nil), fmt.Errorf("Invalid time profile (%v)", body.Profile)
 	}
 
-	err := api.Grant(impl.UHPPOTE, a.Devices, *body.CardNumber, *body.From, *body.To, body.Profile, body.Doors)
+	err := api.Grant(a.UHPPOTE, a.Devices, *body.CardNumber, *body.From, *body.To, body.Profile, body.Doors)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, err.Error(), nil), err
 	}

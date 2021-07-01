@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, error) {
+func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
 		URL *string `json:"url"`
 	}{}
@@ -41,7 +41,7 @@ func (a *ACL) Download(impl *uhppoted.UHPPOTED, request []byte) (interface{}, er
 		a.info("acl:download", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
 	}
 
-	rpt, errors := api.PutACL(impl.UHPPOTE, *acl, false)
+	rpt, errors := api.PutACL(a.UHPPOTE, *acl, false)
 	if len(errors) > 0 {
 		err := fmt.Errorf("%v", errors)
 		return common.MakeError(StatusInternalServerError, "Error updating ACL", err), err
