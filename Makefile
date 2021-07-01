@@ -1,7 +1,5 @@
-VERSION = v0.7.x
 DEBUG  ?= --debug
 DIST   ?= development
-LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 
 SERIALNO  ?= 405419896
 CARD      ?= 1327679

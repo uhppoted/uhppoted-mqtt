@@ -1,4 +1,4 @@
-## v0.7.x
+## v0.7.1
 
 - [x] Migrate ACL dispatch to use IUHPPOTED
 - [x] `set-task-list`
