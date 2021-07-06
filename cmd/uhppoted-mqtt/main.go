@@ -6,6 +6,7 @@ import (
 
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/command"
+	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-mqtt/commands"
 )
 
@@ -13,10 +14,13 @@ var cli = []uhppoted.Command{
 	&commands.RUN,
 	&commands.DAEMONIZE,
 	&commands.UNDAEMONIZE,
-	&commands.DUMP,
 	&uhppoted.Version{
 		Application: commands.SERVICE,
 		Version:     uhppote.VERSION,
+	},
+	&uhppoted.Config{
+		Application: commands.SERVICE,
+		Config:      config.DefaultConfig,
 	},
 }
 

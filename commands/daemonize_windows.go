@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,6 +11,7 @@ import (
 	"golang.org/x/sys/windows/svc/eventlog"
 	"golang.org/x/sys/windows/svc/mgr"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/config"
 )
 
@@ -28,8 +28,8 @@ type info struct {
 	Executable       string
 	WorkDir          string
 	LogDir           string
-	BindAddress      *net.UDPAddr
-	BroadcastAddress *net.UDPAddr
+	BindAddress      *types.BindAddr
+	BroadcastAddress *types.BroadcastAddr
 }
 
 type Daemonize struct {

@@ -1,8 +1,6 @@
-## v0.7.1
+## v0.7.x
 
-- [x] Migrate ACL dispatch to use IUHPPOTED
-- [x] `set-task-list`
-- [x] Fix log/debug request datetime
+- [x] Use `uhppoted-lib` `config` command implementation
 
 ## TODO
 
