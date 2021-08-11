@@ -127,9 +127,9 @@ func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 
 func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
-		DeviceID *uhppoted.DeviceID     `json:"device-id"`
-		Door     *uint8                 `json:"door"`
-		Control  *uhppoted.ControlState `json:"control"`
+		DeviceID *uhppoted.DeviceID  `json:"device-id"`
+		Door     *uint8              `json:"door"`
+		Control  *types.ControlState `json:"control"`
 	}{}
 
 	if response, err := unmarshal(request, &body); err != nil {

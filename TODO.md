@@ -1,10 +1,12 @@
 ## v0.7.x
 
+### IN PROGRESS
+
 - [x] Use `uhppoted-lib` `config` command implementation
+- [ ] Make reconnect time configurable
 
 ## TODO
 
-- [ ] Make reconnect time configurable
 - [ ] Replace values passed in Context with initialised struct
 - [ ] last-will-and-testament (?)
 - [ ] publish add/delete card, etc to event stream
