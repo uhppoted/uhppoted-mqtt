@@ -1,17 +1,13 @@
 package device
 
 import (
-	"encoding/json"
 	"fmt"
-	"time"
+	"regexp"
+	"strconv"
 
-	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
-
-type startdate time.Time
-type enddate time.Time
 
 // Handler for the special-events MQTT message. Extracts the 'enabled' value from the request
 // and invokes the uhppoted-lib.RecordSpecialEvents API function to update the controller
@@ -51,118 +47,133 @@ func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (i
 	return response, nil
 }
 
-func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetEventIndices(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
-		DeviceID *uhppoted.DeviceID `json:"device-id"`
-		Start    *startdate         `json:"start"`
-		End      *enddate           `json:"end"`
+		DeviceID uint32 `json:"device-id"`
 	}{}
 
 	if response, err := unmarshal(request, &body); err != nil {
 		return response, err
 	}
 
-	if body.DeviceID == nil {
+	if body.DeviceID == 0 {
 		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
 	}
 
-	if body.Start != nil && body.End != nil && time.Time(*body.End).Before(time.Time(*body.Start)) {
-		return common.MakeError(StatusBadRequest, "Invalid event data range", nil), fmt.Errorf("Invalid event date range: %v to %v", body.Start, body.End)
-	}
-
-	rq := uhppoted.GetEventRangeRequest{
-		DeviceID: *body.DeviceID,
-		Start:    (*types.DateTime)(body.Start),
-		End:      (*types.DateTime)(body.End),
-	}
-
-	response, err := impl.GetEventRange(rq)
+	first, last, current, err := impl.GetEventIndices(body.DeviceID)
 	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve events from %d", *body.DeviceID), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve events from %d", body.DeviceID), err), err
+	}
+
+	response := struct {
+		DeviceID uint32 `json:"device-id,omitempty"`
+		First    uint32 `json:"first,omitempty"`
+		Last     uint32 `json:"last,omitempty"`
+		Current  uint32 `json:"current,omitempty"`
+	}{
+		DeviceID: body.DeviceID,
+		First:    first,
+		Last:     last,
+		Current:  current,
 	}
 
 	return response, nil
 }
 
 func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+	var deviceID uint32
+	var index string
+
 	body := struct {
-		DeviceID *uhppoted.DeviceID `json:"device-id"`
-		EventID  *uint32            `json:"event-id"`
+		DeviceID uint32      `json:"device-id"`
+		Index    interface{} `json:"event-index"`
 	}{}
 
 	if response, err := unmarshal(request, &body); err != nil {
 		return response, err
 	}
 
-	if body.DeviceID == nil {
+	if body.DeviceID == 0 {
 		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+	} else {
+		deviceID = body.DeviceID
 	}
 
-	if body.EventID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing event ID", nil), fmt.Errorf("Invalid/missing event ID")
+	if body.Index == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing event index", nil), fmt.Errorf("Invalid/missing event index")
 	}
 
-	rq := uhppoted.GetEventRequest{
-		DeviceID: *body.DeviceID,
-		EventID:  *body.EventID,
+	// ... parse event index
+
+	if matches := regexp.MustCompile("^([0-9]+|first|last|current|next)$").FindStringSubmatch(fmt.Sprintf("%v", body.Index)); matches == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing event index", nil), fmt.Errorf("Invalid/missing event index")
+	} else {
+		index = matches[1]
 	}
 
-	response, err := impl.GetEvent(rq)
+	// .. get event indices
+	first, last, current, err := impl.GetEventIndices(deviceID)
 	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve events from %d", *body.DeviceID), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event indices from %v", deviceID), err), err
 	}
 
-	return response, nil
+	// ... get event
+	switch index {
+	case "first":
+		return getEvent(impl, deviceID, first)
+
+	case "last":
+		return getEvent(impl, deviceID, last)
+
+	case "current":
+		return getEvent(impl, deviceID, current)
+
+	case "next":
+		return getNextEvent(impl, deviceID)
+
+	default:
+		if v, err := strconv.ParseUint(index, 10, 32); err != nil {
+			return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid event index (%v)", body.Index), nil), fmt.Errorf("Invalid event index (%v)", index)
+		} else {
+			return getEvent(impl, deviceID, uint32(v))
+		}
+	}
 }
 
-func (d *startdate) UnmarshalJSON(bytes []byte) error {
-	var s string
-
-	err := json.Unmarshal(bytes, &s)
+func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (interface{}, error) {
+	event, err := impl.GetEvent(deviceID, index)
 	if err != nil {
-		return err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event %v from %v", index, deviceID), err), err
+	} else if event == nil {
+		return common.MakeError(StatusNotFound, fmt.Sprintf("No event at %v on %v", index, deviceID), nil), fmt.Errorf("No event at %v on %v", index, deviceID)
 	}
 
-	if datetime, err := time.ParseInLocation("2006-01-02 15:04:05", s, time.Local); err == nil {
-		*d = startdate(datetime)
-		return nil
+	response := struct {
+		DeviceID uint32      `json:"device-id"`
+		Event    interface{} `json:"event"`
+	}{
+		DeviceID: deviceID,
+		Event:    event,
 	}
 
-	if datetime, err := time.ParseInLocation("2006-01-02 15:04", s, time.Local); err == nil {
-		*d = startdate(datetime)
-		return nil
-	}
-
-	if date, err := time.ParseInLocation("2006-01-02", s, time.Local); err == nil {
-		*d = startdate(date)
-		return nil
-	}
-
-	return fmt.Errorf("Cannot parse date/time %s", string(bytes))
+	return &response, nil
 }
 
-func (d *enddate) UnmarshalJSON(bytes []byte) error {
-	var s string
-
-	err := json.Unmarshal(bytes, &s)
+func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (interface{}, error) {
+	event, err := impl.GetNextEvent(deviceID)
 	if err != nil {
-		return err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event from %v", deviceID), err), err
+	} else if event == nil {
+		return common.MakeError(StatusNotFound, fmt.Sprintf("No 'next' event for %v", deviceID), nil), fmt.Errorf("No 'next' event for %v", deviceID)
 	}
 
-	if datetime, err := time.ParseInLocation("2006-01-02 15:04:05", s, time.Local); err == nil {
-		*d = enddate(datetime)
-		return nil
+	response := struct {
+		DeviceID uint32      `json:"device-id"`
+		Event    interface{} `json:"event"`
+	}{
+		DeviceID: deviceID,
+		Event:    event,
 	}
 
-	if datetime, err := time.ParseInLocation("2006-01-02 15:04", s, time.Local); err == nil {
-		*d = enddate(datetime)
-		return nil
-	}
-
-	if date, err := time.ParseInLocation("2006-01-02", s, time.Local); err == nil {
-		*d = enddate(time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999999999, time.Local))
-		return nil
-	}
-
-	return fmt.Errorf("Cannot parse date/time %s", string(bytes))
+	return &response, nil
 }

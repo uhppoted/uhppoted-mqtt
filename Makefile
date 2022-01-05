@@ -8,6 +8,10 @@ CLIENTID  ?= QWERTY54
 REPLYTO   ?= uhppoted/reply/97531
 DATETIME  = $(shell date "+%Y-%m-%d %H:%M:%S")
 
+.PHONY: clean
+.PHONY: update
+.PHONY: update-release
+
 all: test      \
 	 benchmark \
      coverage
@@ -15,6 +19,24 @@ all: test      \
 clean:
 	go clean
 	rm -rf bin
+
+update:
+	go get -u github.com/uhppoted/uhppote-core@master
+	go get -u github.com/uhppoted/uhppoted-lib@master
+	go get -u github.com/aws/aws-sdk-go
+	go get -u github.com/eclipse/paho.mqtt.golang
+	go get -u github.com/gorilla/websocket
+	go get -u golang.org/x/net
+	go get -u golang.org/x/sys
+
+update-release:
+	go get -u github.com/uhppoted/uhppote-core
+	go get -u github.com/uhppoted/uhppoted-lib
+	go get -u github.com/aws/aws-sdk-go
+	go get -u github.com/eclipse/paho.mqtt.golang
+	go get -u github.com/gorilla/websocket
+	go get -u golang.org/x/net
+	go get -u golang.org/x/sys
 
 format: 
 	go fmt ./...
@@ -48,31 +70,26 @@ build-all: test vet
 	env GOOS=darwin  GOARCH=amd64         go build -o dist/$(DIST)/darwin  ./...
 	env GOOS=windows GOARCH=amd64         go build -o dist/$(DIST)/windows ./...
 
-release: build-all
+release: update-release build-all
 	find . -name ".DS_Store" -delete
 	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
-bump:
-	go get -u github.com/uhppoted/uhppote-core
-	go get -u github.com/uhppoted/uhppoted-lib
-	go get -u github.com/aws/aws-sdk-go
-	go get -u github.com/eclipse/paho.mqtt.golang
-	go get -u github.com/gorilla/websocket
-	go get -u golang.org/x/net
-	go get -u golang.org/x/sys
-
 debug: build
-	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
-               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                      "client-id":  "$(CLIENTID)", \
-                                                      "reply-to":   "$(REPLYTO)", \
-                                                      "device-id":  405419896 }}}'
-	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
-               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                      "client-id":  "$(CLIENTID)", \
-                                                      "reply-to":   "$(REPLYTO)", \
-                                                      "device-id":  303986753 }}}'
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id": 303986753, \
+                                                      "event-index": 50 }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id": 201020304, \
+                                                      "event-index": 500 }}}'
+
 godoc:
 	godoc -http=:80	-index_interval=60s
 
@@ -377,17 +394,43 @@ get-events:
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
                                                       "client-id":  "$(CLIENTID)", \
                                                       "reply-to":   "$(REPLYTO)", \
-                                                      "device-id":  $(SERIALNO), \
-                                                      "start":      "2019-08-05", \
-                                                      "end":        "2019-08-09" }}}'
+                                                      "device-id":  $(SERIALNO) }}}'
 
 get-event:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
-               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                      "client-id":  "$(CLIENTID)", \
-                                                      "reply-to":   "$(REPLYTO)", \
-                                                      "device-id":  $(SERIALNO), \
-                                                      "event-id":   50 }}}'
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":$(SERIALNO), \
+                                                      "event-index": 50 }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":$(SERIALNO), \
+                                                      "event-index": "first" }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":$(SERIALNO), \
+                                                      "event-index": "last" }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":$(SERIALNO), \
+                                                      "event-index": "current" }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":$(SERIALNO), \
+                                                      "event-index": "next" }}}'
 
 open-door:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/door/lock:open' \

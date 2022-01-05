@@ -12,6 +12,7 @@ const (
 	StatusInternalServerError = uhppoted.StatusInternalServerError
 	StatusBadRequest          = uhppoted.StatusBadRequest
 	StatusUnauthorized        = uhppoted.StatusUnauthorized
+	StatusNotFound            = uhppoted.StatusNotFound
 )
 
 type Device struct {
