@@ -160,7 +160,7 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (interface
 }
 
 func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (interface{}, error) {
-	event, err := impl.GetNextEvent(deviceID)
+	event, err := impl.GetEvents(deviceID, 1)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event from %v", deviceID), err), err
 	} else if event == nil {

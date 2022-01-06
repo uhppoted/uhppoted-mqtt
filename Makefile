@@ -28,6 +28,7 @@ update:
 	go get -u github.com/gorilla/websocket
 	go get -u golang.org/x/net
 	go get -u golang.org/x/sys
+	go mod tidy
 
 update-release:
 	go get -u github.com/uhppoted/uhppote-core
@@ -37,6 +38,7 @@ update-release:
 	go get -u github.com/gorilla/websocket
 	go get -u golang.org/x/net
 	go get -u golang.org/x/sys
+	go mod tidy
 
 format: 
 	go fmt ./...

@@ -1,6 +1,6 @@
 ## CHANGELOG
 
-### v0.7.x
+### v0.7.2
 
 1. Migrated to uhppoted-lib `config` command implementation
 2. Reworked `get-events` to return the `first`, `last` and `current` event indices.
