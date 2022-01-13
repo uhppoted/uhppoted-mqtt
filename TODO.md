@@ -3,7 +3,17 @@
 ### IN PROGRESS
 
 - [x] Use `uhppoted-lib` `config` command implementation
+- [x] Rework 'get-events' to return first, last and current event indices
+- [x] Rework 'get-event' to accept:
+      - [x] index
+      - [x] first
+      - [x] last
+      - [x] current
+      - [x] next
+      - [x] next?count=N
+
 - [ ] Make reconnect time configurable
+- [ ] Relook at encoding reply content - maybe json.RawMessage can preserve the field order
 
 ## TODO
 

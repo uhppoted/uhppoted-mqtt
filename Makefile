@@ -78,20 +78,12 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
                --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
                                                       "client-id":"$(CLIENTID)", \
                                                       "reply-to":"$(REPLYTO)", \
-                                                      "device-id": 303986753, \
-                                                      "event-index": 50 }}}'
-
-	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
-               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
-                                                      "client-id":"$(CLIENTID)", \
-                                                      "reply-to":"$(REPLYTO)", \
-                                                      "device-id": 201020304, \
-                                                      "event-index": 500 }}}'
-
+                                                      "device-id":$(SERIALNO), \
+                                                      "count": 5 }}}'
 godoc:
 	godoc -http=:80	-index_interval=60s
 
@@ -397,6 +389,13 @@ get-events:
                                                       "client-id":  "$(CLIENTID)", \
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO) }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":$(SERIALNO), \
+                                                      "count": 3 }}}'
 
 get-event:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
