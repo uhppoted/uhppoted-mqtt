@@ -1,4 +1,4 @@
-## v0.7.x
+## v0.7.2
 
 ### IN PROGRESS
 
@@ -12,11 +12,10 @@
       - [x] next
       - [x] next?count=N
 
-- [ ] Make reconnect time configurable
-- [ ] Relook at encoding reply content - maybe json.RawMessage can preserve the field order
-
 ## TODO
 
+- [ ] Make reconnect time configurable
+- [ ] Relook at encoding reply content - maybe json.RawMessage can preserve the field order
 - [ ] Replace values passed in Context with initialised struct
 - [ ] last-will-and-testament (?)
 - [ ] publish add/delete card, etc to event stream

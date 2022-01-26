@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.2    | Reworked event handling (including removal of rollover)                                   |
 | v0.7.1    | Added `set-task-list` command to manage the controller task list                          |
 | v0.7.0    | Added support time profiles from the extended API                                         |
 | v0.6.12   | Added support for `nil` events in response to `get-status`                                |
@@ -92,9 +93,9 @@ The above commands build the `'uhppoted-mqtt` executable to the `bin` directory.
 | -------------------------------------------------------- | ------------------------------------------------------ |
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
 | [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) | common API for external applications                   |
-| golang.org/x/sys/windows                                 | Support for Windows services                           |
-| golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 | github.com/eclipse/paho.mqtt.golang                      | Eclipse Paho MQTT client                               |
+| golang.org/x/sys                                         | Support for Windows services                           |
+| golang.org/x/net                                         | paho.mqtt.golang dependency                            |
 | github.com/gorilla/websocket                             | paho.mqtt.golang dependency                            |
 
 ## uhppoted-mqtt
