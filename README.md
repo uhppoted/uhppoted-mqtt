@@ -79,7 +79,7 @@ If you prefer not to use `make`:
 git clone https://github.com/uhppoted/uhppoted-mqtt.git
 cd uhppoted-mqtt
 mkdir bin
-go build -o bin ./...
+go build -trimpath -o bin ./...
 ```
 
 The above commands build the `'uhppoted-mqtt` executable to the `bin` directory.
