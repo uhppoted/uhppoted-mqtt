@@ -1,3 +1,7 @@
 .DS_Store
 bin
 dist
+documentation/docker
+documentation/etc
+documentation/tmp
+
