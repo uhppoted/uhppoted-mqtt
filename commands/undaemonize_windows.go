@@ -75,7 +75,7 @@ func (cmd *Undaemonize) Execute(args ...interface{}) error {
 }
 
 func (cmd *Undaemonize) unregister() error {
-	fmt.Println("   ... unregistering %s as a Windows service", cmd.name)
+	fmt.Printf("   ... unregistering %s as a Windows service\n", cmd.name)
 	m, err := mgr.Connect()
 	if err != nil {
 		return err
