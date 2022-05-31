@@ -121,7 +121,7 @@ func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 			CardNumber: c.CardNumber,
 			From:       c.From,
 			To:         c.To,
-			Doors:      map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0},
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		},
 	}
 
@@ -134,12 +134,12 @@ func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 
 		case int:
 			if v >= 2 && v < 254 {
-				rq.Card.Doors[k] = v
+				rq.Card.Doors[k] = uint8(v)
 			}
 
 		case float64:
 			if int(v) >= 2 && int(v) < 254 {
-				rq.Card.Doors[k] = int(v)
+				rq.Card.Doors[k] = uint8(v)
 			}
 		}
 	}

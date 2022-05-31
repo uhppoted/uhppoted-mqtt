@@ -76,15 +76,22 @@ func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 		return common.MakeError(StatusBadRequest, "Invalid/missing delay", nil), fmt.Errorf("Invalid/missing delay: %v", *body.Delay)
 	}
 
-	rq := uhppoted.SetDoorDelayRequest{
-		DeviceID: *body.DeviceID,
-		Door:     *body.Door,
-		Delay:    *body.Delay,
+	deviceID := uint32(*body.DeviceID)
+	door := *body.Door
+	delay := *body.Delay
+
+	if err := impl.SetDoorDelay(deviceID, door, delay); err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
-	response, err := impl.SetDoorDelay(rq)
-	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
+	response := struct {
+		DeviceID uint32 `json:"device-id"`
+		Door     uint8  `json:"door"`
+		Delay    uint8  `json:"delay"`
+	}{
+		DeviceID: deviceID,
+		Door:     door,
+		Delay:    delay,
 	}
 
 	return response, nil
@@ -156,15 +163,22 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 		return common.MakeError(StatusBadRequest, "Invalid/missing door control state", nil), fmt.Errorf("Invalid/missing control state: %v", *body.Control)
 	}
 
-	rq := uhppoted.SetDoorControlRequest{
-		DeviceID: *body.DeviceID,
-		Door:     *body.Door,
-		Control:  *body.Control,
+	deviceID := uint32(*body.DeviceID)
+	door := *body.Door
+	mode := *body.Control
+
+	if err := impl.SetDoorControl(deviceID, door, mode); err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
-	response, err := impl.SetDoorControl(rq)
-	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
+	response := struct {
+		DeviceID uint32             `json:"device-id"`
+		Door     uint8              `json:"door"`
+		Control  types.ControlState `json:"control"`
+	}{
+		DeviceID: deviceID,
+		Door:     door,
+		Control:  mode,
 	}
 
 	return response, nil
@@ -302,7 +316,7 @@ func getTimeProfile(impl uhppoted.IUHPPOTED, deviceID uint32, profileID uint8) (
 	return &response.TimeProfile, nil
 }
 
-func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.TimeProfile) error {
+func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile types.TimeProfile) error {
 	now := time.Now()
 	hhmm := types.HHmmFromTime(now)
 	today := types.Date(now)

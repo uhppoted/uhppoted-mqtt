@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.3    | Maintenance release for version compatibility with `uhppoted-core` `v0.7.3`               |
 | v0.7.2    | Reworked event handling (including removal of rollover)                                   |
 | v0.7.1    | Added `set-task-list` command to manage the controller task list                          |
 | v0.7.0    | Added support time profiles from the extended API                                         |
