@@ -78,12 +78,14 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	mqtt publish --topic 'uhppoted/gateway/requests/device/events:get' \
-               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
-                                                      "client-id":"$(CLIENTID)", \
-                                                      "reply-to":"$(REPLYTO)", \
-                                                      "device-id":$(SERIALNO), \
-                                                      "count": 5 }}}'
+	mqtt publish --topic 'uhppoted/gateway/requests/device/door/lock:open' \
+               --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                      "client-id":   "$(CLIENTID)",  \
+                                                      "reply-to":    "$(REPLYTO)",   \
+                                                      "device-id":   $(SERIALNO),    \
+                                                      "card-number": 8165538,        \
+                                                      "door":        4 }}}'
+
 godoc:
 	godoc -http=:80	-index_interval=60s
 
