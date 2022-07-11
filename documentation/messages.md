@@ -35,7 +35,7 @@ This document describes the command and control functions implemented by _uhppot
 21. `set-task-list`
 22. `get-events`
 23. `get-event`
-24. [`open-door`](#open_door)
+24. [`open-door`](messages.md#open-door)
 25. `acl-show`
 26. `acl-grant`
 27. `acl-revoke`
