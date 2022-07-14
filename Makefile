@@ -82,9 +82,18 @@ debug: build
                --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
                                                       "client-id":   "$(CLIENTID)",  \
                                                       "reply-to":    "$(REPLYTO)",   \
-                                                      "device-id":   $(SERIALNO),    \
-                                                      "card-number": 8165538,        \
-                                                      "door":        4 }}}'
+                                                      "device-id":   423187757,      \
+                                                      "card-number": 6154410,        \
+                                                      "door":        1 }}}'
+debug2:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
+                                                      "client-id":"$(CLIENTID)", \
+                                                      "reply-to":"$(REPLYTO)", \
+                                                      "device-id":423187757, \
+                                                      "event-index": 206900 }}}'
+
+	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
 
 godoc:
 	godoc -http=:80	-index_interval=60s

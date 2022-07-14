@@ -1,4 +1,14 @@
-## CHANGELOG
+# CHANGELOG
+
+## [Unreleased]
+
+### Changed
+
+1. **BREAKING CHANGE** 
+   Reworked event struct in `get-event` and `get-events` response to include
+   - event type code and description
+   - event reason code and description
+
 
 ## [v0.8.0] - 2022-07-01
 

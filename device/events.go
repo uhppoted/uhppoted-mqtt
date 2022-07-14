@@ -5,11 +5,30 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+type Event struct {
+	DeviceID uint32 `json:"device-id"`
+	Index    uint32 `json:"event-id"`
+	Type     struct {
+		Code        uint8  `json:"code"`
+		Description string `json:"description"`
+	} `json:"event-type"`
+	Granted    bool           `json:"access-granted"`
+	Door       uint8          `json:"door-id"`
+	Direction  uint8          `json:"direction"`
+	CardNumber uint32         `json:"card-number"`
+	Timestamp  types.DateTime `json:"timestamp"`
+	Reason     struct {
+		Code        uint8  `json:"code"`
+		Description string `json:"description"`
+	} `json:"event-reason"`
+}
+
+func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID uint32 `json:"device-id"`
 		Count    int    `json:"count,omitempty"`
@@ -25,7 +44,7 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 
 	deviceID := body.DeviceID
 	count := body.Count
-	events := []interface{}{}
+	events := []Event{}
 
 	if count > 0 {
 		list, err := impl.GetEvents(deviceID, count)
@@ -34,7 +53,7 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 		}
 
 		for _, e := range list {
-			events = append(events, e)
+			events = append(events, translate(e))
 		}
 	}
 
@@ -44,11 +63,11 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 	}
 
 	response := struct {
-		DeviceID uint32        `json:"device-id,omitempty"`
-		First    uint32        `json:"first,omitempty"`
-		Last     uint32        `json:"last,omitempty"`
-		Current  uint32        `json:"current,omitempty"`
-		Events   []interface{} `json:"events,omitempty"`
+		DeviceID uint32  `json:"device-id,omitempty"`
+		First    uint32  `json:"first,omitempty"`
+		Last     uint32  `json:"last,omitempty"`
+		Current  uint32  `json:"current,omitempty"`
+		Events   []Event `json:"events,omitempty"`
 	}{
 		DeviceID: deviceID,
 		First:    first,
@@ -60,13 +79,13 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 	return response, nil
 }
 
-func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	var deviceID uint32
 	var index string
 
 	body := struct {
-		DeviceID uint32      `json:"device-id"`
-		Index    interface{} `json:"event-index"`
+		DeviceID uint32 `json:"device-id"`
+		Index    any    `json:"event-index"`
 	}{}
 
 	if response, err := unmarshal(request, &body); err != nil {
@@ -123,7 +142,7 @@ func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (interface{},
 // Handler for the special-events MQTT message. Extracts the 'enabled' value from the request
 // and invokes the uhppoted-lib.RecordSpecialEvents API function to update the controller
 // 'record special events' flag.
-func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Enabled  *bool              `json:"enabled"`
@@ -158,7 +177,7 @@ func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (i
 	return response, nil
 }
 
-func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (interface{}, error) {
+func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (any, error) {
 	event, err := impl.GetEvent(deviceID, index)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event %v from %v", index, deviceID), err), err
@@ -167,18 +186,18 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (interface
 	}
 
 	response := struct {
-		DeviceID uint32      `json:"device-id"`
-		Event    interface{} `json:"event"`
+		DeviceID uint32 `json:"device-id"`
+		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    event,
+		Event:    translate(*event),
 	}
 
 	return &response, nil
 }
 
-func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (interface{}, error) {
-	event, err := impl.GetEvents(deviceID, 1)
+func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
+	event, err := impl.GetEvent(deviceID, 1)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event from %v", deviceID), err), err
 	} else if event == nil {
@@ -186,12 +205,38 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (interface{}, error)
 	}
 
 	response := struct {
-		DeviceID uint32      `json:"device-id"`
-		Event    interface{} `json:"event"`
+		DeviceID uint32 `json:"device-id"`
+		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    event,
+		Event:    translate(*event),
 	}
 
 	return &response, nil
+}
+
+func translate(e uhppoted.Event) Event {
+	return Event{
+		DeviceID: e.DeviceID,
+		Index:    e.Index,
+		Type: struct {
+			Code        uint8  `json:"code"`
+			Description string `json:"description"`
+		}{
+			Code:        e.Type,
+			Description: "",
+		},
+		Granted:    e.Granted,
+		Door:       e.Door,
+		Direction:  e.Direction,
+		CardNumber: e.CardNumber,
+		Timestamp:  e.Timestamp,
+		Reason: struct {
+			Code        uint8  `json:"code"`
+			Description string `json:"description"`
+		}{
+			Code:        e.Reason,
+			Description: "",
+		},
+	}
 }
