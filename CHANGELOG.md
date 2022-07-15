@@ -5,10 +5,11 @@
 ### Changed
 
 1. **BREAKING CHANGE** 
-   Reworked event struct in `get-event` and `get-events` response to include
+   Reworked event struct in `get-status`, `get-event` and `get-events` response to include
    - event type code and description
    - event reason code and description
 
+2. Added _en_ dictionary for event type and reason lookup.
 
 ## [v0.8.0] - 2022-07-01
 
