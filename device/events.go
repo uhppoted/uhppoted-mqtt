@@ -8,6 +8,7 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
+	"github.com/uhppoted/uhppoted-mqtt/locales"
 )
 
 type Event struct {
@@ -17,9 +18,12 @@ type Event struct {
 		Code        uint8  `json:"code"`
 		Description string `json:"description"`
 	} `json:"event-type"`
-	Granted    bool           `json:"access-granted"`
-	Door       uint8          `json:"door-id"`
-	Direction  uint8          `json:"direction"`
+	Granted   bool  `json:"access-granted"`
+	Door      uint8 `json:"door-id"`
+	Direction struct {
+		Code        uint8  `json:"code"`
+		Description string `json:"description"`
+	} `json:"direction"`
 	CardNumber uint32         `json:"card-number"`
 	Timestamp  types.DateTime `json:"timestamp"`
 	Reason     struct {
@@ -53,7 +57,7 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error)
 		}
 
 		for _, e := range list {
-			events = append(events, translate(e))
+			events = append(events, transmogrify(e))
 		}
 	}
 
@@ -190,7 +194,7 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (any, erro
 		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    translate(*event),
+		Event:    transmogrify(*event),
 	}
 
 	return &response, nil
@@ -209,13 +213,13 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
 		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    translate(*event),
+		Event:    transmogrify(*event),
 	}
 
 	return &response, nil
 }
 
-func translate(e uhppoted.Event) Event {
+func transmogrify(e uhppoted.Event) Event {
 	return Event{
 		DeviceID: e.DeviceID,
 		Index:    e.Index,
@@ -224,11 +228,17 @@ func translate(e uhppoted.Event) Event {
 			Description string `json:"description"`
 		}{
 			Code:        e.Type,
-			Description: "",
+			Description: lookup(fmt.Sprintf("event.type.%v", e.Type)),
 		},
-		Granted:    e.Granted,
-		Door:       e.Door,
-		Direction:  e.Direction,
+		Granted: e.Granted,
+		Door:    e.Door,
+		Direction: struct {
+			Code        uint8  `json:"code"`
+			Description string `json:"description"`
+		}{
+			Code:        e.Direction,
+			Description: lookup(fmt.Sprintf("event.direction.%v", e.Direction)),
+		},
 		CardNumber: e.CardNumber,
 		Timestamp:  e.Timestamp,
 		Reason: struct {
@@ -236,7 +246,15 @@ func translate(e uhppoted.Event) Event {
 			Description string `json:"description"`
 		}{
 			Code:        e.Reason,
-			Description: "",
+			Description: lookup(fmt.Sprintf("event.reason.%v", e.Reason)),
 		},
 	}
+}
+
+func lookup(key string) string {
+	if v, ok := locales.Lookup(key); ok {
+		return v
+	}
+
+	return ""
 }
