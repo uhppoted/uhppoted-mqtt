@@ -1,6 +1,10 @@
-## v0.7.3
+## v0.8.x
 
 ### IN PROGRESS
+
+- [ ] Return event type and event reason descriptions
+- [ ] Internationalize event type and event reason descriptions
+- [ ] Implement protocol version
 
 ## TODO
 

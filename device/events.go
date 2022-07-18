@@ -6,9 +6,9 @@ import (
 	"strconv"
 
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-lib/locales"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
-	"github.com/uhppoted/uhppoted-mqtt/locales"
 )
 
 type Event struct {
