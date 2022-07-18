@@ -4,12 +4,13 @@
 
 ### Changed
 
-1. Reworked event struct in `get-status`, `get-event` and `get-events` response to include:
+1. Reworked event struct in `get-status`, `get-event`, `get-events` and `listen` to include:
    - event type code and description
    - event reason code and description
    - event direction code and description
 
 2. Added protocol version to configuration.
+
 
 ## [v0.8.0] - 2022-07-01
 

@@ -69,7 +69,7 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error)
 		}
 
 		for _, e := range list {
-			events = append(events, transmogrify(e))
+			events = append(events, Transmogrify(e))
 		}
 	}
 
@@ -206,7 +206,7 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (any, erro
 		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    transmogrify(*event),
+		Event:    Transmogrify(*event),
 	}
 
 	return &response, nil
@@ -225,13 +225,21 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
 		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    transmogrify(*event),
+		Event:    Transmogrify(*event),
 	}
 
 	return &response, nil
 }
 
-func transmogrify(e uhppoted.Event) any {
+func Transmogrify(e uhppoted.Event) any {
+	lookup := func(key string) string {
+		if v, ok := locales.Lookup(key); ok {
+			return v
+		}
+
+		return ""
+	}
+
 	if protocol == "v0" {
 		return Event_v0{
 			DeviceID:   e.DeviceID,
@@ -275,12 +283,4 @@ func transmogrify(e uhppoted.Event) any {
 			Description: lookup(fmt.Sprintf("event.reason.%v", e.Reason)),
 		},
 	}
-}
-
-func lookup(key string) string {
-	if v, ok := locales.Lookup(key); ok {
-		return v
-	}
-
-	return ""
 }

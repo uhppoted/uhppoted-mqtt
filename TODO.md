@@ -2,10 +2,11 @@
 
 ### IN PROGRESS
 
-- [ ] Implement protocol version
+- [x] Implement protocol version
 - [x] Return event type and event reason descriptions
-- [ ] Update events from `listen`
+- [x] Update events from `listen`
 - [ ] Internationalize event type and event reason descriptions
+      - [ ] Load from file
 
 ## TODO
 

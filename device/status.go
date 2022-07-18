@@ -67,7 +67,7 @@ func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 	}
 
 	if reply.Event != nil {
-		event := transmogrify(*reply.Event)
+		event := Transmogrify(*reply.Event)
 		response.Status.Event = &event
 	}
 

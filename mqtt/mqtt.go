@@ -289,7 +289,13 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE, log *log.Logg
 		log.Printf("WARN  Error loading event map [%v]", err)
 	}
 
-	handler := func(event uhppoted.EventMessage) bool {
+	handler := func(e uhppoted.Event) bool {
+		event := struct {
+			Event any `json:"event"`
+		}{
+			Event: device.Transmogrify(e),
+		}
+
 		if err := m.send(&m.Encryption.EventsKeyID, m.Topics.Events, nil, event, msgEvent, true); err != nil {
 			log.Printf("WARN  %-12s %v", "listen", err)
 			return false
