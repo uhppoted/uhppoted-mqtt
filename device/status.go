@@ -17,7 +17,7 @@ type Status struct {
 	SpecialInfo    uint8          `json:"special-info"`
 	RelayState     uint8          `json:"relay-state"`
 	InputState     uint8          `json:"input-state"`
-	Event          *Event         `json:"event,omitempty"`
+	Event          any            `json:"event,omitempty"`
 }
 
 func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {

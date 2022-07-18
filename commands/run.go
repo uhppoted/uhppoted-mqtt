@@ -154,6 +154,7 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 		Permissions:    *permissions,
 		EventMap:       c.EventIDs,
 		AWS:            mqtt.AWS{},
+		Protocol:       c.Protocol,
 
 		Debug: cmd.debug,
 	}

@@ -20,6 +20,12 @@ type Device struct {
 	Log             *log.Logger
 }
 
+var protocol string = ""
+
+func SetProtocol(version string) {
+	protocol = version
+}
+
 func unmarshal(bytes []byte, request interface{}) (interface{}, error) {
 	if err := json.Unmarshal(bytes, request); err != nil {
 		return common.MakeError(StatusBadRequest, "Cannot parse request", err), err

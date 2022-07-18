@@ -33,6 +33,7 @@ type MQTTD struct {
 	Permissions    auth.Permissions
 	AWS            AWS
 	EventMap       string
+	Protocol       string
 	Debug          bool
 
 	client    paho.Client
@@ -119,6 +120,8 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 	paho.CRITICAL = log
 	paho.ERROR = log
 	paho.WARN = log
+
+	device.SetProtocol(mqttd.Protocol)
 
 	if mqttd.Debug {
 		paho.DEBUG = log

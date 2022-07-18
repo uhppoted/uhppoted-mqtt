@@ -2,9 +2,10 @@
 
 ### IN PROGRESS
 
-- [ ] Return event type and event reason descriptions
-- [ ] Internationalize event type and event reason descriptions
 - [ ] Implement protocol version
+- [x] Return event type and event reason descriptions
+- [ ] Update events from `listen`
+- [ ] Internationalize event type and event reason descriptions
 
 ## TODO
 

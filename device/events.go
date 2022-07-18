@@ -11,6 +11,18 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
+type Event_v0 struct {
+	DeviceID   uint32         `json:"device-id"`
+	Index      uint32         `json:"event-id"`
+	Type       uint8          `json:"event-type"`
+	Granted    bool           `json:"access-granted"`
+	Door       uint8          `json:"door-id"`
+	Direction  uint8          `json:"direction"`
+	CardNumber uint32         `json:"card-number"`
+	Timestamp  types.DateTime `json:"timestamp"`
+	Reason     uint8          `json:"event-reason"`
+}
+
 type Event struct {
 	DeviceID uint32 `json:"device-id"`
 	Index    uint32 `json:"event-id"`
@@ -48,7 +60,7 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error)
 
 	deviceID := body.DeviceID
 	count := body.Count
-	events := []Event{}
+	events := []any{}
 
 	if count > 0 {
 		list, err := impl.GetEvents(deviceID, count)
@@ -67,11 +79,11 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error)
 	}
 
 	response := struct {
-		DeviceID uint32  `json:"device-id,omitempty"`
-		First    uint32  `json:"first,omitempty"`
-		Last     uint32  `json:"last,omitempty"`
-		Current  uint32  `json:"current,omitempty"`
-		Events   []Event `json:"events,omitempty"`
+		DeviceID uint32 `json:"device-id,omitempty"`
+		First    uint32 `json:"first,omitempty"`
+		Last     uint32 `json:"last,omitempty"`
+		Current  uint32 `json:"current,omitempty"`
+		Events   []any  `json:"events,omitempty"`
 	}{
 		DeviceID: deviceID,
 		First:    first,
@@ -219,7 +231,21 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
 	return &response, nil
 }
 
-func transmogrify(e uhppoted.Event) Event {
+func transmogrify(e uhppoted.Event) any {
+	if protocol == "v0" {
+		return Event_v0{
+			DeviceID:   e.DeviceID,
+			Index:      e.Index,
+			Type:       e.Type,
+			Granted:    e.Granted,
+			Door:       e.Door,
+			Direction:  e.Direction,
+			CardNumber: e.CardNumber,
+			Timestamp:  e.Timestamp,
+			Reason:     e.Reason,
+		}
+	}
+
 	return Event{
 		DeviceID: e.DeviceID,
 		Index:    e.Index,
