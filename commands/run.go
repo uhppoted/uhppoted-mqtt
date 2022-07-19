@@ -16,6 +16,7 @@ import (
 
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
+	"github.com/uhppoted/uhppoted-lib/locales"
 	"github.com/uhppoted/uhppoted-lib/monitoring"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
 	"github.com/uhppoted/uhppoted-mqtt/mqtt"
@@ -217,6 +218,19 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 	mqttd.Encryption.HOTP = hotp
 	mqttd.Encryption.RSA = rsa
 	mqttd.Encryption.Nonce = *nonce
+
+	// ... locales
+
+	if c.Locale != "" {
+		folder := filepath.Dir(c.Locale)
+		file := filepath.Base(c.Locale)
+		fs := os.DirFS(folder)
+		if err := locales.Load(fs, file); err != nil {
+			logger.Printf("WARN  %v", err)
+		} else {
+			logger.Printf("INFO  using translations from %v", c.Locale)
+		}
+	}
 
 	// ... monitoring
 

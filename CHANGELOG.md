@@ -9,7 +9,8 @@
    - event reason code and description
    - event direction code and description
 
-2. Added protocol version to configuration.
+2. Added (optional) protocol version to configuration.
+3. Added (optional) translation locale to configuration.
 
 
 ## [v0.8.0] - 2022-07-01
