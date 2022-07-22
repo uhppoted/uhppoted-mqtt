@@ -5,8 +5,7 @@
 - [x] Implement protocol version
 - [x] Return event type and event reason descriptions
 - [x] Update events from `listen`
-- [ ] Internationalize event type and event reason descriptions
-      - [ ] Load from file
+- [x] Internationalize event type and event reason descriptions
 
 ## TODO
 

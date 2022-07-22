@@ -8,7 +8,6 @@
    - event type code and description
    - event reason code and description
    - event direction code and description
-
 2. Added (optional) protocol version to configuration.
 3. Added (optional) translation locale to configuration.
 

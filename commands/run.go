@@ -155,7 +155,7 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 		Permissions:    *permissions,
 		EventMap:       c.EventIDs,
 		AWS:            mqtt.AWS{},
-		Protocol:       c.Protocol,
+		Protocol:       c.MQTT.Protocol,
 
 		Debug: cmd.debug,
 	}
@@ -221,14 +221,14 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 
 	// ... locales
 
-	if c.Locale != "" {
-		folder := filepath.Dir(c.Locale)
-		file := filepath.Base(c.Locale)
+	if c.MQTT.Locale != "" {
+		folder := filepath.Dir(c.MQTT.Locale)
+		file := filepath.Base(c.MQTT.Locale)
 		fs := os.DirFS(folder)
 		if err := locales.Load(fs, file); err != nil {
 			logger.Printf("WARN  %v", err)
 		} else {
-			logger.Printf("INFO  using translations from %v", c.Locale)
+			logger.Printf("INFO  using translations from %v", c.MQTT.Locale)
 		}
 	}
 

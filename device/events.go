@@ -213,19 +213,20 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (any, erro
 }
 
 func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
-	event, err := impl.GetEvent(deviceID, 1)
-	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event from %v", deviceID), err), err
-	} else if event == nil {
-		return common.MakeError(StatusNotFound, fmt.Sprintf("No 'next' event for %v", deviceID), nil), fmt.Errorf("No 'next' event for %v", deviceID)
-	}
-
 	response := struct {
 		DeviceID uint32 `json:"device-id"`
 		Event    any    `json:"event"`
 	}{
 		DeviceID: deviceID,
-		Event:    Transmogrify(*event),
+	}
+
+	events, err := impl.GetEvents(deviceID, 1)
+	if err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event from %v", deviceID), err), err
+	} else if events == nil {
+		return common.MakeError(StatusNotFound, fmt.Sprintf("No 'next' event for %v", deviceID), nil), fmt.Errorf("No 'next' event for %v", deviceID)
+	} else if len(events) > 0 {
+		response.Event = Transmogrify(events[0])
 	}
 
 	return &response, nil
