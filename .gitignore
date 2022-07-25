@@ -1,7 +1,9 @@
 .DS_Store
 bin
 dist
+runtime
 go.work
+go.work.sum
 documentation/docker
 documentation/etc
 documentation/tmp
