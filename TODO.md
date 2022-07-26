@@ -6,6 +6,7 @@
 - [x] Return event type and event reason descriptions
 - [x] Update events from `listen`
 - [x] Internationalize event type and event reason descriptions
+- [ ] Fix listener address health-check 
 - [ ] Write up AWS GreenGrass setup
       - https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
