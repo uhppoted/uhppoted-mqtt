@@ -1,9 +1,9 @@
-# _uhppoted-mqtt_ with _AWS Greengrass_: Getting Started
+# HOWTO: _uhppoted-mqtt_ with _AWS Greengrass_: Getting Started
 
-This is a simplified guide to getting _uhppoted-mqtt_ up and running with _AWS Greengrass_.
+This _HOWTO_ is a simplified guide to getting _uhppoted-mqtt_ up and running with _AWS Greengrass_.
 
 Getting started with _HiveMQ_ or _Mosquito_ is relatively straightforward - AWS Greengrass is a whole 'nuther
-beast in terms of complexity and getting just a base system to build on can be daunting. 
+beast in terms of complexity and getting just a base system on which to build can be daunting. 
 
 This guide outlines the steps required to _"just get something working"_:
 
@@ -16,8 +16,8 @@ This guide outlines the steps required to _"just get something working"_:
 
 ## Raison d'être
 
-AWS Greengrass has a couple of expectations that make getting uhppoted-mqtt configured to connect to the _Moquette_ 
-MQTT broker component non-trivial until you've read a couple of reams of documentation accompanied by quite a lot
+AWS Greengrass has a couple of expectations that make getting _uhppoted-mqtt_ configured to connect to the _Moquette_ 
+MQTT broker component non-trivial until you've read a couple of reams of documentation, accompanied by quite a lot
 of coffee:
 
 1. By default, _Moquette_ is configured to require TLS mutual authentication i.e. clients are required to present a valid
@@ -37,9 +37,11 @@ This guide is essentially a desperation resource distilled from:
 
 ## Outline
 
-The guide outlines setting up a clean Ubuntu server with:
+For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
 - an _AWS Greengrass_ _core_ device with the _Auth_, _Moquette_ and _MQTT Bridge_ components
 - an _AWS Greengrass_ _thing_ for _uhppoted-mqtt_
+
+It should be similar'ish for anything else but YMMV.
 
 For the rest of this guide:
 
@@ -47,6 +49,46 @@ For the rest of this guide:
 - the _thing_ device will be named and referred to as _uhppoted-mqtt_. Think of it as _uhppoted-mqtt_.
 - both _core_ and _thing_ will be installed on the same machine. This is not a requirement but does avoid having
   to change firewall rules and NATs, etc.
+
+## Host
+
+The instructions below are for Ubuntu 22.04 LTS - modify as required for other systems.
+
+1. Install Java:
+```
+sudo apt install openjdk-8-jdk
+```
+
+2. Create _admin_ user:
+```
+sudo adduser admin
+sudo usermod -aG sudo admin
+```
+
+3. Create _uhppoted_ user:
+```
+sudo adduser uhppoted
+```
+
+4. Create _Greengrass_ user/group:
+```
+sudo adduser --system ggc_user
+sudo addgroup --system ggc_group
+```
+
+5. Create folders:
+```
+sudo mkdir -p /opt/aws
+sudo mkdir -p /opt/uhppoted
+
+sudo chown -R admin:admin /opt/aws
+sudo chown -R uhppoted:uhppoted /opt/uhppoted
+```
+
+6. Optionally, install Go:
+```
+sudo apt install golang
+```
 
 ## AWS IAM
 
@@ -63,9 +105,19 @@ fit your needs but basically it:
 For simplicity it creates a permanent user which can/should be deleted when no longer required. If you're familiar
 with creating and using temporary credentials, rather use those.
 
+### Policies
+
+### Groups
+
+### Users
+
 ## AWS Greengrass
 
 ## _uhppoted-mqtt_
+
+1. uhppoted-mqtt
+2. Certificates
+3. Firewall
 
 ## References
 
