@@ -10,6 +10,7 @@
    - event direction code and description
 2. Added (optional) protocol version to configuration.
 3. Added (optional) translation locale to configuration.
+4. Resolved INADDR_ANY to interface IPv4 address for controller listener address health check.
 
 
 ## [v0.8.0] - 2022-07-01
