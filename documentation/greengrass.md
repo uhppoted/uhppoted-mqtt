@@ -54,9 +54,10 @@ For the rest of this guide:
 
 The instructions below are for Ubuntu 22.04 LTS - modify as required for other systems.
 
-1. Install Java:
+1. Install Java and (optionally) Go:
 ```
 sudo apt install openjdk-8-jdk
+sudo apt install golang
 ```
 
 2. Create _admin_ user:
@@ -72,7 +73,7 @@ sudo adduser uhppoted
 
 4. Create _Greengrass_ user/group:
 ```
-sudo adduser --system ggc_user
+sudo adduser  --system ggc_user
 sudo addgroup --system ggc_group
 ```
 
@@ -83,11 +84,6 @@ sudo mkdir -p /opt/uhppoted
 
 sudo chown -R admin:admin /opt/aws
 sudo chown -R uhppoted:uhppoted /opt/uhppoted
-```
-
-6. Optionally, install Go:
-```
-sudo apt install golang
 ```
 
 ## AWS IAM
@@ -106,6 +102,123 @@ For simplicity it creates a permanent user which can/should be deleted when no l
 with creating and using temporary credentials, rather use those.
 
 ### Policies
+
+In the AWS IAM console, create two policies:
+
+1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the AWS Greengrass 'core' and
+   'thing' devices. 
+2. A _uhppoted-greengrass-cli_ policy for the AWS Greengrass CLI
+
+For this HOWTO, the policy is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
+
+The _uhppoted-greengrass-cli_ policy is a convenience for this HOWTO and is not required if you don't anticipate needing
+to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. Chance are you'll probably need it.
+
+#### `uhppoted-greengrass`
+
+1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
+2. Copy the _Account ID_ from AWS Account for later
+3. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
+4. Click on _Create policy_
+5. Open the _JSON_ tab and paste the following policy, replacing the \<account-id\> with the Amazon
+   account ID from step 2:
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CreateTokenExchangeRole",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachRolePolicy",
+                "iam:CreatePolicy",
+                "iam:CreateRole",
+                "iam:GetPolicy",
+                "iam:GetRole",
+                "iam:PassRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::<account-id>:role/GreengrassV2TokenExchangeRole",
+                "arn:aws:iam::<account-id>:policy/GreengrassV2TokenExchangeRoleAccess"
+            ]
+        },
+        {
+            "Sid": "CreateIoTResources",
+            "Effect": "Allow",
+            "Action": [
+                "iot:AddThingToThingGroup",
+                "iot:AttachPolicy",
+                "iot:AttachThingPrincipal",
+                "iot:CreateKeysAndCertificate",
+                "iot:CreatePolicy",
+                "iot:CreateRoleAlias",
+                "iot:CreateThing",
+                "iot:CreateThingGroup",
+                "iot:DescribeEndpoint",
+                "iot:DescribeRoleAlias",
+                "iot:DescribeThingGroup",
+                "iot:GetPolicy"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "DeployDevTools",
+            "Effect": "Allow",
+            "Action": [
+                "greengrass:CreateDeployment",
+                "iot:CancelJob",
+                "iot:CreateJob",
+                "iot:DeleteThingShadow",
+                "iot:DescribeJob",
+                "iot:DescribeThing",
+                "iot:DescribeThingGroup",
+                "iot:GetThingShadow",
+                "iot:UpdateJob",
+                "iot:UpdateThingShadow"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+6. Click on _Next: Tags_
+7. Click on _Next: Review_
+8. Fill in fields:
+   - `Name`: `uhppoted-greengrass`
+   - `Description`: Greengrass policy for deploying uhppoted-mqtt
+9. Click on _Create Policy_
+
+#### `uhppoted-greengrass-cli`
+
+1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
+2. Copy the _Account ID_ from AWS Account for later
+3. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
+4. Click on _Create policy_
+5. Open the _JSON_ tab and paste the following policy, replacing the \<account-id\> with the Amazon
+   account ID from step 2:
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "greengrass:List*",
+                "greengrass:Get*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+6. Click on _Next: Tags_
+7. Click on _Next: Review_
+8. Fill in fields:
+   - `Name`: `uhppoted-greengrass-cli`
+   - `Description`: Greengrass policy for the CLI
+9. Click on _Create Policy_
+
 
 ### Groups
 
