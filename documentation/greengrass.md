@@ -222,7 +222,50 @@ to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. Chance 
 
 ### Groups
 
+In the AWS IAM console, create two groups:
+
+1. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass 'core' and
+   'thing' devices. 
+2. (optional) A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass CLI.
+
+Steps:
+
+1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
+2. Open the [_User groups_](https://console.aws.amazon.com/iamv2/home#/groups) page
+3. Click on _Create group_
+4. Enter the group name _uhppoted-greengrass_
+5. Tick the _uhppoted-greengrass_ policy created above to attach it to the group
+6. Click on _Create group_
+
+Optionally, repeat steps 3-6 to create a _uhppoted-greengrass-cli_ group with the _uhppoted-greengrass-cli_ policy attached.
+
+
 ### Users
+
+_(skip this section if you're using temporary credentials)_
+
+In the AWS IAM console, create two users:
+
+1. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass 'core' and 'thing' devices. 
+2. (optional) A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI.
+
+Steps:
+
+1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
+2. Open the [_Users_](https://console.aws.amazon.com/iamv2/home#/users) page
+3. Click _Add users_
+4. Enter the user name _uhppoted-greengrass_
+5. Select the _Access key - Programmatic access_ AWS credential type
+6. Click _Next: Permissions_
+7. Check the _uhppoted-greengrass_ group under the _Add user to group_ section
+8. Click _Next: Tags_
+9. Click _Next: Review_
+10. Click _Create user_
+11. Copy the access key and secret key for later use
+12. Click _Close_
+
+Optionally, repeat steps 3-12 to create a _uhppoted-greengrass-cli_ user in the _uhppoted-greengrass-cli_ group.
+
 
 ## AWS Greengrass
 
