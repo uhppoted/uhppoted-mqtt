@@ -1,14 +1,13 @@
-# HOWTO: _uhppoted-mqtt_ with _AWS Greengrass_: Getting Started
+# HOWTO: Getting started with _uhppoted-mqtt_ with _AWS Greengrass_
 
 This _HOWTO_ is a simplified guide to getting _uhppoted-mqtt_ up and running with _AWS Greengrass_.
 
-Getting started with _HiveMQ_ or _Mosquito_ is relatively straightforward - AWS Greengrass is a whole 'nuther
-beast in terms of complexity and getting just a base system on which to build can be daunting. 
-
-This guide outlines the steps required to _"just get something working"_:
+Getting started with _HiveMQ_ or _Mosquito_ is relatively straightforward - _AWS Greengrass_ however is
+a whole 'nuther beast in terms of complexity and getting just a base system on which to build can be 
+daunting. This guide outlines the steps required to _"just get something working"_:
 
 - It is **NOT** intended as a guide to setting up a production ready system. Among other things it uses fairly
-  permissive policies and works around some recommended practices (e.g. Greengrass Discovery) that add complication
+  permissive policies and works around some recommended practices (e.g. _Greengrass Discovery_) that add complication
   when you just want to get a system running.
 
 - It is probably egregiously wrong in places i.e. you should read the official documentation.
@@ -17,18 +16,18 @@ This guide outlines the steps required to _"just get something working"_:
 ## Raison d'être
 
 AWS Greengrass has a couple of expectations that make getting _uhppoted-mqtt_ configured to connect to the _Moquette_ 
-MQTT broker component non-trivial until you've read a couple of reams of documentation, accompanied by quite a lot
+MQTT broker component non-trivial until you've read a couple of reams of documentation along with quite a lot
 of coffee:
 
 1. By default, _Moquette_ is configured to require TLS mutual authentication i.e. clients are required to present a valid
    X.509 certificate signed by a common certificate authority during the intial TLS handshake.
-2. Clients are expected to obtain the X.509 certificates required to connect to _Moquette_ using AWS Greengrass Discovery.
+2. Clients are expected to obtain the X.509 certificates required to connect to _Moquette_ using AWS _Greengrass Discovery_.
 3. The workaround for clients not using Greengrass Discovery is not officially documented (ref. [Add docs about manual connection of client devices to GG Core without cloud discovery](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20)).
 4. Then there's the message routing...
 
 This guide is essentially a desperation resource distilled from:
 
-- The discussion '[uhppoted-mqtt to AWS Greengrass aws.greengrass.clientdevices.mqtt.Moquette client](https://github.com/uhppoted/uhppoted/discussions/14)'
+- The discussion _[uhppoted-mqtt to AWS Greengrass aws.greengrass.clientdevices.mqtt.Moquette client](https://github.com/uhppoted/uhppoted/discussions/14)_
 - [Tutorial: Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html)
 - [Install AWS IoT Greengrass Core software with manual resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/manual-installation.html)
 - [Implementing Local Client Devices with AWS IoT Greengrass](https://aws.amazon.com/blogs/iot/implementing-local-client-devices-with-aws-iot-greengrass)
@@ -40,10 +39,9 @@ This guide is essentially a desperation resource distilled from:
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
 - an _AWS Greengrass_ _core_ device with the _Auth_, _Moquette_ and _MQTT Bridge_ components
 - an _AWS Greengrass_ _thing_ for _uhppoted-mqtt_
+- a daemonized _uhppoted-mqtt_
 
-It should be similar'ish for anything else but YMMV.
-
-For the rest of this guide:
+It should be similar'ish for anything else but YMMV. For the rest of this guide:
 
 - the _core_ device will be named and referred to as _uhppoted-greengrass_. Think of it as the MQTT broker.
 - the _thing_ device will be named and referred to as _uhppoted-mqtt_. Think of it as _uhppoted-mqtt_.
@@ -226,7 +224,7 @@ In the AWS IAM console, create two groups:
 
 1. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass 'core' and
    'thing' devices. 
-2. (optional) A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass CLI.
+2. A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass CLI (optional).
 
 Steps:
 
@@ -247,7 +245,7 @@ _(skip this section if you're using temporary credentials)_
 In the AWS IAM console, create two users:
 
 1. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass 'core' and 'thing' devices. 
-2. (optional) A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI.
+2. A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI (optional).
 
 Steps:
 
