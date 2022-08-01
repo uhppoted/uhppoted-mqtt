@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [Unreleased]
+## [v0.8.1] - 2022-08-01
 
 ### Changed
 
