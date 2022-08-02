@@ -267,6 +267,87 @@ Optionally, repeat steps 3-12 to create a _uhppoted-greengrass-cli_ user in the 
 
 ## AWS Greengrass
 
+The initially relevant sections in the AWS Greengrass documentation are:
+
+- [Tutorial:Getting started](https://docs.aws.amazon.com/greengrass/v2/developerguide/getting-started.html)
+- [Tutorial:Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html)
+- [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html)
+
+1. Follow the [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html) instructions to install the _core_ device on the Ubuntu host
+- use the access key and secret for the _uhppoted-greengrass_ user
+
+2. Install the following additional components to the _core_ device:
+- Auth (client device auth)
+- MQTT 3.1.1 broker
+- MQTT bridge 
+- (optional) IPDetector
+
+using the instructions from [Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html) instructions steps 1 and 2.
+
+   _Notes_
+   - Use the following policy for the Auth component (it is identical to the one in the AWS tutorial except for the group
+and policy names):
+
+```
+{
+  "deviceGroups": {
+    "formatVersion": "2021-03-05",
+    "definitions": {
+      "UhppotedIoTGroup": {
+        "selectionRule": "thingName: uhppoted-mqtt*",
+        "policyName": "UhppotedIotPolicy"
+      }
+    },
+    "policies": {
+      "UhppotedIotPolicy": {
+        "AllowConnect": {
+          "statementDescription": "Allow client devices to connect.",
+          "operations": [
+            "mqtt:connect"
+          ],
+          "resources": [
+            "*"
+          ]
+        },
+        "AllowPublish": {
+          "statementDescription": "Allow client devices to publish to all topics.",
+          "operations": [
+            "mqtt:publish"
+          ],
+          "resources": [
+            "*"
+          ]
+        },
+        "AllowSubscribe": {
+          "statementDescription": "Allow client devices to subscribe to all topics.",
+          "operations": [
+            "mqtt:subscribe"
+          ],
+          "resources": [
+            "*"
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+   - Use the following configuration for the MQTT bridge:
+{
+  "mqttTopicMapping": {
+    "UhppoteIotMapping": {
+      "topic": "uhppoted/#",
+      "source": "LocalMqtt",
+      "target": "IotCore"
+    }
+  }
+}
+
+3. Create a 'thing' device for _uhppoted-mqtt_ from AWS console.
+
+
+
 ## _uhppoted-mqtt_
 
 1. uhppoted-mqtt
