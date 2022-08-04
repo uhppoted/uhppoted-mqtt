@@ -3,6 +3,7 @@
 ### IN PROGRESS
 
 - [ ] Write up AWS GreenGrass setup
+      - [ ] Create separate policy/group/user for Greengrass CLI
       - https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
 

@@ -22,7 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
-| v0.8.1    | Maintenance release for version compatibility with `uhppoted-core` `v0.8.1`               |
+| v0.8.1    | Added human readable event fields and fixed health check for INADDR_ANY addresses         |
 | v0.8.0    | Maintenance release for version compatibility with `uhppoted-core` `v0.8.0`               |
 | v0.7.3    | Maintenance release for version compatibility with `uhppoted-core` `v0.7.3`               |
 | v0.7.2    | Reworked event handling (including removal of rollover)                                   |
