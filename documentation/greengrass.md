@@ -1,3 +1,5 @@
+**WORK IN PROGRESS**
+
 # HOWTO: Getting started with _uhppoted-mqtt_ with _AWS Greengrass_
 
 This _HOWTO_ is a simplified guide to getting _uhppoted-mqtt_ up and running with _AWS Greengrass_.
@@ -16,8 +18,8 @@ daunting. This guide outlines the steps required to _"just get something working
 ## Raison d'être
 
 AWS Greengrass has a couple of expectations that make getting _uhppoted-mqtt_ configured to connect to the _Moquette_ 
-MQTT broker component non-trivial until you've read a couple of reams of documentation along with quite a lot
-of coffee:
+MQTT broker component non-trivial until you've read a couple of reams of documentation which in turn requires more
+than a little coffee:
 
 1. By default, _Moquette_ is configured to require TLS mutual authentication i.e. clients are required to present a valid
    X.509 certificate signed by a common certificate authority during the intial TLS handshake.
@@ -37,6 +39,7 @@ This guide is essentially a desperation resource distilled from:
 ## Outline
 
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
+
 - an _AWS Greengrass_ _core_ device with the _Auth_, _Moquette_ and _MQTT Bridge_ components
 - an _AWS Greengrass_ _thing_ for _uhppoted-mqtt_
 - a daemonized _uhppoted-mqtt_
@@ -280,7 +283,7 @@ The initially relevant sections in the AWS Greengrass documentation are:
 - Auth (client device auth)
 - MQTT 3.1.1 broker
 - MQTT bridge 
-- (optional) IPDetector
+- IPDetector
 
 using the instructions from [Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html) instructions steps 1 and 2.
 
@@ -344,9 +347,9 @@ and policy names):
   }
 }
 
-3. Create a 'thing' device for _uhppoted-mqtt_ from AWS console.
+3. Create a 'thing' device for _uhppoted-mqtt_ via the AWS console.
 
-
+_TODO_
 
 ## _uhppoted-mqtt_
 

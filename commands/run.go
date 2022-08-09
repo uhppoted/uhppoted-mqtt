@@ -6,7 +6,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"log"
+	syslog "log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,7 +18,9 @@ import (
 	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-lib/locales"
 	"github.com/uhppoted/uhppoted-lib/monitoring"
+
 	"github.com/uhppoted/uhppoted-mqtt/auth"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 	"github.com/uhppoted/uhppoted-mqtt/mqtt"
 )
 
@@ -32,6 +34,11 @@ type Run struct {
 	debug               bool
 	healthCheckInterval time.Duration
 	watchdogInterval    time.Duration
+	softlock            softlock
+}
+
+type softlock struct {
+	enabled bool
 }
 
 func (cmd *Run) Name() string {
@@ -57,7 +64,7 @@ func (cmd *Run) Help() {
 func (cmd *Run) execute(f func(*config.Config) error) error {
 	conf := config.NewConfig()
 	if err := conf.Load(cmd.configuration); err != nil {
-		log.Printf("WARN  Could not load configuration (%v)", err)
+		log.Warnf("WARN  Could not load configuration (%v)", err)
 	}
 
 	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
@@ -84,11 +91,14 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 	return f(conf)
 }
 
-func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Signal) {
-	logger.Printf("START")
+func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.Signal) {
+	log.SetLogger(logger)
+	log.Infof("START")
 
 	cmd.healthCheckInterval = c.HealthCheckInterval
 	cmd.watchdogInterval = c.WatchdogInterval
+
+	cmd.softlock.enabled = c.MQTT.Softlock.Enabled
 
 	// ... initialise MQTT
 
@@ -121,7 +131,7 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 		c.MQTT.Permissions.Groups,
 		logger)
 	if err != nil {
-		log.Printf("ERROR: %v", err)
+		log.Errorf("%v", err)
 		return
 	}
 
@@ -170,19 +180,19 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 	if strings.HasPrefix(mqttd.Connection.Broker, "tls:") {
 		pem, err := os.ReadFile(c.Connection.BrokerCertificate)
 		if err != nil {
-			logger.Printf("ERROR: %v", err)
+			log.Errorf("%v", err)
 		} else {
 			mqttd.TLS.InsecureSkipVerify = false
 			mqttd.TLS.RootCAs = x509.NewCertPool()
 
 			if ok := mqttd.TLS.RootCAs.AppendCertsFromPEM(pem); !ok {
-				logger.Printf("ERROR: Could not initialise MQTTD CA certificates")
+				log.Errorf("could not initialise MQTTD CA certificates")
 			}
 		}
 
 		certificate, err := tls.LoadX509KeyPair(c.Connection.ClientCertificate, c.Connection.ClientKey)
 		if err != nil {
-			logger.Printf("ERROR: %v", err)
+			log.Errorf("%v", err)
 		} else {
 			mqttd.TLS.Certificates = []tls.Certificate{certificate}
 		}
@@ -192,25 +202,25 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 
 	hmac, err := auth.NewHMAC(c.HMAC.Required, c.HMAC.Key)
 	if c.HMAC.Required && err != nil {
-		logger.Printf("ERROR: %v", err)
+		log.Errorf("%v", err)
 		return
 	}
 
 	hotp, err := auth.NewHOTP(c.MQTT.HOTP.Range, c.MQTT.HOTP.Secrets, c.MQTT.HOTP.Counters, logger)
 	if mqttd.Authentication == "HOTP" && err != nil {
-		logger.Printf("ERROR: %v", err)
+		log.Errorf("%v", err)
 		return
 	}
 
 	rsa, err := auth.NewRSA(c.RSA.KeyDir, logger)
 	if mqttd.Authentication == "RSA" && err != nil {
-		logger.Printf("ERROR: %v", err)
+		log.Errorf("%v", err)
 		return
 	}
 
 	nonce, err := auth.NewNonce(c.Nonce.Required, c.Nonce.Server, c.Nonce.Clients, logger)
 	if err != nil {
-		logger.Printf("ERROR: %v", err)
+		log.Errorf("%v", err)
 		return
 	}
 
@@ -226,9 +236,9 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 		file := filepath.Base(c.MQTT.Locale)
 		fs := os.DirFS(folder)
 		if err := locales.Load(fs, file); err != nil {
-			logger.Printf("WARN  %v", err)
+			log.Warnf("%v", err)
 		} else {
-			logger.Printf("INFO  using translations from %v", c.MQTT.Locale)
+			log.Infof("using translations from %v", c.MQTT.Locale)
 		}
 	}
 
@@ -240,17 +250,17 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger, interrupt chan os.Sign
 
 	cards, err := authorized(c.MQTT.Cards)
 	if err != nil {
-		logger.Printf("WARN  %v", err)
+		log.Warnf("%v", err)
 	}
 
 	// ... listen
 
 	err = cmd.listen(u, &mqttd, devices, &healthcheck, cards, logger, interrupt)
 	if err != nil {
-		logger.Printf("ERROR %v", err)
+		log.Errorf("%v", err)
 	}
 
-	logger.Printf("INFO  exit")
+	log.Infof("exit")
 }
 
 func (r *Run) listen(
@@ -259,29 +269,21 @@ func (r *Run) listen(
 	devices []uhppote.Device,
 	healthcheck *monitoring.HealthCheck,
 	authorized []string,
-	logger *log.Logger,
+	logger *syslog.Logger,
 	interrupt chan os.Signal) error {
 
+	// ... obtain MQTT client lock
+	if lockfile, err := r.lock(mqttd.Connection.ClientID); err != nil {
+		return err
+	} else if lockfile == "" {
+		return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
+	} else {
+		defer func() {
+			os.Remove(lockfile)
+		}()
+	}
+
 	// ... MQTT
-
-	pid := fmt.Sprintf("%d\n", os.Getpid())
-	workdir := filepath.Dir(r.pidFile)
-	lockfile := filepath.Join(workdir, fmt.Sprintf("%s.lock", mqttd.Connection.ClientID))
-
-	_, err := os.Stat(lockfile)
-	if err == nil {
-		return fmt.Errorf("MQTT client lockfile '%v' already in use", lockfile)
-	} else if !os.IsNotExist(err) {
-		return fmt.Errorf("Error checking MQTT client lockfile '%v' (%v_)", lockfile, err)
-	}
-
-	if err := os.WriteFile(lockfile, []byte(pid), 0644); err != nil {
-		return fmt.Errorf("Unable to create MQTT client lockfile: %v", err)
-	}
-
-	defer func() {
-		os.Remove(lockfile)
-	}()
 
 	if err := mqttd.Run(u, devices, authorized, logger); err != nil {
 		return err
@@ -318,7 +320,7 @@ func (r *Run) listen(
 			}
 
 		case <-interrupt:
-			logger.Printf("... interrupt")
+			log.Infof("... interrupt")
 			return nil
 		}
 	}
@@ -337,4 +339,45 @@ func authorized(file string) ([]string, error) {
 	}
 
 	return lines, scanner.Err()
+}
+
+func (r *Run) lock(clientID string) (string, error) {
+	pid := fmt.Sprintf("%d\n", os.Getpid())
+	workdir := filepath.Dir(r.pidFile)
+	lockfile := filepath.Join(workdir, fmt.Sprintf("%s.lock", clientID))
+
+	_, err := os.Stat(lockfile)
+	if err == nil {
+		return "", fmt.Errorf("MQTT client lockfile '%v' already in use", lockfile)
+	} else if !os.IsNotExist(err) {
+		return "", fmt.Errorf("Error checking MQTT client lockfile '%v' (%v_)", lockfile, err)
+	}
+
+	if err := os.WriteFile(lockfile, []byte(pid), 0644); err != nil {
+		return "", fmt.Errorf("Unable to create MQTT client lockfile: %v", err)
+	}
+
+	if r.softlock.enabled {
+		tick := time.Tick(10 * time.Second)
+		go func() {
+			for {
+				<-tick
+				touch(lockfile)
+			}
+		}()
+	}
+
+	return lockfile, nil
+}
+
+func touch(file string) {
+	log.Infof("touching lockfile %v", file)
+
+	now := time.Now().Local()
+
+	if _, err := os.Stat(file); err != nil {
+		log.Errorf("%v", err)
+	} else if err := os.Chtimes(file, now, now); err != nil {
+		log.Errorf("%v", err)
+	}
 }

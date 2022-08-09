@@ -400,32 +400,33 @@ func (m *MQTTD) authorise(clientID *string, topic string) error {
 }
 
 // TODO: add callback for published/failed
-// func (mqttd *MQTTD) send(destID *string, topic string, message interface{}, msgtype msgType, critical bool) error {
-// 	if mqttd.client == nil || !mqttd.client.IsConnected() {
-// 		return errors.New("No connection to MQTT broker")
-// 	}
 //
-// 	m, err := mqttd.wrap(msgtype, message, destID)
-// 	if err != nil {
-// 		return err
-// 	} else if m == nil {
-// 		return errors.New("'wrap' failed to return a publishable message")
-// 	}
+//	func (mqttd *MQTTD) send(destID *string, topic string, message interface{}, msgtype msgType, critical bool) error {
+//		if mqttd.client == nil || !mqttd.client.IsConnected() {
+//			return errors.New("No connection to MQTT broker")
+//		}
 //
-// 	qos := byte(0)
-// 	retained := false
-// 	if critical {
-// 		qos = mqttd.Alerts.QOS
-// 		retained = mqttd.Alerts.Retained
-// 	}
+//		m, err := mqttd.wrap(msgtype, message, destID)
+//		if err != nil {
+//			return err
+//		} else if m == nil {
+//			return errors.New("'wrap' failed to return a publishable message")
+//		}
 //
-// 	token := mqttd.client.Publish(topic, qos, retained, string(m))
-// 	if token.Error() != nil {
-// 		return token.Error()
-// 	}
+//		qos := byte(0)
+//		retained := false
+//		if critical {
+//			qos = mqttd.Alerts.QOS
+//			retained = mqttd.Alerts.Retained
+//		}
 //
-// 	return nil
-// }
+//		token := mqttd.client.Publish(topic, qos, retained, string(m))
+//		if token.Error() != nil {
+//			return token.Error()
+//		}
+//
+//		return nil
+//	}
 //
 // TODO: add callback for published/failed
 func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
