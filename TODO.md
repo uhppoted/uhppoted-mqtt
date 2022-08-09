@@ -3,6 +3,10 @@
 ### IN PROGRESS
 
 - [ ] Optional soft lock for MQTT client lock file
+      - [x] Use hash because stat changes file mtime
+      - [ ] Handle interrupt (CTRL-C)
+      - [ ] Add interval and wait to config
+
 - [ ] Exit on too many reconnects in e.g. 60s
 - [ ] Abstract logger to separate log package
       - [ ] Move to uhppoted-lib

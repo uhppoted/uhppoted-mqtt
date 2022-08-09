@@ -3,8 +3,10 @@ package commands
 import (
 	"bufio"
 	"bytes"
+	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/hex"
 	"fmt"
 	syslog "log"
 	"os"
@@ -38,7 +40,9 @@ type Run struct {
 }
 
 type softlock struct {
-	enabled bool
+	enabled  bool
+	interval time.Duration
+	wait     time.Duration
 }
 
 func (cmd *Run) Name() string {
@@ -99,6 +103,8 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	cmd.watchdogInterval = c.WatchdogInterval
 
 	cmd.softlock.enabled = c.MQTT.Softlock.Enabled
+	cmd.softlock.interval = 30 * time.Second
+	cmd.softlock.wait = 60 * time.Second
 
 	// ... initialise MQTT
 
@@ -272,7 +278,7 @@ func (r *Run) listen(
 	logger *syslog.Logger,
 	interrupt chan os.Signal) error {
 
-	// ... obtain MQTT client lock
+	// ... acquire MQTT client lock
 	if lockfile, err := r.lock(mqttd.Connection.ClientID); err != nil {
 		return err
 	} else if lockfile == "" {
@@ -341,28 +347,70 @@ func authorized(file string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
+// Uses SHA-256 hash of lockfile contents because os.Stat updates the mtime
+// of the lockfile and in any event, mtime has a resolution of 1 minute.
 func (r *Run) lock(clientID string) (string, error) {
-	pid := fmt.Sprintf("%d\n", os.Getpid())
 	workdir := filepath.Dir(r.pidFile)
 	lockfile := filepath.Join(workdir, fmt.Sprintf("%s.lock", clientID))
+	write := func() error {
+		pid := fmt.Sprintf("%d", os.Getpid())
+		now := time.Now().Format("2006-01-02 15:04:05")
+		v := fmt.Sprintf("%v\n%v\n", pid, now)
 
-	_, err := os.Stat(lockfile)
-	if err == nil {
-		return "", fmt.Errorf("MQTT client lockfile '%v' already in use", lockfile)
-	} else if !os.IsNotExist(err) {
-		return "", fmt.Errorf("Error checking MQTT client lockfile '%v' (%v_)", lockfile, err)
+		return os.WriteFile(lockfile, []byte(v), 0644)
 	}
 
-	if err := os.WriteFile(lockfile, []byte(pid), 0644); err != nil {
-		return "", fmt.Errorf("Unable to create MQTT client lockfile: %v", err)
+	checksum, err := hash(lockfile)
+
+	switch {
+	case err != nil && !os.IsNotExist(err):
+		return "", err
+
+	case err != nil && os.IsNotExist(err):
+		if err := write(); err != nil {
+			return "", err
+		}
+
+	case err == nil && !r.softlock.enabled:
+		return "", fmt.Errorf("MQTT client lockfile '%v' already in use", lockfile)
+
+	case err == nil && r.softlock.enabled && checksum == "":
+		return "", fmt.Errorf("invalid MQTT client lockfile checksum")
+
+	case err == nil && r.softlock.enabled && checksum != "":
+		log.Warnf("MQTT client lockfile '%v' exists, delaying for %v", lockfile, r.softlock.wait)
+		time.Sleep(r.softlock.wait)
+		h, err := hash(lockfile)
+		switch {
+		case err != nil && !os.IsNotExist(err):
+			return "", err
+
+		case err != nil && os.IsNotExist(err):
+			if err := write(); err != nil {
+				return "", err
+			}
+
+		case h != checksum:
+			return "", fmt.Errorf("MQTT client lockfile '%v' in use", lockfile)
+
+		default:
+			log.Warnf("replacing MQTT client lockfile '%v'", lockfile)
+			if err := write(); err != nil {
+				return "", err
+			}
+		}
+
+	default:
+		return "", fmt.Errorf("failed to acquire MQTT client lock")
 	}
 
 	if r.softlock.enabled {
-		tick := time.Tick(10 * time.Second)
+		tick := time.Tick(r.softlock.interval)
 		go func() {
 			for {
 				<-tick
-				touch(lockfile)
+				log.Infof("touching MQTT client lockfile '%v'", lockfile)
+				write()
 			}
 		}()
 	}
@@ -370,14 +418,12 @@ func (r *Run) lock(clientID string) (string, error) {
 	return lockfile, nil
 }
 
-func touch(file string) {
-	log.Infof("touching lockfile %v", file)
+func hash(file string) (string, error) {
+	if bytes, err := os.ReadFile(file); err != nil {
+		return "", err
+	} else {
+		sum := sha256.Sum256(bytes)
 
-	now := time.Now().Local()
-
-	if _, err := os.Stat(file); err != nil {
-		log.Errorf("%v", err)
-	} else if err := os.Chtimes(file, now, now); err != nil {
-		log.Errorf("%v", err)
+		return hex.EncodeToString(sum[:]), nil
 	}
 }
