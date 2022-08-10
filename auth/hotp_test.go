@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"github.com/uhppoted/uhppoted-lib/kvs"
-	"log"
 	"strconv"
 	"testing"
+
+	"github.com/uhppoted/uhppoted-lib/kvs"
 )
 
 func TestValidateHOTPWithValidOTP(t *testing.T) {
@@ -14,11 +14,9 @@ func TestValidateHOTPWithValidOTP(t *testing.T) {
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
-			log      *log.Logger
 		}{
 			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
-			nil,
 		},
 	}
 
@@ -40,11 +38,9 @@ func TestValidateHOTPWithOutOfOrderOTP(t *testing.T) {
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
-			log      *log.Logger
 		}{
 			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
-			nil,
 		},
 	}
 
@@ -66,11 +62,9 @@ func TestValidateHOTPWithOutOfRangeOTP(t *testing.T) {
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
-			log      *log.Logger
 		}{
 			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
-			nil,
 		},
 	}
 
@@ -88,11 +82,9 @@ func TestValidateHOTPWithInvalidOTP(t *testing.T) {
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
-			log      *log.Logger
 		}{
 			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
-			nil,
 		},
 	}
 

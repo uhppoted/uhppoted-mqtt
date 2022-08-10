@@ -1,5 +1,5 @@
-github.com/aws/aws-sdk-go v1.44.72 h1:i7J5XT7pjBjtl1OrdIhiQHzsG89wkZCcM1HhyK++3DI=
-github.com/aws/aws-sdk-go v1.44.72/go.mod h1:y4AeaBuwd2Lk+GepC1E9v0qOiTws0MIWAX4oIKwKHZo=
+github.com/aws/aws-sdk-go v1.44.73 h1:dfvXVwi4A5/GxsmtsWI6ryjSIqM9SG0DKyGrB7q0NV8=
+github.com/aws/aws-sdk-go v1.44.73/go.mod h1:y4AeaBuwd2Lk+GepC1E9v0qOiTws0MIWAX4oIKwKHZo=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/eclipse/paho.mqtt.golang v1.4.1 h1:tUSpviiL5G3P9SZZJPC4ZULZJsxQKXxfENpMvdbAXAI=
@@ -17,8 +17,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/uhppoted/uhppote-core v0.8.2-0.20220809163547-e7090d5b0fd4 h1:7KK6/h81LkDNdHO+rO0EClDngODNh2NtD90MvB1kZIg=
 github.com/uhppoted/uhppote-core v0.8.2-0.20220809163547-e7090d5b0fd4/go.mod h1:DsKVqUqHPQoZx4C4qp0fmYuyDXfFH8k+ejTriM9pOE4=
-github.com/uhppoted/uhppoted-lib v0.8.2-0.20220810174942-63672b7e2bcd h1:d0HEHF40BCyUBBfatgBTCHDkf2zdywqnQCrYPyX0vA8=
-github.com/uhppoted/uhppoted-lib v0.8.2-0.20220810174942-63672b7e2bcd/go.mod h1:wCXLNkcGbeKwBkA20WgqEW54bWTDZBgCQjv2Kl/yDn0=
+github.com/uhppoted/uhppoted-lib v0.8.2-0.20220810182805-d813fd1ae16d h1:j6OYKuNSJDV03eeiv0np/e0V4907D4lxIbzYJRT2EAs=
+github.com/uhppoted/uhppoted-lib v0.8.2-0.20220810182805-d813fd1ae16d/go.mod h1:wCXLNkcGbeKwBkA20WgqEW54bWTDZBgCQjv2Kl/yDn0=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0/go.mod h1:qpuaurCH72eLCgpAm/N6yyVIVM9cpaDIP3A8BGJEC5A=
 golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd/go.mod h1:CfG3xpIq0wQ8r1q4Su4UZFWDARRcnwPjda9FqA0JpMk=

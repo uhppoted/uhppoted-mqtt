@@ -103,8 +103,8 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	cmd.watchdogInterval = c.WatchdogInterval
 
 	cmd.softlock.enabled = c.MQTT.Softlock.Enabled
-	cmd.softlock.interval = 30 * time.Second
-	cmd.softlock.wait = 60 * time.Second
+	cmd.softlock.interval = c.MQTT.Softlock.Interval
+	cmd.softlock.wait = c.MQTT.Softlock.Wait
 
 	// ... initialise MQTT
 
@@ -283,9 +283,9 @@ func (r *Run) listen(
 	} else if lockfile == "" {
 		return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
 	} else {
-		// defer func() {
-		// 	os.Remove(lockfile)
-		// }()
+		defer func() {
+			os.Remove(lockfile)
+		}()
 	}
 
 	// ... MQTT
