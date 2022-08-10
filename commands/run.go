@@ -278,14 +278,14 @@ func (r *Run) listen(
 	interrupt chan os.Signal) error {
 
 	// ... acquire MQTT client lock
-	if lockfile, err := r.lock(mqttd.Connection.ClientID); err != nil {
+	if lockfile, err := r.lock(mqttd.Connection.ClientID, interrupt); err != nil {
 		return err
 	} else if lockfile == "" {
 		return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
 	} else {
-		defer func() {
-			os.Remove(lockfile)
-		}()
+		// defer func() {
+		// 	os.Remove(lockfile)
+		// }()
 	}
 
 	// ... MQTT
@@ -348,10 +348,21 @@ func authorized(file string) ([]string, error) {
 
 // Uses SHA-256 hash of lockfile contents because os.Stat updates the mtime
 // of the lockfile and in any event, mtime has a resolution of 1 minute.
-func (r *Run) lock(clientID string) (string, error) {
+func (r *Run) lock(clientID string, interrupt chan os.Signal) (string, error) {
 	workdir := filepath.Dir(r.pidFile)
 	lockfile := filepath.Join(workdir, fmt.Sprintf("%s.lock", clientID))
-	write := func() error {
+
+	hash := func(file string) (string, error) {
+		if bytes, err := os.ReadFile(file); err != nil {
+			return "", err
+		} else {
+			sum := sha256.Sum256(bytes)
+
+			return hex.EncodeToString(sum[:]), nil
+		}
+	}
+
+	touch := func() error {
 		pid := fmt.Sprintf("%d", os.Getpid())
 		now := time.Now().Format("2006-01-02 15:04:05")
 		v := fmt.Sprintf("%v\n%v\n", pid, now)
@@ -366,7 +377,7 @@ func (r *Run) lock(clientID string) (string, error) {
 		return "", err
 
 	case err != nil && os.IsNotExist(err):
-		if err := write(); err != nil {
+		if err := touch(); err != nil {
 			return "", err
 		}
 
@@ -378,14 +389,23 @@ func (r *Run) lock(clientID string) (string, error) {
 
 	case err == nil && r.softlock.enabled && checksum != "":
 		log.Warnf("MQTT client lockfile '%v' exists, delaying for %v", lockfile, r.softlock.wait)
-		time.Sleep(r.softlock.wait)
+
+		wait := time.After(r.softlock.wait)
+
+		select {
+		case <-wait:
+
+		case <-interrupt:
+			return "", fmt.Errorf("interrupted")
+		}
+
 		h, err := hash(lockfile)
 		switch {
 		case err != nil && !os.IsNotExist(err):
 			return "", err
 
 		case err != nil && os.IsNotExist(err):
-			if err := write(); err != nil {
+			if err := touch(); err != nil {
 				return "", err
 			}
 
@@ -394,7 +414,7 @@ func (r *Run) lock(clientID string) (string, error) {
 
 		default:
 			log.Warnf("replacing MQTT client lockfile '%v'", lockfile)
-			if err := write(); err != nil {
+			if err := touch(); err != nil {
 				return "", err
 			}
 		}
@@ -409,20 +429,10 @@ func (r *Run) lock(clientID string) (string, error) {
 			for {
 				<-tick
 				log.Infof("touching MQTT client lockfile '%v'", lockfile)
-				write()
+				touch()
 			}
 		}()
 	}
 
 	return lockfile, nil
-}
-
-func hash(file string) (string, error) {
-	if bytes, err := os.ReadFile(file); err != nil {
-		return "", err
-	} else {
-		sum := sha256.Sum256(bytes)
-
-		return hex.EncodeToString(sum[:]), nil
-	}
 }
