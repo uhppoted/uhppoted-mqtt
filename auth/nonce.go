@@ -3,9 +3,10 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/uhppoted/uhppoted-lib/kvs"
-	"log"
 	"strconv"
+
+	"github.com/uhppoted/uhppoted-lib/kvs"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 type Nonce struct {
@@ -18,10 +19,9 @@ type Nonce struct {
 		*kvs.KeyValueStore
 		filepath string
 	}
-	log *log.Logger
 }
 
-func NewNonce(verify bool, server, clients string, logger *log.Logger) (*Nonce, error) {
+func NewNonce(verify bool, server, clients string) (*Nonce, error) {
 	var err error
 
 	var f = func(value string) (interface{}, error) {
@@ -44,15 +44,14 @@ func NewNonce(verify bool, server, clients string, logger *log.Logger) (*Nonce, 
 			kvs.NewKeyValueStore("nonce:clients", f),
 			clients,
 		},
-		log: logger,
 	}
 
 	if err = nonce.mqttd.LoadFromFile(server); err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("%v", err)
 	}
 
 	if err = nonce.counters.LoadFromFile(clients); err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("%v", err)
 	}
 
 	return &nonce, nil
@@ -77,7 +76,7 @@ func (n *Nonce) Validate(clientID *string, nonce *uint64) error {
 			return fmt.Errorf("nonce reused: %s, %d", *clientID, *nonce)
 		}
 
-		n.counters.Store(*clientID, *nonce, n.counters.filepath, n.log)
+		n.counters.Store(*clientID, *nonce, n.counters.filepath)
 	}
 
 	return nil
@@ -91,7 +90,7 @@ func (n *Nonce) Next() uint64 {
 
 	nonce := c.(uint64) + 1
 
-	n.mqttd.Store("mqttd", nonce, n.mqttd.filepath, n.log)
+	n.mqttd.Store("mqttd", nonce, n.mqttd.filepath)
 
 	return nonce
 }

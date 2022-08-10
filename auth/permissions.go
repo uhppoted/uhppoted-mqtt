@@ -2,10 +2,10 @@ package auth
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppoted-lib/kvs"
-	"log"
 	"regexp"
 	"strings"
+
+	"github.com/uhppoted/uhppoted-lib/kvs"
 )
 
 type Permissions struct {
@@ -23,7 +23,7 @@ func (p permission) String() string {
 	return fmt.Sprintf("resource:`%s` action:`%s`", p.resource, p.action)
 }
 
-func NewPermissions(enabled bool, users, groups string, logger *log.Logger) (*Permissions, error) {
+func NewPermissions(enabled bool, users, groups string) (*Permissions, error) {
 	separator := regexp.MustCompile(`\s*,\s*`)
 
 	u := func(value string) (interface{}, error) {
@@ -73,8 +73,8 @@ func NewPermissions(enabled bool, users, groups string, logger *log.Logger) (*Pe
 			return nil, err
 		}
 
-		permissions.users.Watch(users, logger)
-		permissions.groups.Watch(groups, logger)
+		permissions.users.Watch(users)
+		permissions.groups.Watch(groups)
 	}
 
 	return &permissions, nil

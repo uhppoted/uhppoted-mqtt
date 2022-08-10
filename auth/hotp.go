@@ -7,12 +7,13 @@ import (
 	"encoding/base32"
 	"encoding/binary"
 	"fmt"
-	"github.com/uhppoted/uhppoted-lib/kvs"
 	"hash"
-	"log"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/uhppoted/uhppoted-lib/kvs"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 type HOTP struct {
@@ -21,13 +22,12 @@ type HOTP struct {
 	counters  struct {
 		*kvs.KeyValueStore
 		filepath string
-		log      *log.Logger
 	}
 }
 
 const DIGITS = 6
 
-func NewHOTP(increment uint64, secrets string, counters string, logger *log.Logger) (*HOTP, error) {
+func NewHOTP(increment uint64, secrets string, counters string) (*HOTP, error) {
 	u := func(value string) (interface{}, error) {
 		return value, nil
 	}
@@ -42,11 +42,9 @@ func NewHOTP(increment uint64, secrets string, counters string, logger *log.Logg
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
-			log      *log.Logger
 		}{
 			kvs.NewKeyValueStore("hotp:counters", v),
 			counters,
-			logger,
 		},
 	}
 
@@ -55,10 +53,10 @@ func NewHOTP(increment uint64, secrets string, counters string, logger *log.Logg
 	}
 
 	if err := hotp.counters.LoadFromFile(counters); err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("%v", err)
 	}
 
-	hotp.secrets.Watch(secrets, logger)
+	hotp.secrets.Watch(secrets)
 
 	return &hotp, nil
 }
@@ -86,7 +84,7 @@ func (hotp *HOTP) Validate(clientID, otp string) error {
 		}
 
 		if subtle.ConstantTimeCompare([]byte(generated), []byte(otp)) == 1 {
-			hotp.counters.Store(clientID, counter.(uint64)+1, hotp.counters.filepath, hotp.counters.log)
+			hotp.counters.Store(clientID, counter.(uint64)+1, hotp.counters.filepath)
 			return nil
 		}
 

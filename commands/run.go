@@ -134,8 +134,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	permissions, err := auth.NewPermissions(
 		c.MQTT.Permissions.Enabled,
 		c.MQTT.Permissions.Users,
-		c.MQTT.Permissions.Groups,
-		logger)
+		c.MQTT.Permissions.Groups)
 	if err != nil {
 		log.Errorf("%v", err)
 		return
@@ -212,7 +211,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		return
 	}
 
-	hotp, err := auth.NewHOTP(c.MQTT.HOTP.Range, c.MQTT.HOTP.Secrets, c.MQTT.HOTP.Counters, logger)
+	hotp, err := auth.NewHOTP(c.MQTT.HOTP.Range, c.MQTT.HOTP.Secrets, c.MQTT.HOTP.Counters)
 	if mqttd.Authentication == "HOTP" && err != nil {
 		log.Errorf("%v", err)
 		return
@@ -224,7 +223,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		return
 	}
 
-	nonce, err := auth.NewNonce(c.Nonce.Required, c.Nonce.Server, c.Nonce.Clients, logger)
+	nonce, err := auth.NewNonce(c.Nonce.Required, c.Nonce.Server, c.Nonce.Clients)
 	if err != nil {
 		log.Errorf("%v", err)
 		return

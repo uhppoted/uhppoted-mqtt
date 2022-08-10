@@ -3,7 +3,7 @@
 ### IN PROGRESS
 
 - [ ] Optional soft lock for MQTT client lock file
-      - [x] Use hash because stat changes file mtime
+      - [x] Use hash because os.Stat changes file mtime
       - [ ] Handle interrupt (CTRL-C)
       - [ ] Add interval and wait to config
 
