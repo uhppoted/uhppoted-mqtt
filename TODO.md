@@ -2,16 +2,13 @@
 
 ### IN PROGRESS
 
-- [ ] Optional soft lock for MQTT client lock file
-      - [x] Use hash because os.Stat changes file mtime
-      - [x] Handle interrupt (CTRL-C)
-      - [ ] Add interval and wait to config
-
+- [x] Optional soft lock for MQTT client lock file
 - [ ] Exit on too many reconnects in e.g. 60s
-- [ ] Abstract logger to separate log package
-      - [ ] Move to uhppoted-lib
-- [ ] Generate uhppoted.conf if it doesn't exist
 
+- [ ] Abstract logger to separate log package
+      - [ ] Wrap uhppoted-lib
+
+- [ ] Generate uhppoted.conf if it doesn't exist
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
       - https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20

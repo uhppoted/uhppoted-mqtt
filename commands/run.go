@@ -45,6 +45,8 @@ type softlock struct {
 	wait     time.Duration
 }
 
+const LOG_TAG = ""
+
 func (cmd *Run) Name() string {
 	return "run"
 }
@@ -68,7 +70,7 @@ func (cmd *Run) Help() {
 func (cmd *Run) execute(f func(*config.Config) error) error {
 	conf := config.NewConfig()
 	if err := conf.Load(cmd.configuration); err != nil {
-		log.Warnf("WARN  Could not load configuration (%v)", err)
+		log.Warnf(LOG_TAG, "Could not load configuration (%v)", err)
 	}
 
 	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
@@ -97,7 +99,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 
 func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.Signal) {
 	log.SetLogger(logger)
-	log.Infof("START")
+	log.Infof(LOG_TAG, "START")
 
 	cmd.healthCheckInterval = c.HealthCheckInterval
 	cmd.watchdogInterval = c.WatchdogInterval
@@ -136,7 +138,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		c.MQTT.Permissions.Users,
 		c.MQTT.Permissions.Groups)
 	if err != nil {
-		log.Errorf("%v", err)
+		log.Errorf(LOG_TAG, "%v", err)
 		return
 	}
 
@@ -185,19 +187,19 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	if strings.HasPrefix(mqttd.Connection.Broker, "tls:") {
 		pem, err := os.ReadFile(c.Connection.BrokerCertificate)
 		if err != nil {
-			log.Errorf("%v", err)
+			log.Errorf(LOG_TAG, "%v", err)
 		} else {
 			mqttd.TLS.InsecureSkipVerify = false
 			mqttd.TLS.RootCAs = x509.NewCertPool()
 
 			if ok := mqttd.TLS.RootCAs.AppendCertsFromPEM(pem); !ok {
-				log.Errorf("could not initialise MQTTD CA certificates")
+				log.Errorf(LOG_TAG, "could not initialise MQTTD CA certificates")
 			}
 		}
 
 		certificate, err := tls.LoadX509KeyPair(c.Connection.ClientCertificate, c.Connection.ClientKey)
 		if err != nil {
-			log.Errorf("%v", err)
+			log.Errorf(LOG_TAG, "%v", err)
 		} else {
 			mqttd.TLS.Certificates = []tls.Certificate{certificate}
 		}
@@ -207,25 +209,25 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	hmac, err := auth.NewHMAC(c.HMAC.Required, c.HMAC.Key)
 	if c.HMAC.Required && err != nil {
-		log.Errorf("%v", err)
+		log.Errorf(LOG_TAG, "%v", err)
 		return
 	}
 
 	hotp, err := auth.NewHOTP(c.MQTT.HOTP.Range, c.MQTT.HOTP.Secrets, c.MQTT.HOTP.Counters)
 	if mqttd.Authentication == "HOTP" && err != nil {
-		log.Errorf("%v", err)
+		log.Errorf(LOG_TAG, "%v", err)
 		return
 	}
 
 	rsa, err := auth.NewRSA(c.RSA.KeyDir, logger)
 	if mqttd.Authentication == "RSA" && err != nil {
-		log.Errorf("%v", err)
+		log.Errorf(LOG_TAG, "%v", err)
 		return
 	}
 
 	nonce, err := auth.NewNonce(c.Nonce.Required, c.Nonce.Server, c.Nonce.Clients)
 	if err != nil {
-		log.Errorf("%v", err)
+		log.Errorf(LOG_TAG, "%v", err)
 		return
 	}
 
@@ -241,9 +243,9 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		file := filepath.Base(c.MQTT.Locale)
 		fs := os.DirFS(folder)
 		if err := locales.Load(fs, file); err != nil {
-			log.Warnf("%v", err)
+			log.Warnf(LOG_TAG, "%v", err)
 		} else {
-			log.Infof("using translations from %v", c.MQTT.Locale)
+			log.Infof(LOG_TAG, "using translations from %v", c.MQTT.Locale)
 		}
 	}
 
@@ -255,17 +257,17 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	cards, err := authorized(c.MQTT.Cards)
 	if err != nil {
-		log.Warnf("%v", err)
+		log.Warnf(LOG_TAG, "%v", err)
 	}
 
 	// ... listen
 
 	err = cmd.listen(u, &mqttd, devices, &healthcheck, cards, logger, interrupt)
 	if err != nil {
-		log.Errorf("%v", err)
+		log.Errorf(LOG_TAG, "%v", err)
 	}
 
-	log.Infof("exit")
+	log.Infof(LOG_TAG, "exit")
 }
 
 func (r *Run) listen(
@@ -294,7 +296,7 @@ func (r *Run) listen(
 		return err
 	}
 
-	defer mqttd.Close(logger)
+	defer mqttd.Close()
 
 	// ... monitoring
 
@@ -325,7 +327,7 @@ func (r *Run) listen(
 			}
 
 		case <-interrupt:
-			log.Infof("... interrupt")
+			log.Infof(LOG_TAG, "interrupt")
 			return nil
 		}
 	}
@@ -388,7 +390,7 @@ func (r *Run) lock(clientID string, interrupt chan os.Signal) (string, error) {
 		return "", fmt.Errorf("invalid MQTT client lockfile checksum")
 
 	case err == nil && r.softlock.enabled && checksum != "":
-		log.Warnf("MQTT client lockfile '%v' exists, delaying for %v", lockfile, r.softlock.wait)
+		log.Warnf(LOG_TAG, "MQTT client lockfile '%v' exists, delaying for %v", lockfile, r.softlock.wait)
 
 		wait := time.After(r.softlock.wait)
 
@@ -413,7 +415,7 @@ func (r *Run) lock(clientID string, interrupt chan os.Signal) (string, error) {
 			return "", fmt.Errorf("MQTT client lockfile '%v' in use", lockfile)
 
 		default:
-			log.Warnf("replacing MQTT client lockfile '%v'", lockfile)
+			log.Warnf(LOG_TAG, "replacing MQTT client lockfile '%v'", lockfile)
 			if err := touch(); err != nil {
 				return "", err
 			}
@@ -428,7 +430,7 @@ func (r *Run) lock(clientID string, interrupt chan os.Signal) (string, error) {
 		go func() {
 			for {
 				<-tick
-				log.Infof("touching MQTT client lockfile '%v'", lockfile)
+				log.Infof(LOG_TAG, "touching MQTT client lockfile '%v'", lockfile)
 				touch()
 			}
 		}()

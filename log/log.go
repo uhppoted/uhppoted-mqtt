@@ -3,6 +3,8 @@ package log
 import (
 	"fmt"
 	syslog "log"
+
+	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type LogLevel int
@@ -15,64 +17,50 @@ const (
 	errors
 )
 
-var logger = syslog.Default()
-var debugging = false
-var level = info
-var hook func()
+const f = "%-8v %v"
 
 func SetDebug(enabled bool) {
-	debugging = enabled
+	log.SetDebug(enabled)
 }
 
-func SetLevel(l string) {
-	switch l {
-	case "none":
-		level = none
-	case "debug":
-		level = debug
-	case "info":
-		level = info
-	case "warn":
-		level = warn
-	case "error":
-		level = errors
-	}
+func SetLevel(level string) {
+	log.SetLevel(level)
 }
 
-func SetLogger(log *syslog.Logger) {
-	logger = log
+func SetLogger(logger *syslog.Logger) {
+	log.SetLogger(logger)
 }
 
 func SetFatalHook(f func()) {
-	hook = f
+	log.SetFatalHook(f)
 }
 
-func Debugf(format string, args ...any) {
-	if debugging || level < info {
-		logger.Printf("%-5v  %v", "DEBUG", fmt.Sprintf(format, args...))
-	}
+func Debugf(tag string, format string, args ...any) {
+	s := fmt.Sprintf(f, tag, format)
+
+	log.Debugf(s, args...)
 }
 
-func Infof(format string, args ...any) {
-	if level < warn {
-		logger.Printf("%-5v  %v", "INFO", fmt.Sprintf(format, args...))
-	}
+func Infof(tag string, format string, args ...any) {
+	s := fmt.Sprintf(f, tag, format)
+
+	log.Infof(s, args...)
 }
 
-func Warnf(format string, args ...any) {
-	if level < errors {
-		logger.Printf("%-5v  %v", "WARN", fmt.Sprintf(format, args...))
-	}
+func Warnf(tag string, format string, args ...any) {
+	s := fmt.Sprintf(f, tag, format)
+
+	log.Warnf(s, args...)
 }
 
-func Errorf(format string, args ...any) {
-	logger.Printf("%-5v  %v", "ERROR", fmt.Sprintf(format, args...))
+func Errorf(tag string, format string, args ...any) {
+	s := fmt.Sprintf(f, tag, format)
+
+	log.Errorf(s, args...)
 }
 
-func Fatalf(format string, args ...any) {
-	if hook != nil {
-		hook()
-	}
+func Fatalf(tag string, format string, args ...any) {
+	s := fmt.Sprintf(f, tag, format)
 
-	logger.Fatalf("%-5v  %v", "FATAL", fmt.Sprintf(format, args...))
+	log.Fatalf(s, args...)
 }

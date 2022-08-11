@@ -53,7 +53,7 @@ func NewHOTP(increment uint64, secrets string, counters string) (*HOTP, error) {
 	}
 
 	if err := hotp.counters.LoadFromFile(counters); err != nil {
-		log.Warnf("%v", err)
+		log.Warnf(LOG_TAG, "%v", err)
 	}
 
 	hotp.secrets.Watch(secrets)

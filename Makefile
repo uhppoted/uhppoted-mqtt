@@ -122,6 +122,9 @@ config: build
 run: build
 	./bin/uhppoted-mqtt run --console
 
+run2: build
+	./bin/uhppoted-mqtt run --console --pid /usr/local/var/com.github.uhppoted/qwerty.pid
+
 get-devices:
 	mqtt publish --topic 'uhppoted/gateway/requests/devices:get' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
