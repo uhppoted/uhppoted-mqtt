@@ -17,7 +17,7 @@ const (
 	errors
 )
 
-const f = "%-8v %v"
+const f = "%-12v %v"
 
 func SetDebug(enabled bool) {
 	log.SetDebug(enabled)

@@ -1,23 +1,22 @@
 package mqtt
 
 import (
-	"github.com/uhppoted/uhppoted-lib/monitoring"
-	"log"
 	"sync"
 	"time"
+
+	"github.com/uhppoted/uhppoted-lib/monitoring"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 type SystemMonitor struct {
 	mqttd *MQTTD
-	log   *log.Logger
 }
 
 var alive = sync.Map{}
 
-func NewSystemMonitor(mqttd *MQTTD, log *log.Logger) *SystemMonitor {
+func NewSystemMonitor(mqttd *MQTTD) *SystemMonitor {
 	return &SystemMonitor{
 		mqttd: mqttd,
-		log:   log,
 	}
 }
 
@@ -46,7 +45,7 @@ func (m *SystemMonitor) Alive(monitor monitoring.Monitor, msg string) error {
 	}
 
 	if err := m.mqttd.send(&m.mqttd.Encryption.SystemKeyID, m.mqttd.Topics.System, nil, event, msgSystem, false); err != nil {
-		m.log.Printf("WARN  %-20s %v", "monitoring", err)
+		log.Warnf("monitoring", "%v", err)
 		return err
 	}
 
@@ -72,7 +71,7 @@ func (m *SystemMonitor) Alert(monitor monitoring.Monitor, msg string) error {
 	}
 
 	if err := m.mqttd.send(&m.mqttd.Encryption.SystemKeyID, m.mqttd.Topics.System, nil, event, msgSystem, true); err != nil {
-		m.log.Printf("WARN  %-20s %v", "monitoring", err)
+		log.Warnf("monitoring", "%v", err)
 		return err
 	}
 

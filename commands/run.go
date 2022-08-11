@@ -279,16 +279,16 @@ func (r *Run) listen(
 	logger *syslog.Logger,
 	interrupt chan os.Signal) error {
 
-	// ... acquire MQTT client lock
-	if lockfile, err := r.lock(mqttd.Connection.ClientID, interrupt); err != nil {
-		return err
-	} else if lockfile == "" {
-		return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
-	} else {
-		defer func() {
-			os.Remove(lockfile)
-		}()
-	}
+	// // ... acquire MQTT client lock
+	// if lockfile, err := r.lock(mqttd.Connection.ClientID, interrupt); err != nil {
+	// 	return err
+	// } else if lockfile == "" {
+	// 	return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
+	// } else {
+	// 	defer func() {
+	// 		os.Remove(lockfile)
+	// 	}()
+	// }
 
 	// ... MQTT
 
@@ -300,7 +300,7 @@ func (r *Run) listen(
 
 	// ... monitoring
 
-	monitor := mqtt.NewSystemMonitor(mqttd, logger)
+	monitor := mqtt.NewSystemMonitor(mqttd)
 	watchdog := monitoring.NewWatchdog(healthcheck, logger)
 	k := time.NewTicker(r.healthCheckInterval)
 
