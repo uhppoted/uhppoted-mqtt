@@ -230,37 +230,29 @@ func (m *MQTTD) subscribeAndServe(d *dispatcher, logger *syslog.Logger) (paho.Cl
 		servers := options.Servers()
 		for _, url := range servers {
 			log.Infof(LOG_TAG, "connected to %s", url)
-			stats.onConnected()
 		}
 
 		token := m.client.Subscribe(m.Topics.Requests+"/#", 0, handler)
 		if err := token.Error(); err != nil {
-			stats.onError()
 			log.Errorf(LOG_TAG, "unable to subscribe to %s (%v)", m.Topics.Requests, err)
 		} else {
-			stats.onSubscribed()
 			log.Infof(LOG_TAG, "subscribed to %s", m.Topics.Requests)
 		}
-
-		log.Infof(LOG_TAG, "statistics %v", &stats)
 	}
 
 	var disconnected paho.ConnectionLostHandler = func(client paho.Client, err error) {
+		log.Errorf(LOG_TAG, "connection to MQTT broker lost (%v)", err)
+
 		stats.onDisconnected()
 
-		log.Errorf(LOG_TAG, "connection to MQTT broker lost (%v)", err)
 		go func() {
 			time.Sleep(10 * time.Second)
 			log.Infof(LOG_TAG, "retrying connection to MQTT broker %v", m.Connection.Broker)
 			token := client.Connect()
 			if err := token.Error(); err != nil {
-				stats.onError()
 				log.Errorf(LOG_TAG, "failed to reconnect to MQTT broker (%v)", err)
-				log.Infof(LOG_TAG, "statistics %v", &stats)
 			}
 		}()
-
-		log.Infof(LOG_TAG, "statistics %v", &stats)
 	}
 
 	// NOTE: Paho auto-reconnect causes a retry storm if two MQTT clients are using the same client ID.
@@ -414,35 +406,6 @@ func (m *MQTTD) authorise(clientID *string, topic string) error {
 }
 
 // TODO: add callback for published/failed
-//
-//	func (mqttd *MQTTD) send(destID *string, topic string, message interface{}, msgtype msgType, critical bool) error {
-//		if mqttd.client == nil || !mqttd.client.IsConnected() {
-//			return errors.New("No connection to MQTT broker")
-//		}
-//
-//		m, err := mqttd.wrap(msgtype, message, destID)
-//		if err != nil {
-//			return err
-//		} else if m == nil {
-//			return errors.New("'wrap' failed to return a publishable message")
-//		}
-//
-//		qos := byte(0)
-//		retained := false
-//		if critical {
-//			qos = mqttd.Alerts.QOS
-//			retained = mqttd.Alerts.Retained
-//		}
-//
-//		token := mqttd.client.Publish(topic, qos, retained, string(m))
-//		if token.Error() != nil {
-//			return token.Error()
-//		}
-//
-//		return nil
-//	}
-//
-// TODO: add callback for published/failed
 func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
 	if mqttd.client == nil || !mqttd.client.IsConnected() {
 		return errors.New("No connection to MQTT broker")
@@ -499,14 +462,6 @@ func compose(meta *metainfo, content interface{}) (interface{}, error) {
 	}
 
 	return reply, nil
-
-	//	return struct {
-	//		*metainfo `json:",omitempty"`
-	//		Content   interface{} `json:"body"`
-	//	}{
-	//		metainfo: meta,
-	//		Content:  content,
-	//	}, nil
 }
 
 func isBase64(request []byte) bool {

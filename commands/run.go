@@ -94,6 +94,10 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 		os.Remove(cmd.pidFile)
 	}()
 
+	log.SetFatalHook(func() {
+		os.Remove(cmd.pidFile)
+	})
+
 	return f(conf)
 }
 

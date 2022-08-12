@@ -4,8 +4,10 @@
 
 - [x] Optional soft lock for MQTT client lock file
 - [ ] Exit on too many reconnects in e.g. 60s
-      - [ ] Collect connect/disconnect statistics
-      - [ ] Exit on too many connect/disconnects
+      - [x] Collect connect/disconnect statistics
+      - [x] Exit on too many connect/disconnects
+      - [x] Clean up PID file on Fatalf
+      - [ ] Clean up lockfile file on Fatalf
       - [ ] Add to MQTT configuration
 
 - [ ] Abstract logger to separate log package
