@@ -3,12 +3,15 @@
 ### IN PROGRESS
 
 - [x] Optional soft lock for MQTT client lock file
+      - [ ] Default to enabled
+
 - [ ] Exit on too many reconnects in e.g. 60s
       - [x] Collect connect/disconnect statistics
       - [x] Exit on too many connect/disconnects
       - [x] Clean up PID file on Fatalf
-      - [ ] Clean up lockfile file on Fatalf
+      - [x] Clean up lockfile file on Fatalf
       - [ ] Add to MQTT configuration
+      - [ ] Default to enabled
 
 - [ ] Abstract logger to separate log package
       - [ ] Wrap uhppoted-lib

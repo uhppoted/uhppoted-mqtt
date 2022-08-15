@@ -31,8 +31,8 @@ func SetLogger(logger *syslog.Logger) {
 	log.SetLogger(logger)
 }
 
-func SetFatalHook(f func()) {
-	log.SetFatalHook(f)
+func AddFatalHook(f func()) {
+	log.AddFatalHook(f)
 }
 
 func Debugf(tag string, format string, args ...any) {

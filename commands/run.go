@@ -94,7 +94,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 		os.Remove(cmd.pidFile)
 	}()
 
-	log.SetFatalHook(func() {
+	log.AddFatalHook(func() {
 		os.Remove(cmd.pidFile)
 	})
 
@@ -292,6 +292,10 @@ func (r *Run) listen(
 		defer func() {
 			os.Remove(lockfile)
 		}()
+
+		log.AddFatalHook(func() {
+			os.Remove(lockfile)
+		})
 	}
 
 	// ... MQTT
