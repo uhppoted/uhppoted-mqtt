@@ -8,24 +8,34 @@ import (
 
 type statistics struct {
 	disconnects []uint32
-	max         uint64
+	interval    time.Duration
+	max         uint32
 
-	index        int
 	disconnected chan uint32
 	tick         <-chan time.Time
 }
 
 var stats = statistics{
 	disconnects: make([]uint32, 20),
+	interval:    5 * time.Minute,
 	max:         10,
 
-	index:        0,
 	disconnected: make(chan uint32),
-	tick:         time.Tick(15 * time.Second),
+	tick:         time.Tick(TICK),
 }
+
+const TICK = 1 * time.Second
 
 func init() {
 	stats.monitor()
+}
+
+func SetDisconnectsInterval(interval time.Duration) {
+	stats.interval = interval
+}
+
+func SetMaxDisconnects(N uint32) {
+	stats.max = N
 }
 
 func (s *statistics) onDisconnected() {
@@ -43,20 +53,31 @@ func (s *statistics) monitor() {
 	}
 
 	go func() {
+		start := time.Now()
+		last := 0
+
 		for {
 			select {
 			case N := <-stats.disconnected:
-				stats.disconnects[stats.index] += N
+				stats.disconnects[0] += N
 				count := sum(stats.disconnects)
-				log.Infof(LOG_TAG, "DISCONNECT COUNT:%v of %v", count, s.max)
-				if count >= stats.max {
+				log.Infof(LOG_TAG, "DISCONNECT %v of %v in %v", count, s.max, s.interval)
+				if count >= uint64(stats.max) {
 					log.Fatalf(LOG_TAG, "DISCONNECT COUNT %v REACHED MAXIMUM ALLOWED (%v)", count, stats.max)
 				}
 
 			case <-stats.tick:
-				index := (stats.index + 1) % len(stats.disconnects)
-				stats.disconnects[index] = 0
-				stats.index = index
+				N := len(stats.disconnects)
+				step := stats.interval / time.Duration(N)
+				delta := time.Now().Sub(start)
+				bucket := int(float64(delta) / float64(step))
+
+				// TODO rework this as ring buffer
+				for bucket > last {
+					disconnects := append([]uint32{0}, stats.disconnects...)
+					stats.disconnects = disconnects[0:N]
+					last += 1
+				}
 			}
 		}
 	}()

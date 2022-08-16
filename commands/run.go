@@ -257,6 +257,9 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	healthcheck := monitoring.NewHealthCheck(u, c.HealthCheckIdle, c.HealthCheckIgnore, logger)
 
+	mqtt.SetDisconnectsInterval(c.MQTT.Disconnects.Interval)
+	mqtt.SetMaxDisconnects(c.MQTT.Disconnects.Max)
+
 	// ... authorized card list
 
 	cards, err := authorized(c.MQTT.Cards)

@@ -2,26 +2,19 @@
 
 ### IN PROGRESS
 
-- [x] Optional soft lock for MQTT client lock file
-      - [ ] Default to enabled
-
 - [ ] Exit on too many reconnects in e.g. 60s
-      - [x] Collect connect/disconnect statistics
-      - [x] Exit on too many connect/disconnects
-      - [x] Clean up PID file on Fatalf
-      - [x] Clean up lockfile file on Fatalf
-      - [ ] Add to MQTT configuration
-      - [ ] Default to enabled
+      - [x] Add to MQTT configuration
+      - [ ] Rework as ring buffer
 
-- [ ] Abstract logger to separate log package
-      - [ ] Wrap uhppoted-lib
-
-- [ ] Generate uhppoted.conf if it doesn't exist
+- [x] Abstract logger to separate log package
+      - [x] Wrap uhppoted-lib
 
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
       - https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
+
+- (?) Generate uhppoted.conf if it doesn't exist
 
 ## TODO
 
