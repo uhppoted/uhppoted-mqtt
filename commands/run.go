@@ -257,6 +257,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	healthcheck := monitoring.NewHealthCheck(u, c.HealthCheckIdle, c.HealthCheckIgnore, logger)
 
+	mqtt.SetDisconnectsEnabled(c.MQTT.Disconnects.Enabled)
 	mqtt.SetDisconnectsInterval(c.MQTT.Disconnects.Interval)
 	mqtt.SetMaxDisconnects(c.MQTT.Disconnects.Max)
 
@@ -286,20 +287,20 @@ func (r *Run) listen(
 	logger *syslog.Logger,
 	interrupt chan os.Signal) error {
 
-	// ... acquire MQTT client lock
-	if lockfile, err := r.lock(mqttd.Connection.ClientID, interrupt); err != nil {
-		return err
-	} else if lockfile == "" {
-		return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
-	} else {
-		defer func() {
-			os.Remove(lockfile)
-		}()
+	// // ... acquire MQTT client lock
+	// if lockfile, err := r.lock(mqttd.Connection.ClientID, interrupt); err != nil {
+	// 	return err
+	// } else if lockfile == "" {
+	// 	return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
+	// } else {
+	// 	defer func() {
+	// 		os.Remove(lockfile)
+	// 	}()
 
-		log.AddFatalHook(func() {
-			os.Remove(lockfile)
-		})
-	}
+	// 	log.AddFatalHook(func() {
+	// 		os.Remove(lockfile)
+	// 	})
+	// }
 
 	// ... MQTT
 

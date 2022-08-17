@@ -7,25 +7,31 @@ import (
 )
 
 type statistics struct {
-	disconnects []uint32
-	interval    time.Duration
-	max         uint32
+	enabled  bool
+	interval time.Duration
+	max      uint32
 
+	disconnects  []uint32
 	disconnected chan uint32
 	tick         <-chan time.Time
 }
 
 var stats = statistics{
-	disconnects: make([]uint32, 60),
-	interval:    5 * time.Minute,
-	max:         10,
+	enabled:  true,
+	interval: 5 * time.Minute,
+	max:      10,
 
+	disconnects:  make([]uint32, 60),
 	disconnected: make(chan uint32),
 	tick:         time.Tick(1 * time.Second),
 }
 
 func init() {
 	stats.monitor()
+}
+
+func SetDisconnectsEnabled(enabled bool) {
+	stats.enabled = enabled
 }
 
 func SetDisconnectsInterval(interval time.Duration) {
@@ -64,7 +70,7 @@ func (s *statistics) monitor() {
 				stats.disconnects[index] += N
 				count := sum(stats.disconnects)
 				log.Infof(LOG_TAG, "DISCONNECT %v of %v in %v", count, s.max, s.interval)
-				if count >= uint64(stats.max) {
+				if stats.enabled && count >= uint64(stats.max) {
 					log.Fatalf(LOG_TAG, "DISCONNECT COUNT %v REACHED MAXIMUM ALLOWED (%v)", count, stats.max)
 				}
 
