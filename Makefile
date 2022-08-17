@@ -78,22 +78,14 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
+	./bin/uhppoted-mqtt run --console --pid /usr/local/var/com.github.uhppoted/qwerty.pid
 	# mqtt publish --topic 'uhppoted/gateway/requests/device/door/lock:open' \
- #               --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
- #                                                      "client-id":   "$(CLIENTID)",  \
- #                                                      "reply-to":    "$(REPLYTO)",   \
- #                                                      "device-id":   423187757,      \
- #                                                      "card-number": 6154410,        \
- #                                                      "door":        1 }}}'
-debug2:
-	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
-               --message '{ "message": { "request": { "request-id":"$(REQUESTID)", \
-                                                      "client-id":"$(CLIENTID)", \
-                                                      "reply-to":"$(REPLYTO)", \
-                                                      "device-id":423187757, \
-                                                      "event-index": 206900 }}}'
-
-	mqtt publish --topic 'uhppoted/gateway/requests/device/event:get' \
+	#               --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+	#                                                      "client-id":   "$(CLIENTID)",  \
+	#                                                      "reply-to":    "$(REPLYTO)",   \
+	#                                                      "device-id":   423187757,      \
+	#                                                      "card-number": 6154410,        \
+	#                                                      "door":        1 }}}'
 
 godoc:
 	godoc -http=:80	-index_interval=60s
@@ -121,9 +113,6 @@ config: build
 
 run: build
 	./bin/uhppoted-mqtt run --console
-
-run2: build
-	./bin/uhppoted-mqtt run --console --pid /usr/local/var/com.github.uhppoted/qwerty.pid
 
 get-devices:
 	mqtt publish --topic 'uhppoted/gateway/requests/devices:get' \

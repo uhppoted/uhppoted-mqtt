@@ -8,7 +8,7 @@
 ### Changed
 1. Updated go.mod to Go 1.19
 2. Reworked MQTT client connection lockfile to implement 'soft lock'
-3. Added logic to shutdown app on too many MQTT client disconnects within the monitoring interval
+3. Added logic to shutdown application on too many MQTT client disconnects within the monitoring interval
 
 
 ## [v0.8.1] - 2022-08-01

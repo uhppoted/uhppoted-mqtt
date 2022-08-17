@@ -16,22 +16,24 @@ type statistics struct {
 }
 
 var stats = statistics{
-	disconnects: make([]uint32, 20),
+	disconnects: make([]uint32, 60),
 	interval:    5 * time.Minute,
 	max:         10,
 
 	disconnected: make(chan uint32),
-	tick:         time.Tick(TICK),
+	tick:         time.Tick(1 * time.Second),
 }
-
-const TICK = 1 * time.Second
 
 func init() {
 	stats.monitor()
 }
 
 func SetDisconnectsInterval(interval time.Duration) {
-	stats.interval = interval
+	if interval > 60*time.Second {
+		stats.interval = interval
+	} else {
+		stats.interval = 60 * time.Second
+	}
 }
 
 func SetMaxDisconnects(N uint32) {
@@ -54,12 +56,12 @@ func (s *statistics) monitor() {
 
 	go func() {
 		start := time.Now()
-		last := 0
+		index := 0
 
 		for {
 			select {
 			case N := <-stats.disconnected:
-				stats.disconnects[0] += N
+				stats.disconnects[index] += N
 				count := sum(stats.disconnects)
 				log.Infof(LOG_TAG, "DISCONNECT %v of %v in %v", count, s.max, s.interval)
 				if count >= uint64(stats.max) {
@@ -70,13 +72,12 @@ func (s *statistics) monitor() {
 				N := len(stats.disconnects)
 				step := stats.interval / time.Duration(N)
 				delta := time.Now().Sub(start)
-				bucket := int(float64(delta) / float64(step))
+				bucket := float64(delta) / float64(step)
+				next := int(bucket) % 60
 
-				// TODO rework this as ring buffer
-				for bucket > last {
-					disconnects := append([]uint32{0}, stats.disconnects...)
-					stats.disconnects = disconnects[0:N]
-					last += 1
+				for next != index {
+					index = (index + 1) % 60
+					stats.disconnects[index] = 0
 				}
 			}
 		}
