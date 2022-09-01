@@ -4,6 +4,7 @@
 
 ### Added
 1. HOWTO writeup for integrating with AWS Greengrass.
+2. ARM7 specific `daemonize` implementation to delete the MQTT client lock file on service start.
 
 ### Changed
 1. Updated go.mod to Go 1.19

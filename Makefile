@@ -78,8 +78,9 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	rm -f /usr/local/var/com.github.uhppoted/muppet.lock
-	./bin/uhppoted-mqtt run --console --pid /usr/local/var/com.github.uhppoted/qwerty.pid
+	env GOOS=linux   GOARCH=arm   GOARM=7 GOWORK=off go build -trimpath -o dist/$(DIST)/arm7    ./...
+	# rm -f /usr/local/var/com.github.uhppoted/muppet.lock
+	# ./bin/uhppoted-mqtt run --console --pid /usr/local/var/com.github.uhppoted/qwerty.pid
 
 godoc:
 	godoc -http=:80	-index_interval=60s
