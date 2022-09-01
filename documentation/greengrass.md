@@ -18,8 +18,8 @@ daunting. This guide outlines the steps required to _"just get something working
 ## Raison d'être
 
 AWS Greengrass has a couple of expectations that make getting _uhppoted-mqtt_ configured to connect to the _Moquette_ 
-MQTT broker component non-trivial until you've read a couple of reams of documentation which in turn requires more
-than a little coffee:
+MQTT broker component non-trivial until you've read a couple of reams of documentation along with more than a little
+coffee:
 
 1. By default, _Moquette_ is configured to require TLS mutual authentication i.e. clients are required to present a valid
    X.509 certificate signed by a common certificate authority during the intial TLS handshake.
@@ -354,8 +354,99 @@ _TODO_
 ## _uhppoted-mqtt_
 
 1. uhppoted-mqtt
+
+Installing _uhppoted-mqtt_ is straightforward and described in the [README](https://github.com/uhppoted/uhppoted-mqtt#installation). 
+
+If you're installing it as a service (daemon) the installation will automatically create (or update) the _/etc/uhppotd/uhppoted.conf_ configuration file. If you're installing it as a console application and don't already have a _uhppoted.conf_ file you can generate one by running the following command:
+```
+./uhppoted-mqtt config > /etc/uhppoted/uhppoted.conf
+```
+
+The default installation is configured with full security enabled which is unnecessary for an integration with _Greengrass_ and also cumbersome to debug (it can always be reenabled incrementally once the system is up and running).
+
+To run without internal security, edit the _/etc/uhppoted/uhppoted.config_ file:
+```
+...
+mqtt.security.HMAC.required = false
+mqtt.security.authentication = NONE
+mqtt.security.nonce.required = false
+mqtt.security.outgoing.sign = false
+mqtt.security.outgoing.encrypt = false
+...
+```
+
 2. Certificates
+
+By default, _Greengrass_ expects MQTT clients to connect with mutual TLS authentication - this is a GOOD thing, leave it like
+that. It does mean however that you need to provide TLS certificates for _uhppoted-mqtt_, which can be done manually or by retrieving them from the Greengrass certificate server. 
+
+Manually provisioning the certificates is only appropriate for debugging an initial setup - for anything else it is highly 
+recommneded that you use a script to retrieve then from the certificate server and to also run that script in a cron job to
+regularly update the certificates which can be revoked and updated from the AWS console.
+
+### Provisioning certificates manually
+
+You need the following certificate components (in PEM format):
+- AWS Root CA certificate
+- MQTT broker certificate
+- MQTT client certificates
+- MQTT client key
+
+Assuming the certificates are located in the _/greengrass/..._ folder:
+
+1. Install the AWS Root CA certificate located at _/greengrass/v3/rootCA.pem in your system trust store - the instructions
+for Ubuntu can be found [here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
+```
+sudo apt-get install -y ca-certificates
+sudo cp /greengrass/v3/rootCA.pem /usr/local/share/ca-certificates
+sudo update-ca-certificates
+```
+
+2. Copy the MQTT broker certificate from _/greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem_:
+```
+cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem /usr/local/etc/uhppoted/mqtt/greengrass/broker.pem
+```
+
+3. Copy the MQTT client certificate from _/greengrass/v2/thingCert.crt_:
+```
+cp /greengrass/v2/thingCert.crt /usr/local/etc/uhppoted/mqtt/greengrass/client.cert
+```
+
+4. Copy the MQTT client key from _/greengrass/v2/privKey.key_:
+```
+cp /greengrass/v2/privKey.key /usr/local/etc/uhppoted/mqtt/greengrass/client.key
+```
+
+5. Update the _uhppoted.conf_ file:
+```
+...
+mqtt.connection.client.ID = uhppoted-mqtt
+mqtt.connection.broker.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/broker.cert
+mqtt.connection.client.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/client.cert
+mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/client.key
+...
+```
+
+### Provisioning certificates from the _AWS Greengrass_ certificate server
+
+_(this assumes you included the _IPDetector_ module in the AWS Greengrass setup)_
+
+tl;dr; The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system.
+
+As above, you need the following certificate components (in PEM format):
+- AWS Root CA certificate
+- MQTT broker certificate
+- MQTT client certificates
+- MQTT client key
+
+-- TODO --
+
 3. Firewall
+
+On Ubuntu you may need to open the firewall for the MQTT port:
+```
+sudo ufw allow from %s to any port 8883 proto tcp
+```
 
 ## References
 

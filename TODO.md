@@ -2,12 +2,9 @@
 
 ### IN PROGRESS
 
-- [ ] Exit on too many reconnects in e.g. 60s
+- [x] Exit on too many reconnects in e.g. 60s
       - [x] Add to MQTT configuration
-      - [ ] Rework as ring buffer
-
-- [x] Abstract logger to separate log package
-      - [x] Wrap uhppoted-lib
+      - [x] Rework as ring buffer
 
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
