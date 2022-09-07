@@ -1,0 +1,58 @@
+{
+    "open_door": {
+        "command": "open-door",
+        "request": {
+            "fields": [
+                {
+                    "field": "request-id",
+                    "value": "<request-id>",
+                    "description": "(optional) message ID, returned in the response"
+                },
+                {
+                    "field": "client-id",
+                    "value": "<client-id>",
+                    "description": "(required) client ID for authentication and authorisation (if enabled)"
+                },
+                {
+                    "field": "reply-to",
+                    "value": "<topic>",
+                    "description": "(optional) topic for reply message. Defaults to uhppoted\/gateway\/replies (or the configured reply topic) if not provided."
+                },
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "(required) controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "(required) door (1..4) to open"
+                },
+                {
+                    "field": "card-number",
+                    "value": "<card-number>",
+                    "description": "(required) card number used to validate access"
+                }
+            ]
+        },
+        "response": {
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "door (1..4) from the request"
+                },
+                {
+                    "field": "opened",
+                    "value": "<result>",
+                    "description": "true if opened, false otherwise"
+                }
+            ]
+        }
+    }
+}

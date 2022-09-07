@@ -1,5 +1,6 @@
-DEBUG  ?= --debug
-DIST   ?= development
+DEBUG   ?= --debug
+DIST    ?= development
+CODEGEN ?= ../uhppoted-codegen/bin/uhppoted-codegen
 
 SERIALNO  ?= 405419896
 CARD      ?= 1327679
@@ -39,6 +40,9 @@ update-release:
 	go get -u golang.org/x/net
 	go get -u golang.org/x/sys
 	go mod tidy
+
+regen:
+	$(CODEGEN) --models documentation/.codegen/.models --templates documentation/.codegen/markdown --out documentation/generated --clean
 
 format: 
 	go fmt ./...
