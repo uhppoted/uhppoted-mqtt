@@ -6,12 +6,12 @@ This document describes the command and control functions implemented by _uhppot
 
 ## Security
 
-Beacuse it was originally designed as a gateway for mobile applications possibly using a public
+Because it was originally designed as a gateway for mobile applications possibly using a public
 MQTT broker, an out-of-the-box installation of _uhppoted-mqtt_ has full authorisation, authentication
 and encryption enabled.
 
 For the use case where it is running on a local network and using a trusted MQTT broker this is excessive
-and unnecessary and also makes initial troubleshooting difficult. To disable all security, edit the
+and unnecessary and also makes troubleshooting difficult. To disable all security, edit the
 the following settings in the _uhppoted.conf_ file:
 
 ```
@@ -35,7 +35,7 @@ The security can then be increased incrementally as required.
 
 ## Commands
 
-- `[get-devices]`(get-devices.md)- `[get-device]`(get-device.md)- `[get-time]`(get-time.md)- `set-time`
+- [`get-devices`](get-devices.md)- [`get-device`](get-device.md)- [`get-time`](get-time.md)- `set-time`
 - `get-door-delay`
 - `set-door-delay`
 - `get-door-control`
@@ -55,7 +55,7 @@ The security can then be increased incrementally as required.
 - `set-task-list`
 - `get-events`
 - `get-event`
-- `[open-door]`(open-door.md)- `acl-show`
+- [`open-door`](open-door.md)- `acl-show`
 - `acl-grant`
 - `acl-revoke`
 - `acl-upload-file`
