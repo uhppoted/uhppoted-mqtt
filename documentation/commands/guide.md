@@ -35,9 +35,36 @@ The security can then be increased incrementally as required.
 
 ## Commands
 
-{{ range .commands}}
-{{- if .link -}}
-- `[{{.command}}]`({{.link}})
-{{- else -}}
-- `{{.command}}`
-{{end}}{{end}}
+- `[get-devices]`(get-devices.md)- `[get-device]`(get-device.md)- `[get-time]`(get-time.md)- `set-time`
+- `get-door-delay`
+- `set-door-delay`
+- `get-door-control`
+- `set-door-control`
+- `record-special-events`
+- `get-status`
+- `get-cards`
+- `delete-cards`
+- `get-card`
+- `put-card`
+- `delete-card`
+- `get-time-profile`
+- `set-time-profile`
+- `clear-time-profiles`
+- `get-time-profiles`
+- `set-time-profiles`
+- `set-task-list`
+- `get-events`
+- `get-event`
+- `[open-door]`(open-door.md)- `acl-show`
+- `acl-grant`
+- `acl-revoke`
+- `acl-upload-file`
+- `acl-upload-s3`
+- `acl-upload-http`
+- `acl-download-file`
+- `acl-download-s3`
+- `acl-download-http`
+- `acl-compare-file`
+- `acl-compare-s3`
+- `acl-compare-http`
+

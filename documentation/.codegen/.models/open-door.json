@@ -2,22 +2,8 @@
     "open_door": {
         "command": "open-door",
         "request": {
+            "topic":  "uhppoted/gateway/requests/device/door/lock:open",
             "fields": [
-                {
-                    "field": "request-id",
-                    "value": "<request-id>",
-                    "description": "(optional) message ID, returned in the response"
-                },
-                {
-                    "field": "client-id",
-                    "value": "<client-id>",
-                    "description": "(required) client ID for authentication and authorisation (if enabled)"
-                },
-                {
-                    "field": "reply-to",
-                    "value": "<topic>",
-                    "description": "(optional) topic for reply message. Defaults to uhppoted\/gateway\/replies (or the configured reply topic) if not provided."
-                },
                 {
                     "field": "device-id",
                     "value": "<controller-id>",

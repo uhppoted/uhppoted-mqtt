@@ -1,16 +1,27 @@
 {{define "request"}}
 ```
 Request:
+
+topic: {{ .request.topic }}
+
+message:
 {
     "message": {
         "request": {
+            "request-id": "<request-id>",
+            "client-id": "<client-id>",
+            "reply-to": "<topic>",
 {{- range .request.fields}}
             "{{.field}}": "{{.value}}",
 {{- end}}
         }
     }
 }
-{{range .request.fields}}
+
+request-id   (optional) message ID, returned in the response
+client-id    (required) client ID for authentication and authorisation (if enabled)
+reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the configured reply topic) if not provided.
+{{- range .request.fields}}
 {{printf "%-12s" .field}} {{.description}}
 {{- end}}
 ```

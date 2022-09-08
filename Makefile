@@ -42,7 +42,7 @@ update-release:
 	go mod tidy
 
 regen:
-	$(CODEGEN) --models documentation/.codegen/.models --templates documentation/.codegen/markdown --out documentation/generated --clean
+	$(CODEGEN) --models documentation/.codegen/.models --templates documentation/.codegen/markdown --out documentation/commands --clean
 
 format: 
 	go fmt ./...

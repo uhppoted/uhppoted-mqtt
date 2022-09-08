@@ -1,13 +1,16 @@
 {
     "commands": [
         {
-            "command": "get-devices"
+            "command": "get-devices",
+            "link": "get-devices.md"
         },
         {
-            "command": "get-device"
+            "command": "get-device",
+            "link": "get-device.md"
         },
         {
-            "command": "get-time"
+            "command": "get-time",
+            "link": "get-time.md"
         },
         {
             "command": "set-time"

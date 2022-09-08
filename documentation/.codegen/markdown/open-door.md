@@ -40,6 +40,7 @@ uhppote-cli get-card 405419896 8165538
 ```
 {{template "request"  . -}}
 {{template "response" . }}
+
 Example:
 ```
 {
@@ -59,7 +60,6 @@ Example:
     "reply": {
       "client-id": "QWERTY",
       "method": "open-door",
-      "nonce": 185,
       "request-id": "AH173635G3",
       "response": {
         "device-id": 405419896,
