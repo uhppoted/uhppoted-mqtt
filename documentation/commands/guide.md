@@ -35,7 +35,11 @@ The security can then be increased incrementally as required.
 
 ## Commands
 
-- [`get-devices`](get-devices.md)- [`get-device`](get-device.md)- [`get-time`](get-time.md)- `set-time`
+
+- [`get-devices`](get-devices.md)
+- [`get-device`](get-device.md)
+- [`get-time`](get-time.md)
+- `set-time`
 - `get-door-delay`
 - `set-door-delay`
 - `get-door-control`
@@ -55,7 +59,8 @@ The security can then be increased incrementally as required.
 - `set-task-list`
 - `get-events`
 - `get-event`
-- [`open-door`](open-door.md)- `acl-show`
+- [`open-door`](open-door.md)
+- `acl-show`
 - `acl-grant`
 - `acl-revoke`
 - `acl-upload-file`
@@ -67,4 +72,3 @@ The security can then be increased incrementally as required.
 - `acl-compare-file`
 - `acl-compare-s3`
 - `acl-compare-http`
-
