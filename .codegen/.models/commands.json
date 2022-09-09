@@ -1,16 +1,13 @@
 {
     "commands": [
         {
-            "command": "get-devices",
-            "link": "get-devices.md"
+            "command": "get-devices"
         },
         {
-            "command": "get-device",
-            "link": "get-device.md"
+            "command": "get-device"
         },
         {
-            "command": "get-time",
-            "link": "get-time.md"
+            "command": "get-time"
         },
         {
             "command": "set-time"
@@ -73,8 +70,7 @@
             "command": "get-event"
         },
         {
-            "command": "open-door",
-            "link": "open-door.md"
+            "command": "open-door"
         },
         {
             "command": "acl-show"

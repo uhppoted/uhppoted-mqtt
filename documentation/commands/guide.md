@@ -37,38 +37,74 @@ The security can then be increased incrementally as required.
 
 
 - [`get-devices`](get-devices.md)
+
 - [`get-device`](get-device.md)
+
 - [`get-time`](get-time.md)
-- `set-time`
-- `get-door-delay`
-- `set-door-delay`
-- `get-door-control`
-- `set-door-control`
-- `record-special-events`
-- `get-status`
-- `get-cards`
-- `delete-cards`
-- `get-card`
-- `put-card`
-- `delete-card`
-- `get-time-profile`
-- `set-time-profile`
-- `clear-time-profiles`
-- `get-time-profiles`
-- `set-time-profiles`
-- `set-task-list`
-- `get-events`
-- `get-event`
+
+- [`set-time`](set-time.md)
+
+- [`get-door-delay`](get-door-delay.md)
+
+- [`set-door-delay`](set-door-delay.md)
+
+- [`get-door-control`](get-door-control.md)
+
+- [`set-door-control`](set-door-control.md)
+
+- [`record-special-events`](record-special-events.md)
+
+- [`get-status`](get-status.md)
+
+- [`get-cards`](get-cards.md)
+
+- [`delete-cards`](delete-cards.md)
+
+- [`get-card`](get-card.md)
+
+- [`put-card`](put-card.md)
+
+- [`delete-card`](delete-card.md)
+
+- [`get-time-profile`](get-time-profile.md)
+
+- [`set-time-profile`](set-time-profile.md)
+
+- [`clear-time-profiles`](clear-time-profiles.md)
+
+- [`get-time-profiles`](get-time-profiles.md)
+
+- [`set-time-profiles`](set-time-profiles.md)
+
+- [`set-task-list`](set-task-list.md)
+
+- [`get-events`](get-events.md)
+
+- [`get-event`](get-event.md)
+
 - [`open-door`](open-door.md)
-- `acl-show`
-- `acl-grant`
-- `acl-revoke`
-- `acl-upload-file`
-- `acl-upload-s3`
-- `acl-upload-http`
-- `acl-download-file`
-- `acl-download-s3`
-- `acl-download-http`
-- `acl-compare-file`
-- `acl-compare-s3`
-- `acl-compare-http`
+
+- [`acl-show`](acl-show.md)
+
+- [`acl-grant`](acl-grant.md)
+
+- [`acl-revoke`](acl-revoke.md)
+
+- [`acl-upload-file`](acl-upload-file.md)
+
+- [`acl-upload-s3`](acl-upload-s3.md)
+
+- [`acl-upload-http`](acl-upload-http.md)
+
+- [`acl-download-file`](acl-download-file.md)
+
+- [`acl-download-s3`](acl-download-s3.md)
+
+- [`acl-download-http`](acl-download-http.md)
+
+- [`acl-compare-file`](acl-compare-file.md)
+
+- [`acl-compare-s3`](acl-compare-s3.md)
+
+- [`acl-compare-http`](acl-compare-http.md)
+

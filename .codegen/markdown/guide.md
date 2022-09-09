@@ -36,5 +36,5 @@ The security can then be increased incrementally as required.
 ## Commands
 
 {{ range .commands}}
-{{if .link}}- [`{{.command}}`]({{.link}}){{else}}- `{{.command}}`{{end -}}
+- [`{{.command}}`]({{.command}}.md)
 {{end}}
