@@ -1,0 +1,44 @@
+{
+    "set_door_delay": {
+        "command": "set-door-delay",
+        "request": {
+            "topic":  "uhppoted/gateway/requests/device/door/delay:set",
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "(required) controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "(required) door (1..4) to open"
+                },
+                {
+                    "field": "delay",
+                    "value": "<delay>",
+                    "description": "door open delay"
+                }
+            ]
+        },
+        "response": {
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "door (1..4) from the request"
+                },
+                {
+                    "field": "delay",
+                    "value": "<delay>",
+                    "description": "door open duration"
+                }
+            ]
+        }
+    }
+}

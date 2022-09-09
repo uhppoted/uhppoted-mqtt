@@ -1,0 +1,44 @@
+{
+    "set_door_control": {
+        "command": "set-door-control",
+        "request": {
+            "topic":  "uhppoted/gateway/requests/device/door/control:set",
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "(required) controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "(required) door (1..4)"
+                },
+                {
+                    "field": "control",
+                    "value": "<mode>",
+                    "description": "door control mode (normally open, normally closed or controlled)"
+                }
+            ]
+        },
+        "response": {
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "door (1..4) from the request"
+                },
+                {
+                    "field": "control",
+                    "value": "<mode>",
+                    "description": "door control mode (normally open, normally closed or controlled)"
+                }
+            ]
+        }
+    }
+}

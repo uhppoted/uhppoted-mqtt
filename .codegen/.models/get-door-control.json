@@ -1,0 +1,39 @@
+{
+    "get_door_control": {
+        "command": "get-door-control",
+        "request": {
+            "topic":  "uhppoted/gateway/requests/device/door/control:get",
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "(required) controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "(required) door (1..4)"
+                }
+            ]
+        },
+        "response": {
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "controller serial number"
+                },
+                {
+                    "field": "door",
+                    "value": "<door-id>",
+                    "description": "door (1..4) from the request"
+                },
+                {
+                    "field": "control",
+                    "value": "<mode>",
+                    "description": "door control mode (normally open, normally closed or controlled)"
+                }
+            ]
+        }
+    }
+}
