@@ -59,7 +59,8 @@ message:
 
 request-id   (optional) message ID, returned in the response
 client-id    (required) client ID for authentication and authorisation (if enabled)
-reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the configured reply topic) if not provided.
+reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the
+                        configured reply topic) if not provided.
 device-id    (required) controller serial number
 door         (required) door (1..4) to open
 card-number  (required) card number used to validate access
