@@ -3,7 +3,7 @@ DIST    ?= development
 CODEGEN ?= ../uhppoted-codegen/bin/uhppoted-codegen
 
 SERIALNO  ?= 405419896
-CARD      ?= 1327679
+CARD      ?= 8165538
 REQUESTID ?= AH173635G3
 CLIENTID  ?= QWERTY54
 REPLYTO   ?= uhppoted/reply/97531
@@ -248,13 +248,6 @@ get-cards:
                                                        "reply-to":  "$(REPLYTO)", \
                                                        "device-id": $(SERIALNO) }}}'
 
-delete-cards:
-	mqtt publish --topic 'uhppoted/gateway/requests/device/cards:delete' \
-               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
-                                                      "client-id":  "$(CLIENTID)", \
-                                                      "reply-to":   "$(REPLYTO)", \
-                                                      "device-id":  $(SERIALNO) }}}'
-
 get-card:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/card:get' \
                  --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
@@ -282,6 +275,13 @@ delete-card:
                                                       "reply-to":   "$(REPLYTO)", \
                                                       "device-id":  $(SERIALNO), \
                                                       "card-number": $(CARD) }}}'
+
+delete-cards:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/cards:delete' \
+               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                      "client-id":  "$(CLIENTID)", \
+                                                      "reply-to":   "$(REPLYTO)", \
+                                                      "device-id":  $(SERIALNO) }}}'
 
 get-time-profile:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profile:get' \

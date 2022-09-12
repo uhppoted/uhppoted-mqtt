@@ -28,13 +28,13 @@
             "command": "record-special-events"
         },
         {
+            "command": "open-door"
+        },
+        {
             "command": "get-status"
         },
         {
             "command": "get-cards"
-        },
-        {
-            "command": "delete-cards"
         },
         {
             "command": "get-card"
@@ -43,7 +43,16 @@
             "command": "put-card"
         },
         {
+            "command": "get-events"
+        },
+        {
+            "command": "get-event"
+        },
+        {
             "command": "delete-card"
+        },
+        {
+            "command": "delete-cards"
         },
         {
             "command": "get-time-profile"
@@ -62,15 +71,6 @@
         },
         {
             "command": "set-task-list"
-        },
-        {
-            "command": "get-events"
-        },
-        {
-            "command": "get-event"
-        },
-        {
-            "command": "open-door"
         },
         {
             "command": "acl-show"

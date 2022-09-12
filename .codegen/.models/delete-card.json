@@ -1,0 +1,39 @@
+{
+    "delete_card": {
+        "command": "delete-card",
+        "request": {
+            "topic": "uhppoted/gateway/requests/device/card:delete",
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "uint32",
+                    "description": "(required) controller serial number"
+                },
+                {
+                    "field": "card-number",
+                    "value": "uint32",
+                    "description": "(required) card number"
+                }
+            ]
+        },
+        "response": {
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "<controller-id>",
+                    "description": "controller serial number"
+                },
+                {
+                    "field": "card-number",
+                    "value": "uint32",
+                    "description": "card number"
+                },
+                {
+                    "field": "deleted",
+                    "value": "bool",
+                    "description": "card delete success/fail"
+                }
+            ]
+        }
+    }
+}

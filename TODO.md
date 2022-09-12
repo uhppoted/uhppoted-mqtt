@@ -2,6 +2,34 @@
 
 ### IN PROGRESS
 
+- [ ] Protocol documentation
+      - [ ] Format JSON with jq
+      - [x] get-card
+      - [ ] put-card
+      - [x] delete-card
+      - [x] delete-cards
+      - [ ] get-events
+      - [ ] get-event
+      - [ ] get-time-profile
+      - [ ] set-time-profile
+      - [ ] clear-time-profiles
+      - [ ] get-time-profiles
+      - [ ] set-time-profiles
+      - [ ] set-task-list
+      - [ ] open-door
+      - [ ] acl-show
+      - [ ] acl-grant
+      - [ ] acl-revoke
+      - [ ] acl-upload-file
+      - [ ] acl-upload-s3
+      - [ ] acl-upload-http
+      - [ ] acl-download-file
+      - [ ] acl-download-s3
+      - [ ] acl-download-http
+      - [ ] acl-compare-file
+      - [ ] acl-compare-s3
+      - [ ] acl-compare-http
+
 - [ ] Ewww - fix record-special-events response
 ```
 {
@@ -71,3 +99,7 @@
 7. [Fernet encryption](https://asecuritysite.com/encryption/fernet)
 8. [IoT standards](https://iot.stackexchange.com/questions/5363/mqtt-json-format-for-process-automation-industry)
 9. [StackExchange: MQTT security tests](https://iot.stackexchange.com/questions/452/what-simple-security-tests-can-i-perform-on-my-mqtt-network)
+
+## NOTES
+
+1. [os_arch.go](https://gist.github.com/camabeh/a02e6846e00251e1820c784516c0318f)

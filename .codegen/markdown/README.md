@@ -6,8 +6,8 @@ This document describes the command and control functions implemented by _uhppot
 
 ## Security
 
-Because it was originally designed as a gateway for mobile applications possibly using a public
-MQTT broker, an out-of-the-box installation of _uhppoted-mqtt_ has full authorisation, authentication
+Because it was originally designed as a gateway for mobile applications (possibly using a public
+MQTT broker), an out-of-the-box installation of _uhppoted-mqtt_ has full authorisation, authentication
 and encryption enabled.
 
 For the use case where it is running on a local network and using a trusted MQTT broker this is excessive

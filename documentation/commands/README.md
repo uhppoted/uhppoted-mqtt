@@ -6,8 +6,8 @@ This document describes the command and control functions implemented by _uhppot
 
 ## Security
 
-Because it was originally designed as a gateway for mobile applications possibly using a public
-MQTT broker, an out-of-the-box installation of _uhppoted-mqtt_ has full authorisation, authentication
+Because it was originally designed as a gateway for mobile applications (possibly using a public
+MQTT broker), an out-of-the-box installation of _uhppoted-mqtt_ has full authorisation, authentication
 and encryption enabled.
 
 For the use case where it is running on a local network and using a trusted MQTT broker this is excessive
@@ -54,17 +54,23 @@ The security can then be increased incrementally as required.
 
 - [`record-special-events`](record-special-events.md)
 
+- [`open-door`](open-door.md)
+
 - [`get-status`](get-status.md)
 
 - [`get-cards`](get-cards.md)
-
-- [`delete-cards`](delete-cards.md)
 
 - [`get-card`](get-card.md)
 
 - [`put-card`](put-card.md)
 
+- [`get-events`](get-events.md)
+
+- [`get-event`](get-event.md)
+
 - [`delete-card`](delete-card.md)
+
+- [`delete-cards`](delete-cards.md)
 
 - [`get-time-profile`](get-time-profile.md)
 
@@ -77,12 +83,6 @@ The security can then be increased incrementally as required.
 - [`set-time-profiles`](set-time-profiles.md)
 
 - [`set-task-list`](set-task-list.md)
-
-- [`get-events`](get-events.md)
-
-- [`get-event`](get-event.md)
-
-- [`open-door`](open-door.md)
 
 - [`acl-show`](acl-show.md)
 
