@@ -1,124 +1,124 @@
 {
-    "get_status": {
-        "command": "get-status",
-        "request": {
-            "topic": "uhppoted\/gateway\/requests\/device\/status:get",
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "uint32",
-                    "description": "(required) controller serial number"
-                }
-            ]
-        },
-        "response": {
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "uint32",
-                    "description": "controller serial number"
-                },
-                {
-                    "field": "status",
-                    "value": "record",
-                    "description": "controller status record"
-                },
-                {
-                    "field": "system-datetime",
-                    "value": "datetime",
-                    "description": "controller system date\/time"
-                },
-                {
-                    "field": "door-states",
-                    "value": "{ 1:bool, 2:bool, 3:bool, 4:bool }",
-                    "description": "door open\/closed states"
-                },
-                {
-                    "field": "door-buttons",
-                    "value": "{ 1:bool, 2:bool, 3:bool, 4:bool }",
-                    "description": "door button states"
-                },
-                {
-                    "field": "input-state",
-                    "value": "uint8",
-                    "description": "input state bitset"
-                },
-                {
-                    "field": "relay-state",
-                    "value": "uint8",
-                    "description": "relay state bitset"
-                },
-                {
-                    "field": "system-error",
-                    "value": "uint8",
-                    "description": "system error code"
-                },
-                {
-                    "field": "special-info",
-                    "value": "uint8",
-                    "description": "internal state information code"
-                },
-                {
-                    "field": "event.timestamp",
-                    "value": "datetime",
-                    "description": "last event date/time"
-                },
-                {
-                    "field": "event.device-id",
-                    "value": "uint32",
-                    "description": "last event controller serial number"
-                },
-                {
-                    "field": "event-id",
-                    "value": "uint32",
-                    "description": "last event index"
-                },
-                {
-                    "field": "event.type",
-                    "value": "uint8",
-                    "description": "last event type code"
-                },
-                {
-                    "field": "event.type-text",
-                    "value": "string",
-                    "description": "last event type"
-                },
-                {
-                    "field": "event.door-id",
-                    "value": "uint8",
-                    "description": "last event door"
-                },
-                {
-                    "field": "event.card-number",
-                    "value": "uint32",
-                    "description": "last event card number"
-                },
-                {
-                    "field": "event.access-granted",
-                    "value": "bool",
-                    "description": "last event access granted"
-                },
-                {
-                    "field": "event.direction",
-                    "value": "uint8",
-                    "description": "last event direction (1:IN, 2:OUT)"
-                },
-                {
-                    "field": "event.direction-text",
-                    "value": "string",
-                    "description": "last event direction ('in', 'out')"
-                },
-                {
-                    "field": "event.reason",
-                    "value": "uint8",
-                    "description": "last event reason code"
-                },
-                {
-                    "field": "event.reason-text",
-                    "value": "string",
-                    "description": "last event reason"
-                }
-            ]
+  "get_status": {
+    "command": "get-status",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/status:get",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "(required) controller serial number"
         }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "controller serial number"
+        },
+        {
+          "field": "status",
+          "value": "record",
+          "description": "controller status record"
+        },
+        {
+          "field": "system-datetime",
+          "value": "datetime",
+          "description": "controller system date/time"
+        },
+        {
+          "field": "door-states",
+          "value": "{ 1:bool, 2:bool, 3:bool, 4:bool }",
+          "description": "door open/closed states"
+        },
+        {
+          "field": "door-buttons",
+          "value": "{ 1:bool, 2:bool, 3:bool, 4:bool }",
+          "description": "door button states"
+        },
+        {
+          "field": "input-state",
+          "value": "uint8",
+          "description": "input state bitset"
+        },
+        {
+          "field": "relay-state",
+          "value": "uint8",
+          "description": "relay state bitset"
+        },
+        {
+          "field": "system-error",
+          "value": "uint8",
+          "description": "system error code"
+        },
+        {
+          "field": "special-info",
+          "value": "uint8",
+          "description": "internal state information code"
+        },
+        {
+          "field": "event.timestamp",
+          "value": "datetime",
+          "description": "last event date/time"
+        },
+        {
+          "field": "event.device-id",
+          "value": "uint32",
+          "description": "last event controller serial number"
+        },
+        {
+          "field": "event-id",
+          "value": "uint32",
+          "description": "last event index"
+        },
+        {
+          "field": "event.type",
+          "value": "uint8",
+          "description": "last event type code"
+        },
+        {
+          "field": "event.type-text",
+          "value": "string",
+          "description": "last event type"
+        },
+        {
+          "field": "event.door-id",
+          "value": "uint8",
+          "description": "last event door"
+        },
+        {
+          "field": "event.card-number",
+          "value": "uint32",
+          "description": "last event card number"
+        },
+        {
+          "field": "event.access-granted",
+          "value": "bool",
+          "description": "last event access granted"
+        },
+        {
+          "field": "event.direction",
+          "value": "uint8",
+          "description": "last event direction (1:IN, 2:OUT)"
+        },
+        {
+          "field": "event.direction-text",
+          "value": "string",
+          "description": "last event direction ('in', 'out')"
+        },
+        {
+          "field": "event.reason",
+          "value": "uint8",
+          "description": "last event reason code"
+        },
+        {
+          "field": "event.reason-text",
+          "value": "string",
+          "description": "last event reason"
+        }
+      ]
     }
+  }
 }

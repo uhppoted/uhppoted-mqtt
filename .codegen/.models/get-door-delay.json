@@ -1,39 +1,39 @@
 {
-    "get_door_delay": {
-        "command": "get-door-delay",
-        "request": {
-            "topic":  "uhppoted/gateway/requests/device/door/delay:get",
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "(required) controller serial number"
-                },
-                {
-                    "field": "door",
-                    "value": "<door-id>",
-                    "description": "(required) door (1..4)"
-                }
-            ]
+  "get_door_delay": {
+    "command": "get-door-delay",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/door/delay:get",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "(required) controller serial number"
         },
-        "response": {
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "controller serial number"
-                },
-                {
-                    "field": "door",
-                    "value": "<door-id>",
-                    "description": "door (1..4) from the request"
-                },
-                {
-                    "field": "delay",
-                    "value": "<delay>",
-                    "description": "door open delay"
-                }
-            ]
+        {
+          "field": "door",
+          "value": "<door-id>",
+          "description": "(required) door (1..4)"
         }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "door",
+          "value": "<door-id>",
+          "description": "door (1..4) from the request"
+        },
+        {
+          "field": "delay",
+          "value": "<delay>",
+          "description": "door open delay"
+        }
+      ]
     }
+  }
 }

@@ -3,7 +3,7 @@
 ### IN PROGRESS
 
 - [ ] Protocol documentation
-      - [ ] Format JSON with jq
+      - [x] Format JSON with jq
       - [x] get-card
       - [x] put-card
       - [x] delete-card

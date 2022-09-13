@@ -1,54 +1,54 @@
 {
-    "get_card": {
-        "command": "get-card",
-        "request": {
-            "topic": "uhppoted/gateway/requests/device/card:get",
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "uint32",
-                    "description": "(required) controller serial number"
-                },
-                {
-                    "field": "card-number",
-                    "value": "uint32",
-                    "description": "(required) card number"
-                }
-            ]
+  "get_card": {
+    "command": "get-card",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/card:get",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "(required) controller serial number"
         },
-        "response": {
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "controller serial number"
-                },
-                {
-                    "field": "card",
-                    "value": "record",
-                    "description": "card record"
-                },
-                {
-                    "field": "card-number",
-                    "value": "uint32",
-                    "description": "card number"
-                },
-                {
-                    "field": "start-date",
-                    "value": "date",
-                    "description": "card 'valid from' date (inclusive)"
-                },
-                {
-                    "field": "end-date",
-                    "value": "date",
-                    "description": "card 'valid until' date (inclusive)"
-                },
-                {
-                    "field": "doors",
-                    "value": "{1:uint8, 2:uint8, 3:uint8, 4:uint8}",
-                    "description": "door [1..4] access rights"
-                }
-            ]
+        {
+          "field": "card-number",
+          "value": "uint32",
+          "description": "(required) card number"
         }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "card",
+          "value": "record",
+          "description": "card record"
+        },
+        {
+          "field": "card-number",
+          "value": "uint32",
+          "description": "card number"
+        },
+        {
+          "field": "start-date",
+          "value": "date",
+          "description": "card 'valid from' date (inclusive)"
+        },
+        {
+          "field": "end-date",
+          "value": "date",
+          "description": "card 'valid until' date (inclusive)"
+        },
+        {
+          "field": "doors",
+          "value": "{1:uint8, 2:uint8, 3:uint8, 4:uint8}",
+          "description": "door [1..4] access rights"
+        }
+      ]
     }
+  }
 }

@@ -1,34 +1,34 @@
 {
-    "set_time": {
-        "command": "set-time",
-        "request": {
-            "topic":  "uhppoted/gateway/requests/device/time:set",
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "(required) controller serial number"
-                },
-                {
-                    "field": "date-time",
-                    "value": "<datetime>",
-                    "description": "date and time to set"
-                }
-            ]
+  "set_time": {
+    "command": "set-time",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/time:set",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "(required) controller serial number"
         },
-        "response": {
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "controller serial number"
-                },
-                {
-                    "field": "date-time",
-                    "value": "<datetime>",
-                    "description": "controller system date and time"
-                }
-            ]
+        {
+          "field": "date-time",
+          "value": "<datetime>",
+          "description": "date and time to set"
         }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "date-time",
+          "value": "<datetime>",
+          "description": "controller system date and time"
+        }
+      ]
     }
+  }
 }

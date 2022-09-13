@@ -1,44 +1,44 @@
 {
-    "open_door": {
-        "command": "open-door",
-        "request": {
-            "topic":  "uhppoted/gateway/requests/device/door/lock:open",
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "(required) controller serial number"
-                },
-                {
-                    "field": "door",
-                    "value": "<door-id>",
-                    "description": "(required) door (1..4) to open"
-                },
-                {
-                    "field": "card-number",
-                    "value": "<card-number>",
-                    "description": "(required) card number used to validate access"
-                }
-            ]
+  "open_door": {
+    "command": "open-door",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/door/lock:open",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "(required) controller serial number"
         },
-        "response": {
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "controller serial number"
-                },
-                {
-                    "field": "door",
-                    "value": "<door-id>",
-                    "description": "door (1..4) from the request"
-                },
-                {
-                    "field": "opened",
-                    "value": "<result>",
-                    "description": "true if opened, false otherwise"
-                }
-            ]
+        {
+          "field": "door",
+          "value": "<door-id>",
+          "description": "(required) door (1..4) to open"
+        },
+        {
+          "field": "card-number",
+          "value": "<card-number>",
+          "description": "(required) card number used to validate access"
         }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "door",
+          "value": "<door-id>",
+          "description": "door (1..4) from the request"
+        },
+        {
+          "field": "opened",
+          "value": "<result>",
+          "description": "true if opened, false otherwise"
+        }
+      ]
     }
+  }
 }

@@ -1,112 +1,112 @@
 {
-    "commands": [
-        {
-            "command": "get-devices"
-        },
-        {
-            "command": "get-device"
-        },
-        {
-            "command": "get-time"
-        },
-        {
-            "command": "set-time"
-        },
-        {
-            "command": "get-door-delay"
-        },
-        {
-            "command": "set-door-delay"
-        },
-        {
-            "command": "get-door-control"
-        },
-        {
-            "command": "set-door-control"
-        },
-        {
-            "command": "record-special-events"
-        },
-        {
-            "command": "open-door"
-        },
-        {
-            "command": "get-status"
-        },
-        {
-            "command": "get-cards"
-        },
-        {
-            "command": "get-card"
-        },
-        {
-            "command": "put-card"
-        },
-        {
-            "command": "get-events"
-        },
-        {
-            "command": "get-event"
-        },
-        {
-            "command": "delete-card"
-        },
-        {
-            "command": "delete-cards"
-        },
-        {
-            "command": "get-time-profile"
-        },
-        {
-            "command": "set-time-profile"
-        },
-        {
-            "command": "clear-time-profiles"
-        },
-        {
-            "command": "get-time-profiles"
-        },
-        {
-            "command": "set-time-profiles"
-        },
-        {
-            "command": "set-task-list"
-        },
-        {
-            "command": "acl-show"
-        },
-        {
-            "command": "acl-grant"
-        },
-        {
-            "command": "acl-revoke"
-        },
-        {
-            "command": "acl-upload-file"
-        },
-        {
-            "command": "acl-upload-s3"
-        },
-        {
-            "command": "acl-upload-http"
-        },
-        {
-            "command": "acl-download-file"
-        },
-        {
-            "command": "acl-download-s3"
-        },
-        {
-            "command": "acl-download-http"
-        },
-        {
-            "command": "acl-compare-file"
-        },
-        {
-            "command": "acl-compare-s3"
-        },
-        {
-            "command": "acl-compare-http"
-        }
-    ]
+  "commands": [
+    {
+      "command": "get-devices"
+    },
+    {
+      "command": "get-device"
+    },
+    {
+      "command": "get-time"
+    },
+    {
+      "command": "set-time"
+    },
+    {
+      "command": "get-door-delay"
+    },
+    {
+      "command": "set-door-delay"
+    },
+    {
+      "command": "get-door-control"
+    },
+    {
+      "command": "set-door-control"
+    },
+    {
+      "command": "record-special-events"
+    },
+    {
+      "command": "open-door"
+    },
+    {
+      "command": "get-status"
+    },
+    {
+      "command": "get-cards"
+    },
+    {
+      "command": "get-card"
+    },
+    {
+      "command": "put-card"
+    },
+    {
+      "command": "get-events"
+    },
+    {
+      "command": "get-event"
+    },
+    {
+      "command": "delete-card"
+    },
+    {
+      "command": "delete-cards"
+    },
+    {
+      "command": "get-time-profile"
+    },
+    {
+      "command": "set-time-profile"
+    },
+    {
+      "command": "clear-time-profiles"
+    },
+    {
+      "command": "get-time-profiles"
+    },
+    {
+      "command": "set-time-profiles"
+    },
+    {
+      "command": "set-task-list"
+    },
+    {
+      "command": "acl-show"
+    },
+    {
+      "command": "acl-grant"
+    },
+    {
+      "command": "acl-revoke"
+    },
+    {
+      "command": "acl-upload-file"
+    },
+    {
+      "command": "acl-upload-s3"
+    },
+    {
+      "command": "acl-upload-http"
+    },
+    {
+      "command": "acl-download-file"
+    },
+    {
+      "command": "acl-download-s3"
+    },
+    {
+      "command": "acl-download-http"
+    },
+    {
+      "command": "acl-compare-file"
+    },
+    {
+      "command": "acl-compare-s3"
+    },
+    {
+      "command": "acl-compare-http"
+    }
+  ]
 }

@@ -1,29 +1,29 @@
 {
-    "get_cards": {
-        "command": "get-cards",
-        "request": {
-            "topic": "uhppoted/gateway/requests/device/cards:get",
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "(required) controller serial number"
-                }
-            ]
-        },
-        "response": {
-            "fields": [
-                {
-                    "field": "device-id",
-                    "value": "<controller-id>",
-                    "description": "controller serial number"
-                },
-                {
-                    "field": "cards",
-                    "value": "[]uint32",
-                    "description": "list of card numbers"
-                }
-            ]
+  "get_cards": {
+    "command": "get-cards",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/cards:get",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "(required) controller serial number"
         }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "cards",
+          "value": "[]uint32",
+          "description": "list of card numbers"
+        }
+      ]
     }
+  }
 }

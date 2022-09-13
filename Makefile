@@ -42,6 +42,7 @@ update-release:
 	go mod tidy
 
 regen:
+	find .codegen/.models -name "*.json" -exec sh -c 'jq . {} | sponge {}' \;
 	$(CODEGEN) --models .codegen/.models --templates .codegen/markdown --out documentation/commands --clean
 
 format: 
