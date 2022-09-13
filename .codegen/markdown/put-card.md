@@ -1,7 +1,7 @@
-{{- with .get_card -}}
+{{- with .put_card -}}
 ### `{{.command}}`
 
-Retrieves a card record from a controller.
+Adds or updates a card record on a controller.
 
 {{template "request"  . -}}
 {{template "response" . }}
@@ -15,7 +15,17 @@ Example:
       "client-id": "QWERTY",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896,
-      "card-number": 8165538
+      "card": {
+        "card-number": 8165538,
+        "start-date": "2021-01-01",
+        "end-date": "2021-12-31",
+        "doors": {
+          "1": true,
+          "2": false,
+          "3": 55,
+          "4": false
+        }
+      }
     }
   }
 }
@@ -24,26 +34,26 @@ Example:
   "message": {
     "reply": {
       "client-id": "QWERTY",
-      "method": "get-card",
+      "method": "put-card",
       "request-id": "AH173635G3",
       "response": {
-        "device-id": 405419896,
+        "device-id": 405419896
         "card": {
           "card-number": 8165538,
           "start-date": "2021-01-01"
           "end-date": "2021-12-31",
           "doors": {
-            "1": 1,
-            "2": 0,
-            "3": 0,
-            "4": 1
-          }
-        }
+            "1": true,
+            "2": false,
+            "3": 55,
+            "4": false
+          },
+        },
       },
       "server-id": "uhppoted"
     }
   },
-  "hmac": "61e3d8136ced7baca20440c2a5678319cce5dae57c8e8e7bed8cb484fa2a55d4"
+  "hmac": "535122d6cac2b5ce29f294fdb9739bc90a39e8ab7913ccb8bd010571ecf51013"
 }
 ```
 {{end -}}

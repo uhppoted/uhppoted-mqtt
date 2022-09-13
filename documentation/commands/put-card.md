@@ -1,12 +1,12 @@
-### `get-card`
+### `put-card`
 
-Retrieves a card record from a controller.
+Adds or updates a card record on a controller.
 
 
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/card:get
+topic: uhppoted/gateway/requests/device/card:put
 
 message:
 {
@@ -16,7 +16,11 @@ message:
             "client-id": "<client-id>",
             "reply-to": "<topic>",
             "device-id": "uint32",
+            "card": "record",
             "card-number": "uint32",
+            "start-date": "date",
+            "end-date": "date",
+            "doors": "{1:uint8, 2:uint8, 3:uint8, 4:uint8}",
         }
     }
 }
@@ -26,7 +30,11 @@ client-id    (required) client ID for authentication and authorisation (if enabl
 reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the
                         configured reply topic) if not provided.
 device-id    (required) controller serial number
-card-number  (required) card number
+card         card record
+card-number  card number
+start-date   card 'valid from' date (inclusive)
+end-date     card 'valid until' date (inclusive)
+doors        door [1..4] access rights
 ```
 
 ```
@@ -36,7 +44,7 @@ Response:
     "reply": {
       "request-id": <request-id>,
       "client-id": <client-id>,
-      "method": "get-card",
+      "method": "put-card",
       "response": {
             "device-id": "<controller-id>",
             "card": "record",
@@ -71,7 +79,17 @@ Example:
       "client-id": "QWERTY",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896,
-      "card-number": 8165538
+      "card": {
+        "card-number": 8165538,
+        "start-date": "2021-01-01",
+        "end-date": "2021-12-31",
+        "doors": {
+          "1": true,
+          "2": false,
+          "3": 55,
+          "4": false
+        }
+      }
     }
   }
 }
@@ -80,25 +98,25 @@ Example:
   "message": {
     "reply": {
       "client-id": "QWERTY",
-      "method": "get-card",
+      "method": "put-card",
       "request-id": "AH173635G3",
       "response": {
-        "device-id": 405419896,
+        "device-id": 405419896
         "card": {
           "card-number": 8165538,
           "start-date": "2021-01-01"
           "end-date": "2021-12-31",
           "doors": {
-            "1": 1,
-            "2": 0,
-            "3": 0,
-            "4": 1
-          }
-        }
+            "1": true,
+            "2": false,
+            "3": 55,
+            "4": false
+          },
+        },
       },
       "server-id": "uhppoted"
     }
   },
-  "hmac": "61e3d8136ced7baca20440c2a5678319cce5dae57c8e8e7bed8cb484fa2a55d4"
+  "hmac": "535122d6cac2b5ce29f294fdb9739bc90a39e8ab7913ccb8bd010571ecf51013"
 }
 ```

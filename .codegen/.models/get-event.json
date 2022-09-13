@@ -1,0 +1,94 @@
+{
+    "get_event": {
+        "command": "get-event",
+        "request": {
+            "topic": "uhppoted/gateway/requests/device/event:get",
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "uint32",
+                    "description": "(required) controller serial number"
+                },
+                {
+                    "field": "event-index",
+                    "value": "uint32",
+                    "description": "(required) index of event to fetch"
+                }
+            ]
+        },
+        "response": {
+            "fields": [
+                {
+                    "field": "device-id",
+                    "value": "uint32",
+                    "description": "controller serial number"
+                },
+                {
+                    "field": "event",
+                    "value": "event record",
+                    "description": "event details"
+                },
+                {
+                    "field": "event.timestamp",
+                    "value": "datetime",
+                    "description": "last event date/time"
+                },
+                {
+                    "field": "event.device-id",
+                    "value": "uint32",
+                    "description": "last event controller serial number"
+                },
+                {
+                    "field": "event-id",
+                    "value": "uint32",
+                    "description": "last event index"
+                },
+                {
+                    "field": "event.type",
+                    "value": "uint8",
+                    "description": "last event type code"
+                },
+                {
+                    "field": "event.type-text",
+                    "value": "string",
+                    "description": "last event type"
+                },
+                {
+                    "field": "event.door-id",
+                    "value": "uint8",
+                    "description": "last event door"
+                },
+                {
+                    "field": "event.card-number",
+                    "value": "uint32",
+                    "description": "last event card number"
+                },
+                {
+                    "field": "event.access-granted",
+                    "value": "bool",
+                    "description": "last event access granted"
+                },
+                {
+                    "field": "event.direction",
+                    "value": "uint8",
+                    "description": "last event direction (1:IN, 2:OUT)"
+                },
+                {
+                    "field": "event.direction-text",
+                    "value": "string",
+                    "description": "last event direction ('in', 'out')"
+                },
+                {
+                    "field": "event.reason",
+                    "value": "uint8",
+                    "description": "last event reason code"
+                },
+                {
+                    "field": "event.reason-text",
+                    "value": "string",
+                    "description": "last event reason"
+                }
+            ]
+        }
+    }
+}

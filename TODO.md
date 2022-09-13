@@ -5,11 +5,11 @@
 - [ ] Protocol documentation
       - [ ] Format JSON with jq
       - [x] get-card
-      - [ ] put-card
+      - [x] put-card
       - [x] delete-card
       - [x] delete-cards
-      - [ ] get-events
-      - [ ] get-event
+      - [x] get-events
+      - [x] get-event
       - [ ] get-time-profile
       - [ ] set-time-profile
       - [ ] clear-time-profiles
