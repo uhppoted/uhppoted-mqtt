@@ -67,8 +67,8 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
       "client-id": "QWERTY",
+      "request-id": "AH173635G3",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896,
       "card-number": 8165538
@@ -79,9 +79,10 @@ Example:
 {
   "message": {
     "reply": {
+      "server-id": "uhppoted"
       "client-id": "QWERTY",
-      "method": "get-card",
       "request-id": "AH173635G3",
+      "method": "get-card",
       "response": {
         "device-id": 405419896,
         "card": {
@@ -95,10 +96,8 @@ Example:
             "4": 1
           }
         }
-      },
-      "server-id": "uhppoted"
+      }
     }
-  },
-  "hmac": "61e3d8136ced7baca20440c2a5678319cce5dae57c8e8e7bed8cb484fa2a55d4"
+  }
 }
 ```

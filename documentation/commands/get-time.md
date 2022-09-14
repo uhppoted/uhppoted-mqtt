@@ -57,8 +57,8 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
       "client-id": "QWERTY",
+      "request-id": "AH173635G3",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896
     }
@@ -68,16 +68,15 @@ Example:
 {
   "message": {
     "reply": {
+      "server-id": "uhppoted"
       "client-id": "QWERTY",
-      "method": "get-time",
       "request-id": "AH173635G3",
+      "method": "get-time",
       "response": {
         "date-time": "2022-09-08 11:01:04 PDT",
         "device-id": 405419896
-      },
-      "server-id": "uhppoted"
+      }
     }
-  },
-  "hmac": "b13b9bd7ddb5b84fde12bd19fb1cdd354084a287b43c414d109403e9bd6cc040"
+  }
 }
 ```

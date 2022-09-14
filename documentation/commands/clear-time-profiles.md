@@ -1,12 +1,12 @@
-### `delete-cards`
+### `clear-time-profiles`
 
-Deletes all cards from a controller.
+Clears all time profiles on a a controller.
 
 
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/cards:delete
+topic: uhppoted/gateway/requests/device/time-profiles:delete
 
 message:
 {
@@ -34,7 +34,7 @@ Response:
     "reply": {
       "request-id": <request-id>,
       "client-id": <client-id>,
-      "method": "delete-cards",
+      "method": "clear-time-profiles",
       "response": {
             "device-id": "<controller-id>",
             "deleted": "bool",
@@ -48,13 +48,12 @@ Response:
 request-id   message ID from the request
 client-id    client ID from the request
 device-id    controller serial number
-deleted      delete all cards success/fail
+deleted      clear time profiles success/fail
 ```
 
 
 Example:
 ```
-{
   "message": {
     "request": {
       "client-id": "QWERTY",
@@ -71,12 +70,12 @@ Example:
       "server-id": "uhppoted"
       "client-id": "QWERTY",
       "request-id": "AH173635G3",
-      "method": "delete-cards",
+      "method": "clear-time-profiles",
       "response": {
-        "device-id": 405419896,
-        "deleted": true
-      }
+        "cleared": true,
+        "device-id": 405419896
+      },
     }
-  }
+  },
 }
 ```

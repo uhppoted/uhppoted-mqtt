@@ -11,9 +11,7 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
-      "client-id": "QWERTY",
-      "reply-to": "uhppoted/reply/97531",
+{{- template "request-preamble"}}
       "device-id": 405419896
     }
   }
@@ -22,9 +20,8 @@ Example:
 {
   "message": {
     "reply": {
-      "client-id": "QWERTY",
+{{- template "response-preamble"}}
       "method": "get-device",
-      "request-id": "AH173635G3",
       "response": {
         "address": {
           "IP": "192.168.1.100",
@@ -40,11 +37,9 @@ Example:
         "subnet-mask": "255.255.255.0",
         "timezone": {},
         "version": "0892"
-      },
-      "server-id": "uhppoted"
+      }
     }
-  },
-  "hmac": "7e41dfbe8ed6eed02f8560a129d893b683909e04b40506d2b284cc22e8e4bb91"
+  }
 }
 ```
 {{end -}}

@@ -1,0 +1,64 @@
+{
+  "set_task_list": {
+    "command": "set-task-list",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/tasklist:set",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "(required) controller serial number"
+        },
+        {
+          "field": "tasks",
+          "value": "array of task",
+          "description": "list of task records"
+        },
+        {
+          "field": "task.task",
+          "value": "string",
+          "description": "task type"
+        },
+        {
+          "field": "task.door",
+          "value": "uint8",
+          "description": "door for task"
+        },
+        {
+          "field": "task.start-date",
+          "value": "date",
+          "description": "date from which task is enabled (inclusive)"
+        },
+        {
+          "field": "task.end-date",
+          "value": "date",
+          "description": "date until which task is enabled (inclusive)"
+        },
+        {
+          "field": "task.weekdays",
+          "value": "string list of weekday",
+          "description": "weekdays on which time profile is enabled"
+        },
+        {
+          "field": "task.start",
+          "value": "time",
+          "description": "task start time (HHmm)"
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "controller serial number"
+        },
+        {
+          "field": "warnings",
+          "value": "array of string",
+          "description": "list of warning messages"
+        }
+      ]
+    }
+  }
+}

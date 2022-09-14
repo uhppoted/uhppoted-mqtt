@@ -75,8 +75,8 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
       "client-id": "QWERTY",
+      "request-id": "AH173635G3",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896,
       "card": {
@@ -97,9 +97,10 @@ Example:
 {
   "message": {
     "reply": {
+      "server-id": "uhppoted"
       "client-id": "QWERTY",
-      "method": "put-card",
       "request-id": "AH173635G3",
+      "method": "put-card",
       "response": {
         "device-id": 405419896
         "card": {
@@ -111,12 +112,10 @@ Example:
             "2": false,
             "3": 55,
             "4": false
-          },
-        },
-      },
-      "server-id": "uhppoted"
+          }
+        }
+      }
     }
-  },
-  "hmac": "535122d6cac2b5ce29f294fdb9739bc90a39e8ab7913ccb8bd010571ecf51013"
+  }
 }
 ```

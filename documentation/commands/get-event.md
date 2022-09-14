@@ -83,8 +83,8 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
       "client-id": "QWERTY",
+      "request-id": "AH173635G3",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896,
       "event-index": 50
@@ -95,9 +95,10 @@ Example:
 {
   "message": {
     "reply": {
-      "client-id": "QWERTY54",
-      "method": "get-event",
+      "server-id": "uhppoted"
+      "client-id": "QWERTY",
       "request-id": "AH173635G3",
+      "method": "get-event",
       "response": {
         "device-id": 405419896,
         "event": {
@@ -114,10 +115,8 @@ Example:
           "event-type-text": "door",
           "timestamp": "2019-08-09 16:18:55 PDT"
         }
-      },
-      "server-id": "uhppoted"
+      }
     }
-  },
-  "hmac": "2079c940984153774d4338a0ffb3e99d66a368e0237b99249463c4a47236767a"
+  }
 }
 ```

@@ -3,20 +3,12 @@
 ### IN PROGRESS
 
 - [ ] Protocol documentation
-      - [x] Format JSON with jq
-      - [x] get-card
-      - [x] put-card
-      - [x] delete-card
-      - [x] delete-cards
-      - [x] get-events
-      - [x] get-event
-      - [ ] get-time-profile
-      - [ ] set-time-profile
-      - [ ] clear-time-profiles
+      - [x] get-time-profile
       - [ ] get-time-profiles
+      - [x] set-time-profile
       - [ ] set-time-profiles
-      - [ ] set-task-list
-      - [ ] open-door
+      - [x] clear-time-profiles
+      - [x] set-task-list
       - [ ] acl-show
       - [ ] acl-grant
       - [ ] acl-revoke

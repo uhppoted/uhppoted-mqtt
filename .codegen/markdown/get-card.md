@@ -11,9 +11,7 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
-      "client-id": "QWERTY",
-      "reply-to": "uhppoted/reply/97531",
+{{- template "request-preamble"}}
       "device-id": 405419896,
       "card-number": 8165538
     }
@@ -23,9 +21,8 @@ Example:
 {
   "message": {
     "reply": {
-      "client-id": "QWERTY",
+{{- template "response-preamble"}}
       "method": "get-card",
-      "request-id": "AH173635G3",
       "response": {
         "device-id": 405419896,
         "card": {
@@ -39,11 +36,9 @@ Example:
             "4": 1
           }
         }
-      },
-      "server-id": "uhppoted"
+      }
     }
-  },
-  "hmac": "61e3d8136ced7baca20440c2a5678319cce5dae57c8e8e7bed8cb484fa2a55d4"
+  }
 }
 ```
 {{end -}}

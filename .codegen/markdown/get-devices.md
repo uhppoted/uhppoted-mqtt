@@ -12,10 +12,7 @@ Example:
 {
   "message": {
     "request": {
-      "request-id": "AH173635G3",
-      "client-id": "QWERTY",
-      "reply-to": "uhppoted/reply/97531",
-      "nonce": 5
+{{- template "request-preamble"}}
     }
   }
 }
@@ -23,9 +20,8 @@ Example:
 {
   "message": {
     "reply": {
-      "client-id": "QWERTY",
+{{- template "response-preamble"}}
       "method": "get-devices",
-      "request-id": "AH173635G3",
       "response": {
         "devices": {
           "201020304": {
@@ -44,11 +40,9 @@ Example:
             "port": 60000
           }
         }
-      },
-      "server-id": "uhppoted"
+      }
     }
-  },
-  "hmac": "77b8917b80e18837fc9c13e451194d17f2712fb95b8f5283f9c762dfe1ed4f55"
+  }
 }
 ```
 {{end -}}

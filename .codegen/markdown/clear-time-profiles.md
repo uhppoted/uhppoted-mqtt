@@ -1,14 +1,13 @@
-{{- with .get_time -}}
+{{- with .clear_time_profiles -}}
 ### `{{.command}}`
 
-Returns the controller date and time.
+Clears all time profiles on a a controller.
 
 {{template "request"  . -}}
 {{template "response" . }}
 
 Example:
 ```
-{
   "message": {
     "request": {
 {{- template "request-preamble"}}
@@ -21,15 +20,13 @@ Example:
   "message": {
     "reply": {
 {{- template "response-preamble"}}
-      "method": "get-time",
+      "method": "clear-time-profiles",
       "response": {
-        "date-time": "2022-09-08 11:01:04 PDT",
+        "cleared": true,
         "device-id": 405419896
-      }
+      },
     }
-  }
+  },
 }
 ```
 {{end -}}
-
-

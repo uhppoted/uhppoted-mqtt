@@ -29,6 +29,13 @@ reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/re
 {{end}}
 
 
+{{define "request-preamble"}}
+      "client-id": "QWERTY",
+      "request-id": "AH173635G3",
+      "reply-to": "uhppoted/reply/97531",
+{{- end}}
+
+
 {{define "response"}}
 ```
 Response:
@@ -56,3 +63,12 @@ client-id    client ID from the request
 {{- end}}
 ```
 {{end}}
+
+{{define "response-preamble"}}
+      "server-id": "uhppoted"
+      "client-id": "QWERTY",
+      "request-id": "AH173635G3",
+{{- end}}
+
+
+
