@@ -3,12 +3,8 @@
 ### IN PROGRESS
 
 - [ ] Protocol documentation
-      - [x] get-time-profile
-      - [ ] get-time-profiles
-      - [x] set-time-profile
-      - [ ] set-time-profiles
-      - [x] clear-time-profiles
-      - [x] set-task-list
+      - [x] get-time-profiles
+      - [x] set-time-profiles
       - [ ] acl-show
       - [ ] acl-grant
       - [ ] acl-revoke
@@ -22,6 +18,7 @@
       - [ ] acl-compare-s3
       - [ ] acl-compare-http
 
+- [ ] `set-time-profiles` is returning incorrect method in response
 - [ ] Ewww - fix record-special-events response
 ```
 {

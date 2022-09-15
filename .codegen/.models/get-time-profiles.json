@@ -1,0 +1,79 @@
+{
+  "get_time_profiles": {
+    "command": "get-time-profiles",
+    "request": {
+      "topic": "uhppoted/gateway/requests/device/time-profiles:get",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "(required) controller serial number"
+        },
+        {
+          "field": "from",
+          "value": "uint8",
+          "description": "(optional) start time profile ID [2..254]. Defaults to 2."
+        },
+        {
+          "field": "to",
+          "value": "uint8",
+          "description": "(optional) end time profile ID [2..254]. Defaults to 254."
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "uint32",
+          "description": "controller serial number"
+        },
+        {
+          "field": "profiles",
+          "value": "array of record",
+          "description": "array of time profile records"
+        },
+        {
+          "field": "profile.id",
+          "value": "uint8",
+          "description": "time profile ID [2..254"
+        },
+        {
+          "field": "profile.start-date",
+          "value": "date",
+          "description": "time profile 'enabled from' date (inclusive)"
+        },
+        {
+          "field": "profile.end-date",
+          "value": "date",
+          "description": "time profile 'enabled until' date (inclusive)"
+        },
+        {
+          "field": "profile.weekdays",
+          "value": "string list of weekday",
+          "description": "weekdays on which time profile is enabled"
+        },
+        {
+          "field": "profile.segments",
+          "value": "array of time segments",
+          "description": "time segments 1-3"
+        },
+        {
+          "field": "profile.segment.start",
+          "value": "time",
+          "description": "segment start time (HHmm)"
+        },
+        {
+          "field": "profile.segment.end",
+          "value": "time",
+          "description": "segment end time (HHmm)"
+        },
+        {
+          "field": "profile.linked-profile-id",
+          "value": "uint8",
+          "description": "(optional) ID of linked time profile [2..254]"
+        }
+      ]
+    }
+  }
+}

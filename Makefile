@@ -340,7 +340,7 @@ set-time-profiles:
                                                                             { "start": "08:15", "end": "11:30" }, \
                                                                             { "start": "14:05", "end": "17:45" }  \
                                                                          ], \
-                                                                         "linked-profile": 30 }, \
+                                                                         "linked-profile": 0 }, \
                                                                          { "id": 31, \
                                                                          "start-date": "2021-01-01", \
                                                                          "end-date":   "2021-12-31", \
@@ -349,7 +349,7 @@ set-time-profiles:
                                                                             { "start": "08:15", "end": "11:30" }, \
                                                                             { "start": "14:05", "end": "17:45" }  \
                                                                          ], \
-                                                                         "linked-profile": 32 }, \
+                                                                         "linked-profile": 0 }, \
                                                                          { "id": 32, \
                                                                          "start-date": "2021-01-01", \
                                                                          "end-date":   "2021-12-31", \
@@ -357,7 +357,7 @@ set-time-profiles:
                                                                          "segments": [ \
                                                                             { "start": "08:30", "end": "15:30" } \
                                                                          ], \
-                                                                         "linked-profile": 33 }, \
+                                                                         "linked-profile": 0 }, \
                                                                          { "id": 33, \
                                                                          "start-date": "2021-01-01", \
                                                                          "end-date":   "2021-12-31", \
