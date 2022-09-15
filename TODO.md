@@ -5,9 +5,9 @@
 - [ ] Protocol documentation
       - [x] get-time-profiles
       - [x] set-time-profiles
-      - [ ] acl-show
-      - [ ] acl-grant
-      - [ ] acl-revoke
+      - [x] acl-show
+      - [x] acl-grant
+      - [x] acl-revoke
       - [ ] acl-upload-file
       - [ ] acl-upload-s3
       - [ ] acl-upload-http
