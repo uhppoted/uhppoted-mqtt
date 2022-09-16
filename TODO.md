@@ -8,15 +8,10 @@
       - [x] acl-show
       - [x] acl-grant
       - [x] acl-revoke
-      - [ ] acl-upload-file
-      - [ ] acl-upload-s3
-      - [ ] acl-upload-http
-      - [ ] acl-download-file
-      - [ ] acl-download-s3
-      - [ ] acl-download-http
-      - [ ] acl-compare-file
-      - [ ] acl-compare-s3
-      - [ ] acl-compare-http
+      - [x] acl-upload
+      - [x] acl-download
+      - [x] acl-compare
+      - [ ] Preamble
 
 - [ ] `set-time-profiles` is returning incorrect method in response
 - [ ] Ewww - fix record-special-events response

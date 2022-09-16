@@ -29,11 +29,6 @@
     "response": {
       "fields": [
         {
-          "field": "device-id",
-          "value": "<controller-id>",
-          "description": "controller serial number"
-        },
-        {
           "field": "granted",
           "value": "bool",
           "description": "grant success/fail"

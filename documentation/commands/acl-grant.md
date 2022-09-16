@@ -43,7 +43,6 @@ Response:
       "client-id": <client-id>,
       "method": "acl-grant",
       "response": {
-            "device-id": "<controller-id>",
             "granted": "bool",
       },
       ...
@@ -54,7 +53,6 @@ Response:
 
 request-id   message ID from the request
 client-id    client ID from the request
-device-id    controller serial number
 granted      grant success/fail
 ```
 

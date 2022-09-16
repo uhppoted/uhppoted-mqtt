@@ -1,0 +1,64 @@
+{
+  "acl_download": {
+    "command": "acl-download",
+    "request": {
+      "topic": "uhppoted/gateway/requests/acl/acl:download",
+      "fields": [
+        {
+          "field": "url",
+          "value": "URL",
+          "description": "Source URL for the ACL file"
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "report",
+          "value": "list of record",
+          "description": "list of the changes made to each controller"
+        },
+        {
+          "field": "report.controller",
+          "value": "uint32",
+          "description": "controller ID"
+        },
+        {
+          "field": "report.controller.added",
+          "value": "uint32",
+          "description": "number of cards added to controller"
+        },
+        {
+          "field": "report.controller.deleted",
+          "value": "uint32",
+          "description": "number of cards deleted from controller"
+        },
+        {
+          "field": "report.controller.updated",
+          "value": "uint32",
+          "description": "number of cards updated on controller"
+        },
+        {
+          "field": "report.controller.unchanged",
+          "value": "uint32",
+          "description": "number of cards unchanged on controller"
+        },
+        {
+          "field": "report.controller.errors",
+          "value": "uint32",
+          "description": "number of errors for controller"
+        },
+        {
+          "field": "report.controller.failed",
+          "value": "uint32",
+          "description": "number of cards that could not be transferred to controller"
+        },
+        {
+          "field": "warnings",
+          "value": "array of string",
+          "description": "list of warning messages while transferring ACL to controller"
+        }
+      ]
+    }
+  }
+}

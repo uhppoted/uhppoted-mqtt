@@ -14,11 +14,6 @@
     "response": {
       "fields": [
         {
-          "field": "device-id",
-          "value": "<controller-id>",
-          "description": "controller serial number"
-        },
-        {
           "field": "card-number",
           "value": "uint32",
           "description": "card number"

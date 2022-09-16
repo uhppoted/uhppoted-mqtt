@@ -36,7 +36,6 @@ Response:
       "client-id": <client-id>,
       "method": "acl-show",
       "response": {
-            "device-id": "<controller-id>",
             "card-number": "uint32",
             "deleted": "bool",
       },
@@ -48,7 +47,6 @@ Response:
 
 request-id   message ID from the request
 client-id    client ID from the request
-device-id    controller serial number
 card-number  card number
 deleted      card delete success/fail
 ```

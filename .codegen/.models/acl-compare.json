@@ -1,0 +1,69 @@
+{
+  "acl_compare": {
+    "command": "acl-compare",
+    "request": {
+      "topic": "uhppoted/gateway/requests/acl/acl:compare",
+      "fields": [
+        {
+          "field": "acl",
+          "value": "URL",
+          "description": "Source URL for the ACL file"
+        },
+        {
+          "field": "report",
+          "value": "URL",
+          "description": "Destination URL for the report file"
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "url",
+          "value": "URL",
+          "description": "URL for the uploaded report file"
+        },
+        {
+          "field": "report",
+          "value": "list of record",
+          "description": "list of the changes made to each controller"
+        },
+        {
+          "field": "report.controller",
+          "value": "uint32",
+          "description": "controller ID"
+        },
+        {
+          "field": "report.controller.diffent",
+          "value": "uint32",
+          "description": "number of cards on the controller that have the same card number but different permissions"
+        },
+        {
+          "field": "report.controller.extraneous",
+          "value": "uint32",
+          "description": "number of cards on the controller that are not in the ACL file"
+        },
+        {
+          "field": "report.controller.updated",
+          "value": "uint32",
+          "description": "number of cards updated on controller"
+        },
+        {
+          "field": "report.controller.unchanged",
+          "value": "uint32",
+          "description": "number of cards unchanged on controller"
+        },
+        {
+          "field": "report.controller.missing",
+          "value": "uint32",
+          "description": "number of card in the ACL file that are not present on the controller"
+        },
+        {
+          "field": "report.controller.unchanged",
+          "value": "uint32",
+          "description": "number of cards on the controller that match the ACL file"
+        }
+      ]
+    }
+  }
+}

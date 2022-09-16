@@ -1,0 +1,24 @@
+{
+  "acl_upload": {
+    "command": "acl-upload",
+    "request": {
+      "topic": "uhppoted/gateway/requests/acl/acl:upload",
+      "fields": [
+        {
+          "field": "url",
+          "value": "URL",
+          "description": "Destination URL for the ACL file"
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "url",
+          "value": "URL",
+          "description": "URL of uploaded file"
+        }
+      ]
+    }
+  }
+}
