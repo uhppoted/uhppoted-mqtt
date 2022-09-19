@@ -9,6 +9,8 @@ added to any existing permissions.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

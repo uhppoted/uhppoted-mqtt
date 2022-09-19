@@ -2,7 +2,7 @@
   "clear_time_profiles": {
     "command": "clear-time-profiles",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/time-profiles:delete",
+      "topic": "device/time-profiles:delete",
       "fields": [
         {
           "field": "device-id",

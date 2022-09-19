@@ -6,7 +6,7 @@ Adds or updates a time profile on a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/time-profile:set
+topic: <root>/<requests>/device/time-profile:set
 
 message:
 {
@@ -88,6 +88,8 @@ linked-profile-id (optional) ID of linked time profile [2..254]
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/time-profile:set
+
 {
   "message": {
     "request": {

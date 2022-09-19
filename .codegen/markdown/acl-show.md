@@ -8,6 +8,8 @@ Retrieves the system-wide access control permissions for a card.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

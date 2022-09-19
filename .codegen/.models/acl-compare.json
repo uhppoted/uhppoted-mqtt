@@ -2,7 +2,7 @@
   "acl_compare": {
     "command": "acl-compare",
     "request": {
-      "topic": "uhppoted/gateway/requests/acl/acl:compare",
+      "topic": "acl/acl:compare",
       "fields": [
         {
           "field": "acl",

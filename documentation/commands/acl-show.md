@@ -6,7 +6,7 @@ Retrieves the system-wide access control permissions for a card.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/acl/card:show
+topic: <root>/<requests>/acl/card:show
 
 message:
 {
@@ -54,6 +54,8 @@ deleted      card delete success/fail
 
 Example:
 ```
+topic: uhppoted/gateway/requests/acl/card:show
+
 {
   "message": {
     "request": {

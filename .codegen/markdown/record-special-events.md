@@ -8,6 +8,8 @@ Enables/disables event logging for door open, close and pushbutton events.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

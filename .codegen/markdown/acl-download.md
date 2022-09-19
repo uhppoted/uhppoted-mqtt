@@ -30,6 +30,8 @@ aws_secret_access_key = FRE................................zuyqt
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

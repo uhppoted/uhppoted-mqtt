@@ -8,6 +8,8 @@ Retrieves a time profile from a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
   "message": {
     "request": {
 {{- template "request-preamble"}}

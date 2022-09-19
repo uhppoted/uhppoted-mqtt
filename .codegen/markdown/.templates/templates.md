@@ -2,7 +2,7 @@
 ```
 Request:
 
-topic: {{ .request.topic }}
+topic: <root>/<requests>/{{ .request.topic }}
 
 message:
 {

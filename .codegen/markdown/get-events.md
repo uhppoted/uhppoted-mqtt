@@ -9,6 +9,8 @@ fetches up to _count_ events starting from the current event index.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

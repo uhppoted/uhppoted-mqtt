@@ -2,7 +2,7 @@
   "get_time_profiles": {
     "command": "get-time-profiles",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/time-profiles:get",
+      "topic": "device/time-profiles:get",
       "fields": [
         {
           "field": "device-id",

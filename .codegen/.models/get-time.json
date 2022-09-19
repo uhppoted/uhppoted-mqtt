@@ -2,7 +2,7 @@
   "get_time": {
     "command": "get-time",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/time:get",
+      "topic": "device/time:get",
       "fields": [
         {
           "field": "device-id",

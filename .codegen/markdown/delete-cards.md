@@ -8,6 +8,8 @@ Deletes all cards from a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

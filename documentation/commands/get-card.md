@@ -6,7 +6,7 @@ Retrieves a card record from a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/card:get
+topic: <root>/<requests>/device/card:get
 
 message:
 {
@@ -64,6 +64,8 @@ doors        door [1..4] access rights
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/card:get
+
 {
   "message": {
     "request": {

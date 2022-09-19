@@ -6,7 +6,7 @@ Returns the controller information for a UHPPOTE controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device:get
+topic: <root>/<requests>/device:get
 
 message:
 {
@@ -58,6 +58,10 @@ port         UDP port for controller commands
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device:get
+
+topic: uhppoted/gateway/requests/device:get
+
 {
   "message": {
     "request": {

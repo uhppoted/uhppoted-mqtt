@@ -2,7 +2,7 @@
   "acl_grant": {
     "command": "acl-grant",
     "request": {
-      "topic": "uhppoted/gateway/requests/acl/card:grant",
+      "topic": "acl/card:grant",
       "fields": [
         {
           "field": "card-number",

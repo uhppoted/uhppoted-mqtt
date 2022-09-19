@@ -2,7 +2,7 @@
   "acl_upload": {
     "command": "acl-upload",
     "request": {
-      "topic": "uhppoted/gateway/requests/acl/acl:upload",
+      "topic": "acl/acl:upload",
       "fields": [
         {
           "field": "url",

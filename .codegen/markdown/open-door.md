@@ -43,6 +43,8 @@ uhppote-cli get-card 405419896 8165538
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

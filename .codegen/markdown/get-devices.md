@@ -9,6 +9,8 @@ configured in _uhppoted.conf_.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

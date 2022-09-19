@@ -2,7 +2,7 @@
   "acl_show": {
     "command": "acl-show",
     "request": {
-      "topic": "uhppoted/gateway/requests/acl/card:show",
+      "topic": "acl/card:show",
       "fields": [
         {
           "field": "card-number",

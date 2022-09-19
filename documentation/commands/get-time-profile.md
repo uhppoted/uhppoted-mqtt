@@ -6,7 +6,7 @@ Retrieves a time profile from a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/time-profile:get
+topic: <root>/<requests>/device/time-profile:get
 
 message:
 {
@@ -72,6 +72,8 @@ linked-profile-id (optional) ID of linked time profile [2..254]
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/time-profile:get
+
   "message": {
     "request": {
       "client-id": "QWERTY",

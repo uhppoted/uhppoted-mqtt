@@ -2,7 +2,7 @@
   "set_door_control": {
     "command": "set-door-control",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/door/control:set",
+      "topic": "device/door/control:set",
       "fields": [
         {
           "field": "device-id",

@@ -2,7 +2,7 @@
   "get_card": {
     "command": "get-card",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/card:get",
+      "topic": "device/card:get",
       "fields": [
         {
           "field": "device-id",

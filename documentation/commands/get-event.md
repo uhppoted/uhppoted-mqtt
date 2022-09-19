@@ -6,7 +6,7 @@ Retrieves an event from the controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/event:get
+topic: <root>/<requests>/device/event:get
 
 message:
 {
@@ -80,6 +80,8 @@ event.reason-text last event reason
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/event:get
+
 {
   "message": {
     "request": {

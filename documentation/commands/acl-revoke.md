@@ -7,7 +7,7 @@ removed from any existing permissions.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/acl/card:revoke
+topic: <root>/<requests>/acl/card:revoke
 
 message:
 {
@@ -59,6 +59,8 @@ revoked      revoke success/fail
 
 Example:
 ```
+topic: uhppoted/gateway/requests/acl/card:revoke
+
 {
   "message": {
     "request": {

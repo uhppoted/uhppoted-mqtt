@@ -7,7 +7,7 @@ added to any existing permissions.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/acl/card:grant
+topic: <root>/<requests>/acl/card:grant
 
 message:
 {
@@ -59,6 +59,8 @@ granted      grant success/fail
 
 Example:
 ```
+topic: uhppoted/gateway/requests/acl/card:grant
+
 {
   "message": {
     "request": {

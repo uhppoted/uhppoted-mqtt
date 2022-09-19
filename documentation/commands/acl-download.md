@@ -28,7 +28,7 @@ aws_secret_access_key = FRE................................zuyqt
 ```
 Request:
 
-topic: uhppoted/gateway/requests/acl/acl:download
+topic: <root>/<requests>/acl/acl:download
 
 message:
 {
@@ -90,6 +90,8 @@ warnings     list of warning messages while transferring ACL to controller
 
 Example:
 ```
+topic: uhppoted/gateway/requests/acl/acl:download
+
 {
   "message": {
     "request": {

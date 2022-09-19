@@ -41,7 +41,7 @@ uhppote-cli get-card 405419896 8165538
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/door/lock:open
+topic: <root>/<requests>/device/door/lock:open
 
 message:
 {
@@ -95,6 +95,8 @@ opened       true if opened, false otherwise
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/door/lock:open
+
 {
   "message": {
     "request": {

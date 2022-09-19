@@ -6,7 +6,7 @@ Retrieves the open delay for a controller door.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/door/delay:get
+topic: <root>/<requests>/device/door/delay:get
 
 message:
 {
@@ -58,6 +58,8 @@ delay        door open delay
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/door/delay:get
+
 {
   "message": {
     "request": {

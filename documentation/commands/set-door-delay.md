@@ -6,7 +6,7 @@ Sets the open delay for a door on a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/door/delay:set
+topic: <root>/<requests>/device/door/delay:set
 
 message:
 {
@@ -60,6 +60,8 @@ delay        door open duration
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/door/delay:set
+
 {
   "message": {
     "request": {

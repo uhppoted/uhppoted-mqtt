@@ -6,7 +6,7 @@ Stores a list of time profiles to a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/time-profiles:set
+topic: <root>/<requests>/device/time-profiles:set
 
 message:
 {
@@ -72,6 +72,8 @@ warnings     list of warning messages
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/time-profiles:set
+
   "message": {
     "request": {
       "client-id": "QWERTY",

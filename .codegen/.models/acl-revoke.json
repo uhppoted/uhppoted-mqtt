@@ -2,7 +2,7 @@
   "acl_revoke": {
     "command": "acl-revoke",
     "request": {
-      "topic": "uhppoted/gateway/requests/acl/card:revoke",
+      "topic": "acl/card:revoke",
       "fields": [
         {
           "field": "card-number",

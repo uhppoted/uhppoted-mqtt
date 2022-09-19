@@ -7,7 +7,7 @@ fetches up to _count_ events starting from the current event index.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/events:get
+topic: <root>/<requests>/device/events:get
 
 message:
 {
@@ -87,6 +87,8 @@ event.reason-text last event reason
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/events:get
+
 {
   "message": {
     "request": {

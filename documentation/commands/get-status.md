@@ -6,7 +6,7 @@ Retrieves the controller status.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/status:get
+topic: <root>/<requests>/device/status:get
 
 message:
 {
@@ -92,6 +92,8 @@ event.reason-text last event reason
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/status:get
+
 {
   "message": {
     "request": {

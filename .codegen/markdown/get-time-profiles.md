@@ -8,6 +8,8 @@ Retrieves a range of time profiles from a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 
   "message": {
     "request": {

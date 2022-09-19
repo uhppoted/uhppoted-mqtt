@@ -7,7 +7,7 @@ configured in _uhppoted.conf_.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/devices:get
+topic: <root>/<requests>/devices:get
 
 message:
 {
@@ -57,6 +57,8 @@ port         UDP port for controller commands
 
 Example:
 ```
+topic: uhppoted/gateway/requests/devices:get
+
 {
   "message": {
     "request": {

@@ -8,6 +8,10 @@ Returns the controller information for a UHPPOTE controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

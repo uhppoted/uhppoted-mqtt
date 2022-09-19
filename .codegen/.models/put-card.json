@@ -2,7 +2,7 @@
   "put_card": {
     "command": "put-card",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/card:put",
+      "topic": "device/card:put",
       "fields": [
         {
           "field": "device-id",

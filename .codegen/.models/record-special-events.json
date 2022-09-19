@@ -2,7 +2,7 @@
   "record_special_events": {
     "command": "record-special-events",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/special-events:set",
+      "topic": "device/special-events:set",
       "fields": [
         {
           "field": "device-id",

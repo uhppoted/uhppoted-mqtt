@@ -6,7 +6,7 @@ Enables/disables event logging for door open, close and pushbutton events.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/special-events:set
+topic: <root>/<requests>/device/special-events:set
 
 message:
 {
@@ -58,6 +58,8 @@ control      door control mode (normally open, normally closed or controlled)
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/special-events:set
+
 {
   "message": {
     "request": {

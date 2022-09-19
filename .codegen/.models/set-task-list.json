@@ -2,7 +2,7 @@
   "set_task_list": {
     "command": "set-task-list",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/tasklist:set",
+      "topic": "device/tasklist:set",
       "fields": [
         {
           "field": "device-id",

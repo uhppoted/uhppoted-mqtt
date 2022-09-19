@@ -6,7 +6,7 @@ Retrieves a list of the cards stored on a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/cards:get
+topic: <root>/<requests>/device/cards:get
 
 message:
 {
@@ -54,6 +54,8 @@ cards        list of card numbers
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/cards:get
+
 {
   "message": {
     "request": {

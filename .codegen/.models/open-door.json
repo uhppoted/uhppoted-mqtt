@@ -2,7 +2,7 @@
   "open_door": {
     "command": "open-door",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/door/lock:open",
+      "topic": "device/door/lock:open",
       "fields": [
         {
           "field": "device-id",

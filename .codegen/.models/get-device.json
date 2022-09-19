@@ -2,7 +2,7 @@
   "get_device": {
     "command": "get-device",
     "request": {
-      "topic": "uhppoted/gateway/requests/device:get",
+      "topic": "device:get",
       "fields": [
         {
           "field": "device-id",

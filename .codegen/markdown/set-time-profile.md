@@ -8,6 +8,8 @@ Adds or updates a time profile on a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

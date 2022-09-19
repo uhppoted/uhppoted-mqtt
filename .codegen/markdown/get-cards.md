@@ -8,6 +8,8 @@ Retrieves a list of the cards stored on a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

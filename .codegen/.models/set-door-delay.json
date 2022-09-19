@@ -2,7 +2,7 @@
   "set_door_delay": {
     "command": "set-door-delay",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/door/delay:set",
+      "topic": "device/door/delay:set",
       "fields": [
         {
           "field": "device-id",

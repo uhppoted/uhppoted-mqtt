@@ -6,7 +6,7 @@ Returns the controller date and time.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/time:get
+topic: <root>/<requests>/device/time:get
 
 message:
 {
@@ -54,6 +54,8 @@ date-time    controller system date and time
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/time:get
+
 {
   "message": {
     "request": {

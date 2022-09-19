@@ -3,14 +3,6 @@
 ### IN PROGRESS
 
 - [ ] Protocol documentation
-      - [x] get-time-profiles
-      - [x] set-time-profiles
-      - [x] acl-show
-      - [x] acl-grant
-      - [x] acl-revoke
-      - [x] acl-upload
-      - [x] acl-download
-      - [x] acl-compare
       - [ ] Preamble
 
 - [ ] `set-time-profiles` is returning incorrect method in response

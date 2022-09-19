@@ -6,7 +6,7 @@ Adds or updates a card record on a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/card:put
+topic: <root>/<requests>/device/card:put
 
 message:
 {
@@ -72,6 +72,8 @@ doors        door [1..4] access rights
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/card:put
+
 {
   "message": {
     "request": {

@@ -6,7 +6,7 @@ Stores a tasklist to a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/tasklist:set
+topic: <root>/<requests>/device/tasklist:set
 
 message:
 {
@@ -68,6 +68,8 @@ warnings     list of warning messages
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/tasklist:set
+
 {
   "message": {
     "request": {

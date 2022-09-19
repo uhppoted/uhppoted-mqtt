@@ -2,7 +2,7 @@
   "get_status": {
     "command": "get-status",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/status:get",
+      "topic": "device/status:get",
       "fields": [
         {
           "field": "device-id",

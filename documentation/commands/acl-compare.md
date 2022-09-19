@@ -28,7 +28,7 @@ aws_secret_access_key = FRE................................zuyqt
 ```
 Request:
 
-topic: uhppoted/gateway/requests/acl/acl:compare
+topic: <root>/<requests>/acl/acl:compare
 
 message:
 {
@@ -92,6 +92,8 @@ report.controller.unchanged number of cards on the controller that match the ACL
 
 Example:
 ```
+topic: uhppoted/gateway/requests/acl/acl:compare
+
 {
   "message": {
     "request": {

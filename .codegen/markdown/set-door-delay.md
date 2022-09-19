@@ -8,6 +8,8 @@ Sets the open delay for a door on a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

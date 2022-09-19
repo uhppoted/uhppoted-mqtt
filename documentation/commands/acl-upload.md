@@ -28,7 +28,7 @@ aws_secret_access_key = FRE................................zuyqt
 ```
 Request:
 
-topic: uhppoted/gateway/requests/acl/acl:upload
+topic: <root>/<requests>/acl/acl:upload
 
 message:
 {
@@ -74,6 +74,8 @@ url          URL of uploaded file
 
 Example:
 ```
+topic: uhppoted/gateway/requests/acl/acl:upload
+
 {
   "message": {
     "request": {

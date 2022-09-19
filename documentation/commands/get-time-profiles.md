@@ -6,7 +6,7 @@ Retrieves a range of time profiles from a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/time-profiles:get
+topic: <root>/<requests>/device/time-profiles:get
 
 message:
 {
@@ -74,6 +74,8 @@ profile.linked-profile-id (optional) ID of linked time profile [2..254]
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/time-profiles:get
+
 
   "message": {
     "request": {

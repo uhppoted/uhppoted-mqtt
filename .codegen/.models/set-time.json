@@ -2,7 +2,7 @@
   "set_time": {
     "command": "set-time",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/time:set",
+      "topic": "device/time:set",
       "fields": [
         {
           "field": "device-id",

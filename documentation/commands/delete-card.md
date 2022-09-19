@@ -6,7 +6,7 @@ Deletes a card from a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/card:delete
+topic: <root>/<requests>/device/card:delete
 
 message:
 {
@@ -58,6 +58,8 @@ deleted      card delete success/fail
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/card:delete
+
 {
   "message": {
     "request": {

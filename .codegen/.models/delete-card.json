@@ -2,7 +2,7 @@
   "delete_card": {
     "command": "delete-card",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/card:delete",
+      "topic": "device/card:delete",
       "fields": [
         {
           "field": "device-id",

@@ -8,6 +8,8 @@ Retrieves the open delay for a controller door.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

@@ -2,7 +2,7 @@
   "get_devices": {
     "command": "get-devices",
     "request": {
-      "topic": "uhppoted/gateway/requests/devices:get",
+      "topic": "devices:get",
       "fields": []
     },
     "response": {

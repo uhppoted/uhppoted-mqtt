@@ -8,6 +8,8 @@ Retrieves the controller status.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

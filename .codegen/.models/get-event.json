@@ -2,7 +2,7 @@
   "get_event": {
     "command": "get-event",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/event:get",
+      "topic": "device/event:get",
       "fields": [
         {
           "field": "device-id",

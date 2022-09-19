@@ -6,7 +6,7 @@ Clears all time profiles on a a controller.
 ```
 Request:
 
-topic: uhppoted/gateway/requests/device/time-profiles:delete
+topic: <root>/<requests>/device/time-profiles:delete
 
 message:
 {
@@ -54,6 +54,8 @@ deleted      clear time profiles success/fail
 
 Example:
 ```
+topic: uhppoted/gateway/requests/device/time-profiles:delete
+
   "message": {
     "request": {
       "client-id": "QWERTY",

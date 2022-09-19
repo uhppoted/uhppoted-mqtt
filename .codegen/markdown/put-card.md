@@ -8,6 +8,8 @@ Adds or updates a card record on a controller.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {

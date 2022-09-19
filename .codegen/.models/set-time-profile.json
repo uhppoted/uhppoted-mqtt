@@ -2,7 +2,7 @@
   "set_time_profile": {
     "command": "set-time-profile",
     "request": {
-      "topic": "uhppoted/gateway/requests/device/time-profile:set",
+      "topic": "device/time-profile:set",
       "fields": [
         {
           "field": "device-id",

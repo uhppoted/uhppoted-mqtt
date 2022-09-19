@@ -2,7 +2,7 @@
   "acl_download": {
     "command": "acl-download",
     "request": {
-      "topic": "uhppoted/gateway/requests/acl/acl:download",
+      "topic": "acl/acl:download",
       "fields": [
         {
           "field": "url",

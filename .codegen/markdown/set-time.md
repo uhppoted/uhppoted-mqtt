@@ -8,6 +8,8 @@ Sets the controller date and time.
 
 Example:
 ```
+topic: uhppoted/gateway/requests/{{ .request.topic }}
+
 {
   "message": {
     "request": {
