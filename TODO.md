@@ -4,6 +4,7 @@
 
 - [ ] Protocol documentation
       - [ ] Preamble
+      - [ ] SUMMARY.md
 
 - [ ] `set-time-profiles` is returning incorrect method in response
 - [ ] Ewww - fix record-special-events response
