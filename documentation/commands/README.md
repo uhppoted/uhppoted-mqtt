@@ -33,7 +33,7 @@ The security can then be increased incrementally as required.
 
 ### Encryption
 
-## Commands
+## Command structure
 
 Each command comprises:
 - topic
@@ -191,7 +191,7 @@ e.g. for the _get-device_ command:
 
 ```
 
-### List of commands
+## List of Commands
 
 - [`get-devices`](get-devices.md)
 
