@@ -7,7 +7,7 @@ This document describes the command and control functions implemented by _uhppot
 ## Security
 
 Because it was originally designed as a gateway for mobile applications i.e. probably using a broker exposed
-to the public and quite possibly using a public MQTT broker, n out-of-the-box installation of _uhppoted-mqtt_
+to the public and quite possibly using a public MQTT broker, an out-of-the-box installation of _uhppoted-mqtt_
 has full authorisation, authentication and encryption enabled by default.
 
 For the use case where it is running on a local network and using a trusted MQTT broker this is excessive
@@ -187,7 +187,9 @@ e.g. for the _get-device_ command:
       }
     }
   }
-}```
+}
+
+```
 
 ### List of commands
 {{ range .commands}}
