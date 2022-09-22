@@ -17,8 +17,8 @@ the following settings in the _uhppoted.conf_ file:
 ```
 # MQTT
 ...
-mqtt.security.authentication = NONE
 mqtt.security.HMAC.required = false
+mqtt.security.authentication = NONE
 mqtt.security.nonce.required = false
 mqtt.security.outgoing.sign = false
 mqtt.security.outgoing.encrypt = false
@@ -26,6 +26,64 @@ mqtt.security.outgoing.encrypt = false
 ```
 
 The security can then be increased incrementally as required.
+
+### HMAC
+
+The first level of security is _HMAC_ and if configured as `required` in _uhppoted.conf_ requires that 
+each request message be authenticated with an HMAC generated using a key associated with the request
+`client-id`:
+
+_uhppoted.conf_:
+```
+...
+mqtt.security.HMAC.required = true
+...
+```
+
+Request:
+```
+topic:  uhppoted/gateway/requests/devices:get
+
+{
+  "message": {
+    "request": {
+      "request-id": "AH173635G3",
+      "client-id": "QWERTY",
+      "reply-to": "uhppoted/reply/97531",
+      "device-id": 405419896
+    }
+  },
+  "hmac": "2574ee13c2a9aa1555a4200060e6250888a5c05c60897ee69b4a52347c102d9a"
+}
+```
+
+Response:
+```
+{
+  "message": {
+    "reply": {
+      "client-id": "QWERTY",
+      "method": "get-device",
+      "request-id": "AH173635G3",
+      "response": {
+        "device-id": 405419896,
+        "device-type": "UTO311-L04",
+        "ip-address": "192.168.1.100",
+        "subnet-mask": "255.255.255.0",
+        "gateway-address": "192.168.1.1",
+        "mac-address": "00:12:23:34:45:56",
+        "date": "2018-11-05",
+        "version": "0892"
+      },
+      "server-id": "uhppoted"
+    }
+  },
+  "hmac": "3fd19f56a23007ea702556938e1e91150fa211ebc4aca12f48df794362c9e9ce"
+}
+
+```
+
+The response message will be authenticated with an HMAC generated using the server key.
 
 ### Authentication
 

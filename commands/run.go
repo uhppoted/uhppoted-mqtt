@@ -210,7 +210,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	}
 
 	// ... authentication
-
 	hmac, err := auth.NewHMAC(c.HMAC.Required, c.HMAC.Key)
 	if c.HMAC.Required && err != nil {
 		log.Errorf(LOG_TAG, "%v", err)
