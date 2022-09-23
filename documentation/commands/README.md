@@ -31,7 +31,9 @@ The security can then be increased incrementally as required.
 
 The first level of security is _HMAC_ and if configured as `required` in _uhppoted.conf_ requires that 
 each request message be authenticated with an HMAC generated using a key associated with the request
-`client-id`:
+`client-id` (the server response HMAC uses the server key). An HMAC simply provides an assurance that
+the message has not been tampered with in transit (e.g. if it is passing through a broker not under your
+control).
 
 _uhppoted.conf_:
 ```
@@ -86,6 +88,69 @@ Response:
 The response message will be authenticated with an HMAC generated using the server key.
 
 ### Authentication
+
+The next level of security requires the request and response messages be digitally signed to provide
+an assurance that they were actually originated by the client/server. _uhppoted-mqtt_ supports two mechanisms:
+
+- a lightweight HOTP, where the client and server share the underlying HOTP key associated with the _client-id_ 
+  of the request
+- a more secure RSA digital signature where the server authenticates a request using the RSA public key associated
+  with the _client-id_ of the request
+
+Both of these mechanisms require an external means to securely exchange keys.
+
+### HOTP
+
+HOTP is a lightweight authentication mechanism based on a shared secret key and a counter that increases monontonically 
+with each request. It is enabled in _uhppoted.conf_:
+```
+# MQTT
+...
+mqtt.security.authentication = HOTP
+...
+```
+
+The keys are stored as `client-id::key` pairs in _/var/uhppoted/mqtt.hotp.secrets_, e.g.:
+```
+QWERTY      DAIOJ9BJQHPC7JBZ
+```
+
+and the corresponding counters are stored as `client-id::counter` pairs in _/var/uhppoted/mqtt.hotp.counters_, e.g.:
+```
+QWERTY      1093
+```
+
+### RSA
+
+RSA provides a stronger authentication mechanism based on digital signatures. The server uses the client public key
+to verify each request, and signs each response with the server private key. It is enabled in _uhppoted.conf_:
+```
+# MQTT
+...
+mqtt.security.authentication = RSA
+...
+```
+
+The client public signing keys are stored as _\<client-id\>.pub_ PEM files in _/var/uhppoted/mqtt/rsa/signing_,
+e.g.:
+```
+QWERTY.pub
+
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx8FbtmHSN8ui3eJN+CiM
+dU1MEmHCzB9fGMplhnNjg/netI27ZVg+VvPMSvAF2c4Pq0MBYdhsOdU7i95SPRH4
+...
+
+```
+
+The server signing key is stored as a PEM file in _/var/uhppoted/mqtt/rsa/signing/mqttd.key_, e.g.:
+```
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDvmv0K0WQHN/wW
+HgVxN5/adjhdMx0WKVWOFEVefN45/PjGIVOOKK80TS6Z/tJnIePD3tJRfi+gyI7D
+...
+```
+
 
 ### Authorisation
 
