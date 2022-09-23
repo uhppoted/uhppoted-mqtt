@@ -120,14 +120,52 @@ and the corresponding counters are stored as `client-id::counter` pairs in _/var
 QWERTY      1093
 ```
 
+Sample request/response:
+```
+{
+  "message": {
+    "request": {
+      "request-id": "AH173635G3",
+      "client-id": "QWERTY",
+      "reply-to": "uhppoted/reply/97531",
+      "nonce": 271,
+      "hotp": "586787"
+    }
+  }
+}
+
+{
+  "message": {
+    "reply": {
+      "client-id": "QWERTY",
+      "method": "get-devices",
+      "request-id": "AH173635G3",
+      "response": {
+        "devices": {
+          "201020304": {
+            "device-type": "UTO311-L02",
+            "ip-address": "192.168.1.101",
+            "port": 60000
+          },
+          ...
+        }
+      },
+      "server-id": "uhppoted"
+    }
+  }
+}
+```
+
 ### RSA
 
 RSA provides a stronger authentication mechanism based on digital signatures. The server uses the client public key
-to verify each request, and signs each response with the server private key. It is enabled in _uhppoted.conf_:
+to verify each request and (optionally) signs each response with the server private key. RSA authentication is enabled
+in _uhppoted.conf_:
 ```
 # MQTT
 ...
 mqtt.security.authentication = RSA
+mqtt.security.outgoing.sign = true
 ...
 ```
 
@@ -151,6 +189,43 @@ HgVxN5/adjhdMx0WKVWOFEVefN45/PjGIVOOKK80TS6Z/tJnIePD3tJRfi+gyI7D
 ...
 ```
 
+Sample request/response:
+```
+{
+  "message": {
+    "signature": "VXLQgzQOHnjIFW6UFftWBYtdwluM3M7nbQD6fjLdSkuk/L8ahLfHsIEPCQF9ofkqEGaBG2Dl6QJtqYF825z8dLPsxbQA1bgMrdbpiVKiS09Vn4ubONIGmShQKcuoZuAzgsVeNbCsDW2MhSq/f6W/DUlKmD9PwgxMkzeKUCjM8bQ=",
+    "request": {
+      "request-id": "AH173635G3",
+      "client-id": "QWERTY",
+      "reply-to": "uhppoted/reply/97531",
+      "nonce": 8
+    }
+  }
+}
+{
+  "message": {
+    "signature": "jVBJagU3KJKShK74RZBVbRGvv32/c3foq+6Dx98A4Pasic0iwNlpcG2fD4F3Zf3nZUsImhVdNTGRUtxzi7sbxI+fUR9STKCsRNDrjrP94gVotLk7GCT/mKyq58XSkHwluR6zj7P0qT3i9Y6U4Du5k8nhIzUObF9/Hff0WA6VtNVj9rhmIOg3pWJAhdjf+Hy6+9lxYjGwCc+3uZzo0wKaca68M3chONx78RlZvbXdr/S1AsvUx0avz+oX8lk4kGbJaq7g/FN9OSN4h8Hz6Al9/TYeUIMImfg3QgfPGujYd3tVSIfnYwmbYkEmQ4hJNQ8JkpDJ+zETf95Fo2Rt9yjJdw==",
+    "reply": {
+      "server-id": "uhppoted"
+      "client-id": "QWERTY",
+      "method": "get-devices",
+      "nonce": 273,
+      "request-id": "AH173635G3",
+      "response": {
+        "devices": {
+          "201020304": {
+            "device-type": "UTO311-L02",
+            "ip-address": "192.168.1.101",
+            "port": 60000
+          },
+          ...
+        }
+      }
+    }
+  },
+  "hmac": "0e8e2b2f44e109fa9f80971b8aac0281b571d12efbb98aef14a16261bd53a09e"
+}
+```
 
 ### Authorisation
 
