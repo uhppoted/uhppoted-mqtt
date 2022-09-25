@@ -34,6 +34,7 @@ type MQTTD struct {
 	Authentication string
 	Permissions    auth.Permissions
 	AWS            AWS
+	ACL            ACL
 	EventMap       string
 	Protocol       string
 	Debug          bool
@@ -74,6 +75,10 @@ type Encryption struct {
 type AWS struct {
 	Credentials *aws.Credentials
 	Region      string
+}
+
+type ACL struct {
+	NoVerify bool
 }
 
 type fdispatch struct {
@@ -149,7 +154,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		Credentials: mqttd.AWS.Credentials,
 		Region:      mqttd.AWS.Region,
 		Log:         log,
-		NoVerify:    false,
+		NoVerify:    mqttd.ACL.NoVerify,
 	}
 
 	d := dispatcher{

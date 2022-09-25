@@ -176,7 +176,10 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		Permissions:    *permissions,
 		EventMap:       c.EventIDs,
 		AWS:            mqtt.AWS{},
-		Protocol:       c.MQTT.Protocol,
+		ACL: mqtt.ACL{
+			NoVerify: !c.ACL.Verify,
+		},
+		Protocol: c.MQTT.Protocol,
 
 		Debug: cmd.debug,
 	}

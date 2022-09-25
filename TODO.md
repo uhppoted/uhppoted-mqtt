@@ -2,6 +2,9 @@
 
 ### IN PROGRESS
 
+- [x] Added ACL.NoVerify to configuration
+- [ ] Add support for downloading non-tar.gz files
+
 - [ ] Protocol documentation
       - [ ] Preamble
       - [ ] SUMMARY.md
