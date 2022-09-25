@@ -78,7 +78,7 @@ type AWS struct {
 }
 
 type ACL struct {
-	NoVerify bool
+	Verify acl.Verification
 }
 
 type fdispatch struct {
@@ -154,7 +154,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		Credentials: mqttd.AWS.Credentials,
 		Region:      mqttd.AWS.Region,
 		Log:         log,
-		NoVerify:    mqttd.ACL.NoVerify,
+		Verify:      mqttd.ACL.Verify,
 	}
 
 	d := dispatcher{

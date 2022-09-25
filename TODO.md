@@ -4,6 +4,7 @@
 
 - [x] Added ACL.NoVerify to configuration
 - [ ] Add support for downloading non-tar.gz files
+- [ ] Fix ACL fetch log format
 
 - [ ] Protocol documentation
       - [ ] Preamble

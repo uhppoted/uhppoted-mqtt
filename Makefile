@@ -520,7 +520,23 @@ acl-download-file:
 acl-download-invalid-file:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
                  --message '{ "message": { "request": { \
-                                           "url": "file://../runtime/mqttd/hogwarts-x.tar.gz", \
+                                           "url": "file://../runtime/mqttd/hogwarts-invalid.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-download-blank-file:
+	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
+                 --message '{ "message": { "request": { \
+                                           "url": "file://../runtime/mqttd/hogwarts-blank.tar.gz", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
+acl-download-empty-file:
+	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
+                 --message '{ "message": { "request": { \
+                                           "url": "file://../runtime/mqttd/hogwarts-empty.tar.gz", \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'

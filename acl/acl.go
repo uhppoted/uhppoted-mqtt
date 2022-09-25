@@ -28,6 +28,18 @@ const (
 	StatusBadRequest          = uhppoted.StatusBadRequest
 )
 
+type Verification int
+
+const (
+	None Verification = iota
+	NotEmpty
+	RSA
+)
+
+func (v Verification) String() string {
+	return [...]string{"none", "not-empty", "RSA"}[v]
+}
+
 type ACL struct {
 	UHPPOTE     uhppote.IUHPPOTE
 	Devices     []uhppote.Device
@@ -35,7 +47,7 @@ type ACL struct {
 	Credentials *credentials.Credentials
 	Region      string
 	Log         *log.Logger
-	NoVerify    bool
+	Verify      Verification
 }
 
 type Permission struct {
@@ -103,13 +115,19 @@ func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 	}
 
 	signature, ok := files["signature"]
-	if !a.NoVerify && !ok {
-		return nil, fmt.Errorf("'signature' file missing from tar.gz")
+	switch a.Verify {
+	case None, NotEmpty:
+	default:
+		if !ok {
+			return nil, fmt.Errorf("'signature' file missing from tar.gz")
+		}
 	}
 
 	a.info(tag, fmt.Sprintf("Extracted ACL from %v: %v bytes, signature: %v bytes", uri, len(tsv), len(signature)))
 
-	if !a.NoVerify {
+	switch a.Verify {
+	case None, NotEmpty:
+	default:
 		if err := a.verify(uname, tsv, signature); err != nil {
 			return nil, err
 		}
@@ -118,6 +136,18 @@ func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 	acl, _, err := api.ParseTSV(bytes.NewReader(tsv), a.Devices, true)
 	if err != nil {
 		return nil, err
+	}
+
+	switch a.Verify {
+	case NotEmpty:
+		count := 0
+		for _, v := range acl {
+			count += len(v)
+		}
+
+		if count == 0 {
+			return nil, fmt.Errorf("ACL file has no records")
+		}
 	}
 
 	return &acl, nil

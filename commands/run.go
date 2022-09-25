@@ -21,6 +21,7 @@ import (
 	"github.com/uhppoted/uhppoted-lib/locales"
 	"github.com/uhppoted/uhppoted-lib/monitoring"
 
+	"github.com/uhppoted/uhppoted-mqtt/acl"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
 	"github.com/uhppoted/uhppoted-mqtt/log"
 	"github.com/uhppoted/uhppoted-mqtt/mqtt"
@@ -177,7 +178,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		EventMap:       c.EventIDs,
 		AWS:            mqtt.AWS{},
 		ACL: mqtt.ACL{
-			NoVerify: !c.ACL.Verify,
+			Verify: acl.RSA,
 		},
 		Protocol: c.MQTT.Protocol,
 
@@ -187,6 +188,14 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	if c.AWS.Credentials != "" {
 		mqttd.AWS.Credentials = credentials.NewSharedCredentials(c.AWS.Credentials, c.AWS.Profile)
 		mqttd.AWS.Region = c.AWS.Region
+	}
+
+	switch strings.ToLower(c.ACL.Verify) {
+	case "none":
+		mqttd.ACL.Verify = acl.None
+
+	case "not-empty":
+		mqttd.ACL.Verify = acl.NotEmpty
 	}
 
 	// ... TLS
