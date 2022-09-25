@@ -191,7 +191,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	}
 
 	switch strings.ToLower(c.ACL.Verify) {
-	case "none":
+	case "none", "false":
 		mqttd.ACL.Verify = acl.None
 
 	case "not-empty":
