@@ -178,7 +178,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		EventMap:       c.EventIDs,
 		AWS:            mqtt.AWS{},
 		ACL: mqtt.ACL{
-			Verify: acl.RSA,
+			Verify: map[acl.Verification]bool{},
 		},
 		Protocol: c.MQTT.Protocol,
 
@@ -190,12 +190,21 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		mqttd.AWS.Region = c.AWS.Region
 	}
 
-	switch strings.ToLower(c.ACL.Verify) {
-	case "none", "false":
-		mqttd.ACL.Verify = acl.None
+	// FIXME: temporary - remove
+	if strings.Contains(strings.ToLower(c.ACL.Verify), "false") {
+		mqttd.ACL.Verify[acl.None] = true
+	}
 
-	case "not-empty":
-		mqttd.ACL.Verify = acl.NotEmpty
+	if strings.Contains(strings.ToLower(c.ACL.Verify), "none") {
+		mqttd.ACL.Verify[acl.None] = true
+	}
+
+	if strings.Contains(strings.ToLower(c.ACL.Verify), "not-empty") {
+		mqttd.ACL.Verify[acl.NotEmpty] = true
+	}
+
+	if strings.Contains(strings.ToLower(c.ACL.Verify), "rsa") {
+		mqttd.ACL.Verify[acl.RSA] = true
 	}
 
 	// ... TLS

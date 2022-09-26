@@ -78,7 +78,7 @@ type AWS struct {
 }
 
 type ACL struct {
-	Verify acl.Verification
+	Verify map[acl.Verification]bool
 }
 
 type fdispatch struct {

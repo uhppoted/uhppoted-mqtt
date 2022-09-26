@@ -47,7 +47,7 @@ type ACL struct {
 	Credentials *credentials.Credentials
 	Region      string
 	Log         *log.Logger
-	Verify      Verification
+	Verify      map[Verification]bool
 }
 
 type Permission struct {
@@ -60,10 +60,6 @@ type Permission struct {
 type Permissions struct {
 	CardNumber  uint32       `json:"card-number"`
 	Permissions []Permission `json:"permissions"`
-}
-
-func (a *ACL) info(tag, msg string) {
-	a.Log.Printf("INFO  %-12s %s", tag, msg)
 }
 
 func (a *ACL) sign(acl []byte) ([]byte, error) {
@@ -114,22 +110,19 @@ func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 		return nil, fmt.Errorf("ACL file missing from tar.gz")
 	}
 
-	signature, ok := files["signature"]
-	switch a.Verify {
-	case None, NotEmpty:
-	default:
-		if !ok {
-			return nil, fmt.Errorf("'signature' file missing from tar.gz")
-		}
-	}
+	// ... verify signature if RSA or default verification
+	signed := false
 
-	a.info(tag, fmt.Sprintf("Extracted ACL from %v: %v bytes, signature: %v bytes", uri, len(tsv), len(signature)))
+	if signature, ok := files["signature"]; !ok {
+		a.warn(tag, "'signature' file missing from tar.gz")
+	} else {
+		a.info(tag, fmt.Sprintf("Extracted ACL from %v: %v bytes, signature: %v bytes", uri, len(tsv), len(signature)))
 
-	switch a.Verify {
-	case None, NotEmpty:
-	default:
 		if err := a.verify(uname, tsv, signature); err != nil {
-			return nil, err
+			a.warn(tag, fmt.Sprintf("%v", err))
+		} else {
+			a.info(tag, fmt.Sprintf("ACL file '%v': verified signature", uri))
+			signed = true
 		}
 	}
 
@@ -138,17 +131,40 @@ func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 		return nil, err
 	}
 
-	switch a.Verify {
-	case NotEmpty:
-		count := 0
-		for _, v := range acl {
-			count += len(v)
+	count := 0
+	for _, v := range acl {
+		count += len(v)
+	}
+
+	// ... verify
+	switch {
+	case a.Verify[None]:
+		// 'k, good to go
+
+	case a.Verify[NotEmpty] && !a.Verify[RSA]:
+		if count == 0 {
+			return nil, fmt.Errorf("ACL file '%v': no records", uri)
 		}
 
-		if count == 0 {
-			return nil, fmt.Errorf("ACL file has no records")
+	case a.Verify[NotEmpty] && a.Verify[RSA]:
+		if count == 0 && !signed {
+			return nil, fmt.Errorf("ACL file '%v': no records", uri)
+		} else if count == 0 && signed {
+			a.warn(tag, fmt.Sprintf("ACL file '%v':signed but contains no records", uri))
+		}
+
+	case a.Verify[RSA]:
+		if !signed {
+			return nil, fmt.Errorf("ACL file '%v': invalid signature", uri)
+		}
+
+	default:
+		if !signed {
+			return nil, fmt.Errorf("ACL file '%v': invalid signature", uri)
 		}
 	}
+
+	a.info(tag, fmt.Sprintf("ACL file '%v': verified", uri))
 
 	return &acl, nil
 }
@@ -303,4 +319,12 @@ func (a *ACL) storeFile(url string, r io.Reader) error {
 	}
 
 	return ioutil.WriteFile(match[1], b, 0660)
+}
+
+func (a *ACL) info(tag, msg string) {
+	a.Log.Printf("INFO  %-12s %s", tag, msg)
+}
+
+func (a *ACL) warn(tag, msg string) {
+	a.Log.Printf("WARN  %-12s %s", tag, msg)
 }
