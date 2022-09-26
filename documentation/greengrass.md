@@ -452,4 +452,4 @@ sudo ufw allow from %s to any port 8883 proto tcp
 
 1. [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
 2. [Stackoverflow:How can I make a topic/action to be allowed only to authorized users?](https://iot.stackexchange.com/questions/5640/how-can-i-make-a-topic-action-to-be-allowed-only-to-authorized-users)
-
+3. [AWS Lambda tar.gz](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/aws-lambda-tar.py)
