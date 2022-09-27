@@ -517,6 +517,15 @@ acl-download-file:
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
 
+acl-download-tsv:
+	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
+                 --message '{ "message": { "request": { \
+                                           "url": "file://../runtime/mqttd/hogwarts.acl", \
+                                           "mime-type": "text/tab-separated-values", \
+                                           "client-id": "QWERTY54", \
+                                           "reply-to": "uhppoted\/reply\/97531", \
+                                           "request-id": "AH173635G3" }}}'
+
 acl-download-invalid-file:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
                  --message '{ "message": { "request": { \

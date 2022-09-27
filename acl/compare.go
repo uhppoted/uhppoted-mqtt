@@ -41,7 +41,10 @@ func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (interface{}, err
 			ACL    *string `json:"acl"`
 			Report *string `json:"report"`
 		} `json:"url"`
-	}{}
+		MimeType string `json:"mime-type"`
+	}{
+		MimeType: "application/tar+gzip",
+	}
 
 	if err := json.Unmarshal(request, &body); err != nil {
 		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
@@ -65,7 +68,7 @@ func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (interface{}, err
 		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", err), fmt.Errorf("Invalid report URL '%v' (%w)", body.URL.Report, err)
 	}
 
-	acl, err := a.fetch("acl:compare", uri.String())
+	acl, err := a.fetch("acl:compare", uri.String(), body.MimeType)
 	if err != nil {
 		return common.MakeError(StatusBadRequest, "Error downloading ACL", err), err
 	}

@@ -12,8 +12,11 @@ import (
 
 func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	body := struct {
-		URL *string `json:"url"`
-	}{}
+		URL      *string `json:"url"`
+		MimeType string  `json:"mime-type"`
+	}{
+		MimeType: "application/tar+gzip",
+	}
 
 	if err := json.Unmarshal(request, &body); err != nil {
 		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
@@ -28,7 +31,7 @@ func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, er
 		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
 	}
 
-	acl, err := a.fetch("acl:download", uri.String())
+	acl, err := a.fetch("acl:download", uri.String(), body.MimeType)
 	if err != nil {
 		return common.MakeError(StatusBadRequest, "Error downloading ACL", err), err
 	}

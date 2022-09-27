@@ -78,7 +78,7 @@ func (a *ACL) verify(uname string, acl, signature []byte) error {
 	return nil
 }
 
-func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
+func (a *ACL) fetch(tag, uri string, mimetype string) (*api.ACL, error) {
 	a.info(tag, fmt.Sprintf("Fetching ACL from %v", uri))
 
 	f := a.fetchHTTP
@@ -95,9 +95,20 @@ func (a *ACL) fetch(tag, uri string) (*api.ACL, error) {
 
 	a.info(tag, fmt.Sprintf("Fetched ACL from %v (%d bytes)", uri, len(b)))
 
-	extract := untar
-	if strings.HasSuffix(uri, ".zip") {
+	var extract func(io.Reader) (map[string][]byte, string, error)
+
+	switch {
+	case strings.HasSuffix(uri, ".zip"): // FIXME: remove - superseded by mime-type
 		extract = unzip
+
+	case mimetype == "application/zip":
+		extract = unzip
+
+	case mimetype == "text/tab-separated-values":
+		extract = unpackTSV
+
+	default:
+		extract = untar
 	}
 
 	files, uname, err := extract(bytes.NewReader(b))

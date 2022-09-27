@@ -4,16 +4,16 @@
 
 - [x] Added ACL.NoVerify to configuration
 - [x] Allow empty files if signed
-| file               | None | NotEmpty | NotEmpty+RSA | RSA | default |
-|--------------------|------|----------|--------------|-----|---------|
-| good               | ✓    | ✓        | ✓            | ✓   | ✓       |
-| invalid-signature  | ✓    | ✓        | ✓            | ✓   | ✓       |
-| blank              | ✓    | ✓        | ✓            | ✓   | ✓       |
-| empty              | ✓    | ✓        | ✓            | ✓   | ✓       |
+  | file               | None | NotEmpty | NotEmpty+RSA | RSA | default |
+  |--------------------|------|----------|--------------|-----|---------|
+  | good               | ✓    | ✓        | ✓            | ✓   | ✓       |
+  | invalid-signature  | ✓    | ✓        | ✓            | ✓   | ✓       |
+  | blank              | ✓    | ✓        | ✓            | ✓   | ✓       |
+  | empty              | ✓    | ✓        | ✓            | ✓   | ✓       |
 
-- [ ] Add support for downloading non-tar.gz files
+- [x] Add support for downloading non-tar.gz files
+
 - [ ] Fix ACL fetch log format
-
 - [ ] Protocol documentation
       - [ ] Preamble
       - [ ] SUMMARY.md

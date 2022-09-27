@@ -12,7 +12,10 @@
 1. Updated go.mod to Go 1.19
 2. Reworked MQTT client connection lockfile to implement 'soft lock'
 3. Added logic to shutdown application on too many MQTT client disconnects within the monitoring interval
-
+4. Added mime-type to `acl:download` and `acl:compare` request messages. Zip files now expect a mime-type of
+   `application/zip`
+5. `acl:download` and `acl:compare` can fetch plain TSV files if the mqtt.acl.verify configuration allows
+   unsigned downloads (i.e. `mqtt.acl.verify = none` or `mqtt.acl.verify = not-empty,RSA`)
 
 ## [v0.8.1] - 2022-08-01
 
