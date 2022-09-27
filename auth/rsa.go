@@ -93,13 +93,13 @@ func NewRSA(keydir string, logger *log.Logger) (*RSA, error) {
 func (r *RSA) Validate(clientID string, request []byte, signature []byte) error {
 	pubkey, ok := r.signingKeys.clientKeys[clientID]
 	if !ok || pubkey == nil {
-		return fmt.Errorf("%s: no RSA public key", clientID)
+		return fmt.Errorf("no RSA public key (%v)", clientID)
 	}
 
 	hash := sha256.Sum256(request)
 	err := rsa.VerifyPKCS1v15(pubkey, crypto.SHA256, hash[:], signature)
 	if err != nil {
-		return fmt.Errorf("%s: invalid RSA signature (%v)", clientID, err)
+		return fmt.Errorf("%v  (%v)", err, clientID)
 	}
 
 	return nil

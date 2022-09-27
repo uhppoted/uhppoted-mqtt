@@ -153,7 +153,6 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		RSA:         mqttd.Encryption.RSA,
 		Credentials: mqttd.AWS.Credentials,
 		Region:      mqttd.AWS.Region,
-		Log:         log,
 		Verify:      mqttd.ACL.Verify,
 	}
 

@@ -41,7 +41,7 @@ func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, er
 	}
 
 	for k, l := range *acl {
-		a.info("acl:download", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
+		infof("acl:download", "%v  Retrieved %v records", k, len(l))
 	}
 
 	rpt, errors := api.PutACL(a.UHPPOTE, *acl, false)
@@ -60,14 +60,14 @@ func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, er
 	}{}
 
 	for k, v := range rpt {
-		a.info("acl:download", fmt.Sprintf("%v  SUMMARY  unchanged:%v  updated:%v  added:%v  deleted:%v  failed:%v  errors:%v",
+		infof("acl:download", "%v  SUMMARY  unchanged:%v  updated:%v  added:%v  deleted:%v  failed:%v  errors:%v",
 			k,
 			len(v.Unchanged),
 			len(v.Updated),
 			len(v.Added),
 			len(v.Deleted),
 			len(v.Failed),
-			len(v.Errors)))
+			len(v.Errors))
 
 		summary[k] = struct {
 			Unchanged int `json:"unchanged"`

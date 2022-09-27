@@ -40,7 +40,7 @@ func (a *ACL) Upload(impl uhppoted.IUHPPOTED, request []byte) (interface{}, erro
 	}
 
 	for k, l := range acl {
-		a.info("acl:upload", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
+		infof("acl:upload", "%v  Retrieved %v records", k, len(l))
 	}
 
 	var w strings.Builder

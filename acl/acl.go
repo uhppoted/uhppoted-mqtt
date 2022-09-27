@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -21,6 +20,7 @@ import (
 	api "github.com/uhppoted/uhppoted-lib/acl"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/auth"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 const (
@@ -46,7 +46,6 @@ type ACL struct {
 	RSA         *auth.RSA
 	Credentials *credentials.Credentials
 	Region      string
-	Log         *log.Logger
 	Verify      map[Verification]bool
 }
 
@@ -79,7 +78,7 @@ func (a *ACL) verify(uname string, acl, signature []byte) error {
 }
 
 func (a *ACL) fetch(tag, uri string, mimetype string) (*api.ACL, error) {
-	a.info(tag, fmt.Sprintf("Fetching ACL from %v", uri))
+	infof(tag, "Fetching ACL from %v", uri)
 
 	f := a.fetchHTTP
 	if strings.HasPrefix(uri, "s3://") {
@@ -93,7 +92,7 @@ func (a *ACL) fetch(tag, uri string, mimetype string) (*api.ACL, error) {
 		return nil, err
 	}
 
-	a.info(tag, fmt.Sprintf("Fetched ACL from %v (%d bytes)", uri, len(b)))
+	infof(tag, "Fetched ACL from %v (%d bytes)", uri, len(b))
 
 	var extract func(io.Reader) (map[string][]byte, string, error)
 
@@ -125,14 +124,14 @@ func (a *ACL) fetch(tag, uri string, mimetype string) (*api.ACL, error) {
 	signed := false
 
 	if signature, ok := files["signature"]; !ok {
-		a.warn(tag, "'signature' file missing from tar.gz")
+		warnf(tag, "'signature' file missing from tar.gz")
 	} else {
-		a.info(tag, fmt.Sprintf("Extracted ACL from %v: %v bytes, signature: %v bytes", uri, len(tsv), len(signature)))
+		infof(tag, "Extracted ACL from %v: %v bytes, signature: %v bytes", uri, len(tsv), len(signature))
 
 		if err := a.verify(uname, tsv, signature); err != nil {
-			a.warn(tag, fmt.Sprintf("%v", err))
+			warnf(tag, "%v", err)
 		} else {
-			a.info(tag, fmt.Sprintf("ACL file '%v': verified signature", uri))
+			infof(tag, "ACL file '%v': verified signature", uri)
 			signed = true
 		}
 	}
@@ -154,28 +153,28 @@ func (a *ACL) fetch(tag, uri string, mimetype string) (*api.ACL, error) {
 
 	case a.Verify[NotEmpty] && !a.Verify[RSA]:
 		if count == 0 {
-			return nil, fmt.Errorf("ACL file '%v': no records", uri)
+			return nil, fmt.Errorf("ACL file %q: no records", uri)
 		}
 
 	case a.Verify[NotEmpty] && a.Verify[RSA]:
 		if count == 0 && !signed {
-			return nil, fmt.Errorf("ACL file '%v': no records", uri)
+			return nil, fmt.Errorf("ACL file %q': no records", uri)
 		} else if count == 0 && signed {
-			a.warn(tag, fmt.Sprintf("ACL file '%v':signed but contains no records", uri))
+			warnf(tag, "ACL file '%v':signed but contains no records", uri)
 		}
 
 	case a.Verify[RSA]:
 		if !signed {
-			return nil, fmt.Errorf("ACL file '%v': invalid signature", uri)
+			return nil, fmt.Errorf("ACL file %q: invalid signature", uri)
 		}
 
 	default:
 		if !signed {
-			return nil, fmt.Errorf("ACL file '%v': invalid signature", uri)
+			return nil, fmt.Errorf("ACL file %q: invalid signature", uri)
 		}
 	}
 
-	a.info(tag, fmt.Sprintf("ACL file '%v': verified", uri))
+	infof(tag, "ACL file %q: verified", uri)
 
 	return &acl, nil
 }
@@ -254,7 +253,7 @@ func (a *ACL) store(tag, uri, filename string, content []byte) error {
 		return err
 	}
 
-	a.info(tag, fmt.Sprintf("tar'd ACL (%v bytes) and signature (%v bytes): %v bytes", len(files["uhppoted.acl"]), len(files["signature"]), b.Len()))
+	infof(tag, "tar'd ACL (%v bytes) and signature (%v bytes): %v bytes", len(files["uhppoted.acl"]), len(files["signature"]), b.Len())
 
 	f := a.storeHTTP
 	if strings.HasPrefix(uri, "s3://") {
@@ -268,7 +267,7 @@ func (a *ACL) store(tag, uri, filename string, content []byte) error {
 		return err
 	}
 
-	a.info(tag, fmt.Sprintf("INFO  Stored ACL to %v", uri))
+	infof(tag, "INFO  Stored ACL to %v", uri)
 
 	return nil
 }
@@ -332,10 +331,10 @@ func (a *ACL) storeFile(url string, r io.Reader) error {
 	return ioutil.WriteFile(match[1], b, 0660)
 }
 
-func (a *ACL) info(tag, msg string) {
-	a.Log.Printf("INFO  %-12s %s", tag, msg)
+func infof(tag, format string, args ...any) {
+	log.Infof(tag, format, args...)
 }
 
-func (a *ACL) warn(tag, msg string) {
-	a.Log.Printf("WARN  %-12s %s", tag, msg)
+func warnf(tag, format string, args ...any) {
+	log.Warnf(tag, format, args...)
 }

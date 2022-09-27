@@ -78,7 +78,7 @@ func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (interface{}, err
 	}
 
 	for k, l := range *acl {
-		a.info("acl:compare", fmt.Sprintf("%v  Retrieved %v records", k, len(l)))
+		infof("acl:compare", "%v  Retrieved %v records", k, len(l))
 	}
 
 	current, errors := api.GetACL(a.UHPPOTE, a.Devices)
@@ -110,7 +110,7 @@ func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (interface{}, err
 	}{}
 
 	for k, v := range diff {
-		a.info("acl:compare", fmt.Sprintf("%v  SUMMARY  unchanged:%v  different:%v  missing:%v  extraneous:%v", k, len(v.Unchanged), len(v.Updated), len(v.Added), len(v.Deleted)))
+		infof("acl:compare", "%v  SUMMARY  unchanged:%v  different:%v  missing:%v  extraneous:%v", k, len(v.Unchanged), len(v.Updated), len(v.Added), len(v.Deleted))
 
 		summary[k] = struct {
 			Unchanged  int `json:"unchanged"`
