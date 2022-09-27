@@ -163,13 +163,23 @@ func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (a
 		Enable:   *body.Enabled,
 	}
 
-	response, err := impl.RecordSpecialEvents(rq)
+	reply, err := impl.RecordSpecialEvents(rq)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not update 'record special events' flag for %d", *body.DeviceID), err), err
 	}
 
-	if response == nil {
+	if reply == nil {
 		return nil, nil
+	}
+
+	response := struct {
+		DeviceID uint32 `json:"device-id"`
+		Enabled  bool   `json:"enabled"`
+		Updated  bool   `json:"updated"`
+	}{
+		DeviceID: uint32(reply.DeviceID),
+		Enabled:  *body.Enabled,
+		Updated:  reply.Updated,
 	}
 
 	return response, nil

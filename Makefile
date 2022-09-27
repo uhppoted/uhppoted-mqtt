@@ -83,9 +83,20 @@ release: update-release build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	env GOOS=linux   GOARCH=arm   GOARM=7 GOWORK=off go build -trimpath -o dist/$(DIST)/arm7    ./...
-	# rm -f /usr/local/var/com.github.uhppoted/muppet.lock
-	# ./bin/uhppoted-mqtt run --console --pid /usr/local/var/com.github.uhppoted/qwerty.pid
+	mqtt publish --topic 'uhppoted/gateway/requests/device/time-profile:set' \
+                 --message '{ "message": { "request": { "request-id":  "$(REQUESTID)", \
+                                                        "client-id":   "$(CLIENTID)", \
+                                                        "reply-to":    "$(REPLYTO)", \
+                                                        "device-id":   $(SERIALNO), \
+                                                        "profile":     { "id": 29, \
+                                                                         "start-date": "2021-01-01", \
+                                                                         "end-date":   "2021-12-31", \
+                                                                         "weekdays":   "Monday,Wednesday,Thursday", \
+                                                                         "segments": [ \
+                                                                            { "start": "08:15", "end": "11:30" }, \
+                                                                            { "start": "14:05", "end": "17:45" }  \
+                                                                         ] } \
+                                                         }}}'
 
 godoc:
 	godoc -http=:80	-index_interval=60s

@@ -16,6 +16,8 @@
    `application/zip`
 5. `acl:download` and `acl:compare` can fetch plain TSV files if the mqtt.acl.verify configuration allows
    unsigned downloads (i.e. `mqtt.acl.verify = none` or `mqtt.acl.verify = not-empty,RSA`)
+6. Fixed response message capitalization for `record-special-events`
+
 
 ## [v0.8.1] - 2022-08-01
 

@@ -2,8 +2,13 @@
 
 ### IN PROGRESS
 
+- [ ] Protocol documentation
+      - [ ] Preamble
+      - [ ] SUMMARY.md
+
 - [x] Added ACL.NoVerify to configuration
 - [x] Allow empty files if signed
+
   | file               | None | NotEmpty | NotEmpty+RSA | RSA | default |
   |--------------------|------|----------|--------------|-----|---------|
   | good               | ✓    | ✓        | ✓            | ✓   | ✓       |
@@ -12,33 +17,8 @@
   | empty              | ✓    | ✓        | ✓            | ✓   | ✓       |
 
 - [x] Add support for downloading non-tar.gz files
-
 - [x] Fix ACL fetch log format
-- [ ] Protocol documentation
-      - [ ] Preamble
-      - [ ] SUMMARY.md
-
-- [ ] `set-time-profiles` is returning incorrect method in response
-- [ ] Ewww - fix record-special-events response
-```
-{
-  "message": {
-    "reply": {
-      "client-id": "QWERTY54",
-      "method": "record-special-events",
-      "nonce": 230,
-      "request-id": "AH173635G3",
-      "response": {
-        "DeviceID": 405419896,
-        "Enable": true,
-        "Updated": true
-      },
-      "server-id": "uhppoted"
-    }
-  },
-  "hmac": "c7767d44fd50c7cda2ee5e1bf1af2d86b8a2367a4a330fda0a84427cc8c1c8ef"
-}
-```
+- [x] Fix record-special-events response
 
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
