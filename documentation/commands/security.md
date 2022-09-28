@@ -202,5 +202,114 @@ Sample request/response:
 
 ### Authorisation
 
+Authorisation restricts the operations which a client has permission. It is appropriate for systems that are accessed
+by a number of users/clients, not all of whom should have full access to the system. 
+
+Authorisation is based on:
+- the `client-id` from the request message
+- user group membership
+- group permissions
+
+1. For authorisation to be effective, the client-id should be authenticated i.e. an authentication method (HOTP and/or RSA)
+should be enabled in _uhppoted.conf_:
+```
+mqtt.security.authentication = HOTP, RSA
+```
+
+2. User group membership is defined in the _`<etc`>/mqtt.permissions.users_ file and specify the groups to which 
+   a user belongs, e.g. for a _mqtt.permissions.users_ file that looks like:
+```
+QWERTY   system, admin, user
+UIOP     user
+```
+
+- QWERTY is a member of the _system_, _admin_ and _user_ groups
+- UIOP is a member of only the _user_ group
+
+3. Permissions for each group are defined in the _`<etc`>/mqtt.permissions.groups_ file and specify the topics
+   a member of the group is allowed to access, e.g.:
+```
+system    *:*
+admin     events:*, event:*, acl:card:*
+user      acl/card:show
+```
+
+grants the following permissions:
+
+- _system_ has unrestricted access to all topics
+- _admin_ can only see events and add/delete/update cards
+- _user_ can only see card permissions
+
+
 ### Encryption
 
+Encrytion is intended to protect message content in transit - it is horrifically complicated, seldom necessary and
+only really intended for systems that use public MQTT brokers.
+
+Encryption is configured in _uhppoted.conf_:
+```
+...
+mqtt.security.rsa.keys = /etc/uhppoted/mqtt/rsa
+mqtt.security.outgoing.encrypt = true
+...
+```
+
+- `mqtt.security.rsa.keys` sets the folder for RSA keys which contains both the encryption and signing keys. 
+   Encryption keys are then located in the _.../encryption_ subfolder (e.g.  `/etc/uhppoted/mqtt/rsa/encryption`).
+   Under the encyption keys subfolder:
+
+   - client public keys are stored in PEM format as _<client-id>.pub_, e.g.:
+```
+   /etc/uhppoted/mqtt/rsa/encryption/QWERTY.pub
+
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFt51kdvOYNUgs8noX5TutPxgg
+....
+....
+70yIjpbXzXEhLRZpPQIDAQAB
+-----END PUBLIC KEY-----
+```
+
+   - the private key used to encrypt outgoing responses is stored in _.../mqttd.key_
+   - the private key used to encrypt outgoing events is stored in _.../events.key_
+
+
+Requests can be encrypted on a message-by-message basis - an encrypted request will include:
+- a `key`
+- a `signature`
+- an encrypted `request`
+
+e.g:
+```
+get-device-encrypted:
+  mqtt publish --topic 'uhppoted/gateway/requests/device:get'
+               --message '{ 
+                             "message": { 
+                                "key": "LRtq7KaKvsCP8VvaRXRsoc2+R5T...WmI3nSQ==",
+                                "signature": "G/3cEtzhZ+5iy.....zyahv8=",
+                                "request": "EJo5lNjfYl....NJUCQ==" 
+                            },
+                             "hmac": "5a0d5ffd....8bba27" 
+                          }'
+```
+
+- the `key` is a base-64 string corresponding to a generated AES-256 key encrypted by the client
+  using its RSA private key. It should be unique for every request (i.e. do not reuse keys)
+- the `signature` is the RSA signature of the request
+- the request is a base-64 string corresponding to the request encrypted under the AES `key` using CBC chaining.
+
+An encrypted response is similar:
+```
+{
+  "message": {
+    "key": "leFH4a2zYIawJrcBtxNNK1D46dlyaAtqV+JuFdI8OeoQrihUVh9/Ul2Qslti7Ow49bQolTVFS6ww3DWYby3qjZHx2sfwGr1yOnWSOXrUVo/bff237iscl+OuSVT24jlDKKtW0Njiq48+3S2DCDJ9h2nW/vl5Q76TtGZXqIQAHpw=",
+    "reply": "SQecW39OR0ILcY4ErW/WdBlwo+J7TNvuGG+KORTRm1ljxkR9LXe60Lx2YJXlQJIRxW8yl//vHIQ+s6tbUedue2lKREPMT6iF5emzHr3BmT4OipdLkp+ogD+RZSDIWKhNSl7V29G6sGxYB5xf4akjDH8ylLVi/KXD/0e07pwygsE0uLifjRWqibZb9m3og7VFO1NCnaSXNeiVZcdK2T5sP/vT7UfgouJvm2goSvTQ6yiF2Mh9xVpTKL799d/jxUl9MHgCSNzIP6lZAdS1rbq9p39UhjGwsFM6WndqKrndrDvKeSAVYAXm+Q6LTCfUrM+b4MYcgPdn4FinE+bnt+m9Enwqchk3OyE1j0e9+s4rnBt53FwNJF+3LqWmKlXCwjju7oLG8bbH6tCGxxGN/Yktgwnz1mLMeDNLkBMoQsTiAZjxzh1QSKTSrhk6WS7dkwTmGJKK14OaNyMsTWx3GHDCzoCQjqWwvLxK54VGJiIMNeNH8Asn8uzxvwRWt6hpSD6U0U3CPNSyTLWwpZPVPc71v/4up/ySvcJLKGIUcs6D3pTa4EgVjO3MNOpB2Bdu/knm"
+  },
+  "hmac": "0b020617d250503647b4bf6e3d395c7f938a673b64967fb9f274fcae677e9693"
+}
+```
+
+- the `key` is a base-64 string corresponding to a generated AES-256 key encrypted by the server using the `mqttd.key` 
+  RSA private key. It is unique for every request.
+- the `signature` is the RSA signature of the reply, using the server signing key
+- the reply is a base-64 string corresponding to the reply encrypted under the AES `key` using CBC chaining.

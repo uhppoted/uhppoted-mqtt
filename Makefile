@@ -610,3 +610,7 @@ acl-compare-http:
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
 
+delete-retained-messages:
+	mqtt publish --topic 'uhppoted/gateway/events' --message ''
+	mqtt publish --topic 'uhppoted/gateway/system' --message ''
+

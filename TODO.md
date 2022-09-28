@@ -3,22 +3,10 @@
 ### IN PROGRESS
 
 - [ ] Protocol documentation
-      - [ ] Preamble
+      - [x] Authorisation
+      - [x] Encryption
+      - [ ] Nonce
       - [ ] SUMMARY.md
-
-- [x] Added ACL.NoVerify to configuration
-- [x] Allow empty files if signed
-
-  | file               | None | NotEmpty | NotEmpty+RSA | RSA | default |
-  |--------------------|------|----------|--------------|-----|---------|
-  | good               | ✓    | ✓        | ✓            | ✓   | ✓       |
-  | invalid-signature  | ✓    | ✓        | ✓            | ✓   | ✓       |
-  | blank              | ✓    | ✓        | ✓            | ✓   | ✓       |
-  | empty              | ✓    | ✓        | ✓            | ✓   | ✓       |
-
-- [x] Add support for downloading non-tar.gz files
-- [x] Fix ACL fetch log format
-- [x] Fix record-special-events response
 
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
