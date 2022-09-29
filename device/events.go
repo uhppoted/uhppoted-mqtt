@@ -155,21 +155,15 @@ func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (a
 	}
 
 	if body.Enabled == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing 'enabled'", nil), fmt.Errorf("Invalid/missing 'enabled'")
+		return common.MakeError(StatusBadRequest, "Invalid/missing 'enabled'", nil), fmt.Errorf("Invalid/missing 'enable'")
 	}
 
-	rq := uhppoted.RecordSpecialEventsRequest{
-		DeviceID: *body.DeviceID,
-		Enable:   *body.Enabled,
-	}
+	deviceID := uint32(*body.DeviceID)
+	enabled := *body.Enabled
 
-	reply, err := impl.RecordSpecialEvents(rq)
+	updated, err := impl.RecordSpecialEvents(deviceID, enabled)
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not update 'record special events' flag for %d", *body.DeviceID), err), err
-	}
-
-	if reply == nil {
-		return nil, nil
 	}
 
 	response := struct {
@@ -177,9 +171,9 @@ func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (a
 		Enabled  bool   `json:"enabled"`
 		Updated  bool   `json:"updated"`
 	}{
-		DeviceID: uint32(reply.DeviceID),
-		Enabled:  *body.Enabled,
-		Updated:  reply.Updated,
+		DeviceID: deviceID,
+		Enabled:  enabled,
+		Updated:  updated,
 	}
 
 	return response, nil
