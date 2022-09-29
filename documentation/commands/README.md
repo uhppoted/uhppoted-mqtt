@@ -1,7 +1,5 @@
 # Command and Control Functions
 
-*STATUS: WORK IN PROGRESS*
-
 This document describes the command and control functions implemented by _uhppoted_mqtt_.
 
 ## Security
@@ -34,6 +32,7 @@ The security can then be increased incrementally as required. The details are de
     - [RSA](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#rsa)
 - [authorisation](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#authorisation)
 - [encryption](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#encryption)
+- [nonce](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#nonce)
 
 ## Command structure
 

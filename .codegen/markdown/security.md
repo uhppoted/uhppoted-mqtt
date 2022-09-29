@@ -313,3 +313,53 @@ An encrypted response is similar:
   RSA private key. It is unique for every request.
 - the `signature` is the RSA signature of the reply, using the server signing key
 - the reply is a base-64 string corresponding to the reply encrypted under the AES `key` using CBC chaining.
+
+### Nonce
+
+The above security enhancements still leave the protocol vulnerable to replay attacks i.e. where a request such as `open-door`
+can be recorded and resent later by an unauthorised client. To mitigate this scenario, `uhppoted-mqtt` optionally mandates
+a `nonce` for every request and response - the `nonce` being a monotonically increasing number that cannot be reused. 
+
+A client request with a `nonce` that is not greater than the `nonce` of the last received request from that client is silently 
+discarded as _invalid_. The `nonce` in a reply is the server `nonce` and is likewise increases monotonically - it has less
+security value than the client `nonce` but can be used as some protection against fake responses.
+
+The `nonce` functionality is enabled or disabled in _uhppoted.conf_:
+```
+...
+mqtt.security.nonce.required = true
+mqtt.security.nonce.server = /var/com.github.uhppoted/mqtt.nonce
+mqtt.security.nonce.clients = /var/com.github.uhppoted/mqtt.nonce.counters
+...
+```
+
+and requires that client authentication is both enabled and required. If enabled, each request must contain a unique
+(and increasing) `nonce` in the message:
+```
+{
+  "message": {
+    "request": {
+      "request-id": "AH173635G3",
+      "client-id": "QWERTY",
+      "reply-to": "uhppoted/reply/97531",
+      "nonce": 271,
+      ...
+    }
+  }
+}
+```
+
+Notes:
+- the server `nonce` value is stored in the _<var>/mqtt.nonce_ file
+```
+mqttd                 376
+```
+
+- the client `nonce` values are stored in the _<var>/mqtt.nonce.counters_ file
+```
+...
+QWERTY                173
+...
+
+```
+

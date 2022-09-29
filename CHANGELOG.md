@@ -5,7 +5,7 @@
 ### Added
 1. HOWTO writeup for integrating with AWS Greengrass.
 2. ARM7 specific `daemonize` implementation to delete the MQTT client lock file on service start.
-3. codegen'd description for MQTT requests/responses.
+3. User guide for MQTT requests/responses and security
 4. Added `mqttd.acl.verify` to configuration
 
 ### Changed
@@ -17,6 +17,7 @@
 5. `acl:download` and `acl:compare` can fetch plain TSV files if the mqtt.acl.verify configuration allows
    unsigned downloads (i.e. `mqtt.acl.verify = none` or `mqtt.acl.verify = not-empty,RSA`)
 6. Fixed response message capitalization for `record-special-events`
+7. Reworked RecordSpecialEvents to not use wrapped requests/responses
 
 
 ## [v0.8.1] - 2022-08-01

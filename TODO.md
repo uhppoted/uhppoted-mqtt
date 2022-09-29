@@ -5,8 +5,8 @@
 - [ ] Protocol documentation
       - [x] Authorisation
       - [x] Encryption
-      - [ ] Nonce
-      - [ ] SUMMARY.md
+      - [x] Nonce
+      - [x] SUMMARY.md
 
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
