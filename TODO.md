@@ -2,7 +2,7 @@
 
 ### IN PROGRESS
 
-- [ ] Protocol documentation
+- [x] Protocol documentation
       - [x] Authorisation
       - [x] Encryption
       - [x] Nonce

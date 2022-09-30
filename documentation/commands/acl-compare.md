@@ -39,6 +39,7 @@ message:
             "reply-to": "<topic>",
             "acl": "URL",
             "report": "URL",
+            "mime-type": "IANA mime-type",
         }
     }
 }
@@ -49,6 +50,7 @@ reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/re
                         configured reply topic) if not provided.
 acl          Source URL for the ACL file
 report       Destination URL for the report file
+mime-type    application/x-gzip for tar.gz files, application/zip for .zip files and text/tab-separated-values for TSV files
 ```
 
 ```
@@ -100,9 +102,11 @@ topic: uhppoted/gateway/requests/acl/acl:compare
       "client-id": "QWERTY",
       "request-id": "AH173635G3",
       "reply-to": "uhppoted/reply/97531",
-    "request": {
-      "acl": "file:///var/uhppoted/ACL.tar.gz",
-      "report": "file:///var/uhppoted/report.tar.gz"
+       "url": {
+         "acl": "file://../runtime/mqttd/QWERTY.tar.gz",
+         "report": "file://../runtime/mqttd/report.tar.gz"
+       },
+       "mime-type": "application/x-gzip"
     }
   }
 }

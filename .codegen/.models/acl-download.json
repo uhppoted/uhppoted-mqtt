@@ -8,6 +8,11 @@
           "field": "url",
           "value": "URL",
           "description": "Source URL for the ACL file"
+        },
+        {
+          "field": "mime-type",
+          "value": "IANA mime-type",
+          "description": "application/x-gzip for tar.gz files, application/zip for .zip files and text/tab-separated-values for TSV files"
         }
       ]
     },

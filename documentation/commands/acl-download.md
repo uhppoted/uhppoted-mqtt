@@ -38,6 +38,7 @@ message:
             "client-id": "<client-id>",
             "reply-to": "<topic>",
             "url": "URL",
+            "mime-type": "IANA mime-type",
         }
     }
 }
@@ -47,6 +48,7 @@ client-id    (required) client ID for authentication and authorisation (if enabl
 reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the
                         configured reply topic) if not provided.
 url          Source URL for the ACL file
+mime-type    application/x-gzip for tar.gz files, application/zip for .zip files and text/tab-separated-values for TSV files
 ```
 
 ```
@@ -100,6 +102,7 @@ topic: uhppoted/gateway/requests/acl/acl:download
       "reply-to": "uhppoted/reply/97531",
     "request": {
       "url": "file:///var/uhppoted/ACL.tar.gz",
+      "mime-type": "application/x-gzip"
     }
   }
 }

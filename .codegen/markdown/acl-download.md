@@ -38,6 +38,7 @@ topic: uhppoted/gateway/requests/{{ .request.topic }}
 {{- template "request-preamble"}}
     "request": {
       "url": "file:///var/uhppoted/ACL.tar.gz",
+      "mime-type": "application/x-gzip"
     }
   }
 }

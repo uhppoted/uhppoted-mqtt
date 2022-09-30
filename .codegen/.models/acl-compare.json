@@ -13,6 +13,11 @@
           "field": "report",
           "value": "URL",
           "description": "Destination URL for the report file"
+        },
+        {
+          "field": "mime-type",
+          "value": "IANA mime-type",
+          "description": "application/x-gzip for tar.gz files, application/zip for .zip files and text/tab-separated-values for TSV files"
         }
       ]
     },

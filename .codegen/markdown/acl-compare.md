@@ -36,9 +36,11 @@ topic: uhppoted/gateway/requests/{{ .request.topic }}
   "message": {
     "request": {
 {{- template "request-preamble"}}
-    "request": {
-      "acl": "file:///var/uhppoted/ACL.tar.gz",
-      "report": "file:///var/uhppoted/report.tar.gz"
+       "url": {
+         "acl": "file://../runtime/mqttd/QWERTY.tar.gz",
+         "report": "file://../runtime/mqttd/report.tar.gz"
+       },
+       "mime-type": "application/x-gzip"
     }
   }
 }
