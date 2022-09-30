@@ -2,18 +2,14 @@
 
 ### IN PROGRESS
 
-- [x] Protocol documentation
-      - [x] Authorisation
-      - [x] Encryption
-      - [x] Nonce
-      - [x] SUMMARY.md
+- [ ] [Investigate possible bug in system monitor](https://github.com/uhppoted/uhppoted-mqtt/issues/5)
 
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
       - https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
 
-- (?) Generate uhppoted.conf if it doesn't exist
+- [ ] (optionally) Generate uhppoted.conf if it doesn't exist
 
 ## TODO
 
