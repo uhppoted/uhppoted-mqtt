@@ -275,7 +275,12 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	// ... monitoring
 
-	healthcheck := monitoring.NewHealthCheck(u, c.HealthCheckIdle, c.HealthCheckIgnore, logger)
+	healthcheck := monitoring.NewHealthCheck(
+		u,
+		c.HealthCheckInterval,
+		c.HealthCheckIdle,
+		c.HealthCheckIgnore,
+		logger)
 
 	mqtt.SetDisconnectsEnabled(c.MQTT.Disconnects.Enabled)
 	mqtt.SetDisconnectsInterval(c.MQTT.Disconnects.Interval)
