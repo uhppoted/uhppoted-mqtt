@@ -10,6 +10,7 @@
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
 
 - [ ] (optionally) Generate uhppoted.conf if it doesn't exist
+- [ ] Remove _false_ `from mqtt.acl.verify`
 
 ## TODO
 
