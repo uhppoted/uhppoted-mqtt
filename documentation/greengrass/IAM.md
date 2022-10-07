@@ -1,7 +1,8 @@
 ## HOWTO: _AWS Greengrass IAM_
 
-This section outlines the steps required to create an IAM user with the necessary permissions. You can tailor it to
-fit your requirements but basically what you're aiming to create are:
+This HOWTO outlines the steps required to create the IAM policies, groups and users with the necessary permissions to setup
+and run a system based on _uhppoted-mqtt_. You can tailor it to fit your requirements but basically what you're aiming to create
+are:
 
 1. An IAM policy with the necessary permissions required to create, configure and run a Greengrass 'core' 
    device with a _Moquette_ MQTT broker.
@@ -17,12 +18,15 @@ In the AWS IAM console, create two policies:
 
 1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the AWS Greengrass 'core' and
    'thing' devices. 
-2. A _uhppoted-greengrass-cli_ policy for the AWS Greengrass CLI
+2. _(optional)_ A _uhppoted-greengrass-cli_ policy for the AWS Greengrass CLI
 
-For this HOWTO, the _uhppoted-greengrass_ policy is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
+The _uhppoted-greengrass_ policy described below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
 
 The _uhppoted-greengrass-cli_ policy is a convenience for this HOWTO and is not required if you don't anticipate needing
-to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. 
+to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. As per the recommendation in the 
+[Greengrass CLI guide](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html), the CLI 
+provides an unnecessary level of access to the system and should not be enabled for systems in production i.e. once you're
+up and running delete the _uhppoted-greengrass-cli_ policy.
 
 #### `uhppoted-greengrass`
 

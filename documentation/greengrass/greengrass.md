@@ -113,9 +113,9 @@ And (optionally) for the AWS Greengrass CLI:
     CLI (optional).
 3. A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI.
 
-This is a convenience and is not required if you don't anticipate needing to use the AWS Greengrass CLI to debug/manage 'core'
-or 'thing' devices - chances are you'll probably need it at some point though, particularly if this is your first time through.
-For more information, see [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html).
+The CLI setup is a convenience and is not required if you don't anticipate needing to use the AWS Greengrass CLI to debug/manage
+'core' or 'thing' devices - chances are you'll probably need it at some point though, particularly if this is your first time
+through. For more information, see [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html).
 
 
 ## AWS Greengrass
