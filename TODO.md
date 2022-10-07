@@ -2,18 +2,16 @@
 
 ### IN PROGRESS
 
-- [ ] [Investigate possible bug in system monitor](https://github.com/uhppoted/uhppoted-mqtt/issues/5)
-
 - [ ] Write up AWS GreenGrass setup
       - [ ] Create separate policy/group/user for Greengrass CLI
-      - https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
 
-- [ ] (optionally) Generate uhppoted.conf if it doesn't exist
 - [ ] Remove _false_ `from mqtt.acl.verify`
 
 ## TODO
 
+- [ ] [UCANs](https://ucan.xyz/)
+- [ ] (optionally) Generate uhppoted.conf if it doesn't exist
 - [ ] Make reconnect time configurable
 - [ ] Relook at encoding reply content - maybe json.RawMessage can preserve the field order
 - [ ] Replace values passed in Context with initialised struct

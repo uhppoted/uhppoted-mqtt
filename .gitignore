@@ -6,4 +6,4 @@ go.work
 go.work.sum
 documentation/docker
 documentation/etc
-documentation/tmp
+documentation/greengrass/tmp
