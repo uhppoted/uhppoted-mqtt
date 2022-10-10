@@ -4,12 +4,12 @@ This HOWTO outlines the steps required to create the IAM policies, groups and us
 and run a system based on _uhppoted-mqtt_. You can tailor it to fit your requirements but basically what you're aiming to create
 are:
 
-1. An IAM policy with the necessary permissions required to create, configure and run a Greengrass 'core' 
+1. An IAM policy with the necessary permissions required to create, configure and run a Greengrass `core` 
    device with a _Moquette_ MQTT broker.
 2. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
 3. An IAM user to use for creating, configuring and running the Greengrass devices. 
 
-For simplicity this HOWTO creates a permanent user which can/should be deleted when no longer required. If you're familiar
+For simplicity this HOWTO creates a permanent user which can and should be deleted when no longer required. If you're familiar
 with creating and using temporary credentials, rather use those.
 
 ### Policies
@@ -52,8 +52,9 @@ up and running, it's a **really good idea** to delete the _uhppoted-greengrass-c
                 "iam:PassRole"
             ],
             "Resource": [
-                "arn:aws:iam::<account-id>:role/GreengrassV2TokenExchangeRole",
-                "arn:aws:iam::<account-id>:policy/GreengrassV2TokenExchangeRoleAccess"
+                "arn:aws:iam::<account-id>:role/UhppotedGreengrassTokenExchangeRole",
+                "arn:aws:iam::<account-id>:policy/UhppotedGreengrassTokenExchangeRoleAccess",
+                "arn:aws:iam::<account-id>:policy/UhppotedGreengrassCoreTokenExchangeRoleAlias"
             ]
         },
         {
@@ -106,11 +107,9 @@ up and running, it's a **really good idea** to delete the _uhppoted-greengrass-c
 #### `uhppoted-greengrass-cli`
 
 1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
-2. Copy the _Account ID_ from AWS Account for later
-3. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
-4. Click on _Create policy_
-5. Open the _JSON_ tab and paste the following policy, replacing the \<account-id\> with the Amazon
-   account ID from step 2:
+2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
+3. Click on _Create policy_
+4. Open the _JSON_ tab and paste the following policy:
 ```
 {
     "Version": "2012-10-17",
@@ -127,20 +126,20 @@ up and running, it's a **really good idea** to delete the _uhppoted-greengrass-c
 }
 ```
 
-6. Click on _Next: Tags_
-7. Click on _Next: Review_
-8. Fill in fields:
+5. Click on _Next: Tags_
+6. Click on _Next: Review_
+7. Fill in fields:
    - `Name`: `uhppoted-greengrass-cli`
    - `Description`: Greengrass policy for the CLI
-9. Click on _Create Policy_
+8. Click on _Create Policy_
 
 
 ### Groups
 
 In the AWS IAM console, create two groups:
 
-1. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass 'core' and
-   'thing' devices. 
+1. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass `core` and
+   `thing` devices. 
 2. A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass CLI (optional).
 
 Steps:
@@ -149,7 +148,7 @@ Steps:
 2. Open the [_User groups_](https://console.aws.amazon.com/iamv2/home#/groups) page
 3. Click on _Create group_
 4. Enter the group name _uhppoted-greengrass_
-5. Tick the _uhppoted-greengrass_ policy created above to attach it to the group
+5. Attach the _uhppoted-greengrass_ policy created above to the group
 6. Click on _Create group_
 
 Optionally, repeat steps 3-6 to create a _uhppoted-greengrass-cli_ group with the _uhppoted-greengrass-cli_ policy attached.
