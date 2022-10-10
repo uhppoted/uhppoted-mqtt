@@ -26,7 +26,7 @@ The _uhppoted-greengrass-cli_ policy is a convenience for this HOWTO and is not 
 to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. As per the recommendation in the 
 [Greengrass CLI guide](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html), the CLI 
 provides an unnecessary level of access to the system and should not be enabled for systems in production i.e. once you're
-up and running delete the _uhppoted-greengrass-cli_ policy.
+up and running, it's a **really good idea** to delete the _uhppoted-greengrass-cli_ policy.
 
 #### `uhppoted-greengrass`
 

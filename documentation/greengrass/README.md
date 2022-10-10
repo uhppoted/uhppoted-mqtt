@@ -40,19 +40,19 @@ This guide is essentially a desperation resource distilled from:
 
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
 
-- an _AWS Greengrass_ _core_ device with the _Auth_, _Moquette_ and _MQTT Bridge_ components
-- an _AWS Greengrass_ _thing_ for _uhppoted-mqtt_
+- an _AWS Greengrass_ `core` device with the _Auth_, _Moquette_ and _MQTT Bridge_ components
+- an _AWS Greengrass_ `thing` device for _uhppoted-mqtt_
 - a daemonized _uhppoted-mqtt_
 
 It should be similar'ish for anything else but YMMV. For the rest of this guide:
 
-- the _core_ device will be named and referred to as _uhppoted-greengrass_. Think of it as the MQTT broker.
-- the _thing_ device will be named and referred to as _uhppoted-thing_. Think of it as _uhppoted-mqtt_ - the controllers
+- the `core` device will be named and referred to as _uhppoted-greengrass_. Think of it as the MQTT broker.
+- the `thing` device will be named and referred to as _uhppoted-thing_. Think of it as _uhppoted-mqtt_ - the controllers
   themselves don't feature except as a source/destination of MQTT messages.
-- both _core_ and _thing_ will be installed on the same machine. This is not a requirement but in the interests of keeping
-  this HOWTO reasonable it does avoid having to change firewall rules and NATs, etc.
+- both `core` and `thing` will be installed on the same machine. This is not a requirement but in the interests of keeping
+  this HOWTO reasonable it does avoid having to configure firewall rules and NATs, etc.
 
-## Host
+## Preparation
 
 The instructions below are for Ubuntu 22.04 LTS - modify as required for other systems.
 
@@ -61,6 +61,10 @@ The instructions below are for Ubuntu 22.04 LTS - modify as required for other s
 sudo apt install openjdk-8-jdk
 sudo apt install golang
 ```
+
+   _Note_: 
+
+   - _Debian's default golang package is quite out of date - install the latest and greatest from [https://go.dev/doc/install](https://go.dev/doc/install)._
 
 2. Create _admin_ user:
 ```
@@ -99,94 +103,47 @@ The basic requirements are:
 
 More detail can be found in [HOWTO:Greengrass IAM](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/IAM.md) for those unfamiliar with IAM or needing more detail, but essentially you want to end up with:
 
-1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the AWS Greengrass 'core' and
-   'thing' devices. The AWS [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
+1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the AWS Greengrass `core` and
+   `thing` devices. The AWS [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
    in the Greengrass devleoper guide is a good starting point.
-2. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass 'core' and
-   'thing' devices. 
-3. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass 'core' and 'thing' devices. 
+2. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass `core` and
+   `thing` devices. 
+3. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass `core` and `thing` devices. 
 
-And (optionally) for the AWS Greengrass CLI:
+And (_optionally_) for the AWS Greengrass CLI:
 
 1. A _uhppoted-greengrass-cli_ policy for the AWS Greengrass CLI. 
 2. A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass
-    CLI (optional).
+    CLI.
 3. A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI.
 
 The CLI setup is a convenience and is not required if you don't anticipate needing to use the AWS Greengrass CLI to debug/manage
-'core' or 'thing' devices - chances are you'll probably need it at some point though, particularly if this is your first time
+`core` or `thing` devices - chances are you'll probably need it at some point though, particularly if this is your first time
 through. For more information, see [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html).
 
 
 ## AWS Greengrass
 
-The initially relevant sections in the AWS Greengrass documentation are:
+The next step is to provision the `core` and `thing` devices on _AWS Greengrass_. There is more detail in [HOWTO:Provisioning AWS Greengrass](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md), but essentially 
+you want to end up with:
 
-- [Tutorial:Getting started](https://docs.aws.amazon.com/greengrass/v2/developerguide/getting-started.html)
-- [Tutorial:Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html)
-- [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html)
+- a `core` device that acts as the MQTT broker for _uhppoted-mqtt_ and forwards messages to/from the AWS Greengrass 
+  message dispatch system.
+- a `thing` device that acts defines the capabilities and permissions for _uhppoted-mqtt_ to act as an AWS Greengrass IoT 
+  element.
 
-1. Follow the [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html) instructions to install the _core_ device on the Ubuntu host
-- use the access key and secret for the _uhppoted-greengrass_ user
+1. The `core` device should be provisioned with the following additional components:
+   - Auth (client device auth)
+   - MQTT 3.1.1 broker
+   - MQTT bridge 
+   - IPDetector
 
-2. Install the following additional components to the _core_ device:
-- Auth (client device auth)
-- MQTT 3.1.1 broker
-- MQTT bridge 
-- IPDetector
+   _References_:
+   -  [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html)
+   - [Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html)
 
-using the instructions from [Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html) instructions steps 1 and 2.
-
-   _Notes_
-   - Use the following policy for the Auth component (it is identical to the one in the AWS tutorial except for the group
-and policy names):
-
+2. The `core` device MQTT bridge should be configured to use the following topic mapping:
 ```
-{
-  "deviceGroups": {
-    "formatVersion": "2021-03-05",
-    "definitions": {
-      "UhppotedIoTGroup": {
-        "selectionRule": "thingName: uhppoted-mqtt*",
-        "policyName": "UhppotedIotPolicy"
-      }
-    },
-    "policies": {
-      "UhppotedIotPolicy": {
-        "AllowConnect": {
-          "statementDescription": "Allow client devices to connect.",
-          "operations": [
-            "mqtt:connect"
-          ],
-          "resources": [
-            "*"
-          ]
-        },
-        "AllowPublish": {
-          "statementDescription": "Allow client devices to publish to all topics.",
-          "operations": [
-            "mqtt:publish"
-          ],
-          "resources": [
-            "*"
-          ]
-        },
-        "AllowSubscribe": {
-          "statementDescription": "Allow client devices to subscribe to all topics.",
-          "operations": [
-            "mqtt:subscribe"
-          ],
-          "resources": [
-            "*"
-          ]
-        }
-      }
-    }
-  }
-}
-```
-
-   - Use the following configuration for the MQTT bridge:
 {
   "mqttTopicMapping": {
     "UhppoteIotMapping": {
@@ -196,6 +153,7 @@ and policy names):
     }
   }
 }
+```
 
 3. Create a 'thing' device for _uhppoted-mqtt_ via the AWS console.
 
