@@ -31,11 +31,10 @@ up and running, it's a **really good idea** to delete the _uhppoted-greengrass-c
 #### `uhppoted-greengrass`
 
 1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
-2. Copy the _Account ID_ from AWS Account for later
-3. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
-4. Click on _Create policy_
-5. Open the _JSON_ tab and paste the following policy, replacing the \<account-id\> with the Amazon
-   account ID from step 2:
+2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
+3. Click on _Create policy_
+4. Open the _JSON_ tab and paste the following policy, replacing the \<account-id\> with the Amazon
+   account ID (it's in the account drop-down at the top right of the page):
 ```
 {
     "Version": "2012-10-17",

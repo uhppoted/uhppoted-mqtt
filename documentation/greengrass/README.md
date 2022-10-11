@@ -35,7 +35,6 @@ This guide is essentially a desperation resource distilled from:
 - [Implementing Local Client Devices with AWS IoT Greengrass](https://aws.amazon.com/blogs/iot/implementing-local-client-devices-with-aws-iot-greengrass)
 - [How to Bridge Mosquitto MQTT Broker to AWS IoT](https://aws.amazon.com/blogs/iot/how-to-bridge-mosquitto-mqtt-broker-to-aws-iot/)
 
-
 ## Outline
 
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
@@ -86,10 +85,14 @@ sudo addgroup --system ggc_group
 5. Create folders:
 ```
 sudo mkdir -p /opt/aws
-sudo mkdir -p /opt/uhppoted
+sudo mkdir -p /opt/aws/certificates
+sudo mkdir -p /etc/uhppoted/mqtt/greengrass
+sudo mkdir -p /var/uhppoted
 
 sudo chown -R admin:admin /opt/aws
 sudo chown -R uhppoted:uhppoted /opt/uhppoted
+sudo chown -R uhppoted:uhppoted /etc/uhppoted
+sudo chown -R uhppoted:uhppoted /var/uhppoted
 ```
 
 ## AWS IAM
