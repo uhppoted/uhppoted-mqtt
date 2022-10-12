@@ -4,13 +4,31 @@ This HOWTO outlines the steps required to create the IAM policies, groups and us
 and run a system based on _uhppoted-mqtt_. You can tailor it to fit your requirements but basically what you're aiming to create
 are:
 
-1. An IAM policy with the necessary permissions required to create, configure and run a Greengrass `core` 
+1. An AWS Greengrass service role with the necessary permissions to provision and manage the Greengrass devices.
+2. An IAM policy with the necessary permissions required to create, configure and run a Greengrass `core` 
    device with a _Moquette_ MQTT broker.
-2. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
-3. An IAM user to use for creating, configuring and running the Greengrass devices. 
+3. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
+4. An IAM user to use for creating, configuring and running the Greengrass devices. 
 
 For simplicity this HOWTO creates a permanent user which can and should be deleted when no longer required. If you're familiar
 with creating and using temporary credentials, rather use those.
+
+### AWS Greengrass Service Role
+
+Ref. [Greengrass service role](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-service-role.html)
+
+_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices.
+
+The service role is in the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the
+very bottom). If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
+
+- Open the _Roles_ section
+- Click on _Create_
+- Choose:
+   - _AWS Service_
+   - _Greengrass_ (under _Use cases for other AWS services_)
+   - Permissions: _AWSGreengrassResourceAccessRolePolicy_
+   - Name: _Greengrass_ServiceRole_
 
 ### Policies
 

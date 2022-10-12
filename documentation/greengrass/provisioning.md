@@ -86,45 +86,34 @@ On successful completeion of the above you should have:
 
 ## Provision a `thing` device for _uhppoted-mqtt_
 
-Based on [Tutorial: Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html).
+Based on [Tutorial: Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html). 
+It's probably easier to just create the `thing` when you configure the `core` device, because that takes care of associating
+the `thing` with the `core`, but in the interests of doing things the difficult way:
 
 In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a new `thing` to represent _uhppoted-mqtt_:
 
-   4.1 Open _Manage/All devices/Things_ and click _Create things_
-   
-   4.2 Choose _Create single thing_
-   
-   4.3 Create a `thing` with 
-       - Name: _uhppoted-mqtt_
-       - Device shadow: _No shadow_
-   
-   4.4 Choose _Auto-generate a new certificate_
-  
-   4.5 Attach the _UhppotedGreengrassThingPolicy_ policy
-  
-   4.6 Create `thing` and download certificate and key files:
-   - Device certificate
-   - Public key file
-   - Private key file
-   - Amazon Root CA certificates
-   
-   4.7. Copy the certificates to the VPS/RaspberryPi/etc e.g.:
+   1. Open _Manage/All devices/Things_ and click _Create things_
+   2. Choose _Create single thing_
+   3. Create a `thing` with 
+      - _name_: `uhppoted-mqtt`
+      - _device shadow_: `No shadow`
+   4. Choose _Auto-generate a new certificate_
+   5. Attach the _UhppotedGreengrassThingPolicy_ policy
+   6. Create `thing` and download certificate and key files:
+      - Device certificate
+      - Public key file
+      - Private key file
+      - Amazon Root CA certificates
+   7. Copy the certificates to the _VPS_ (or _Raspberry Pi_, etc) e.g.:
 ```
-scp AmazonRootCA1.pem          <host>:/opt/aws/certificates/
-scp AmazonRootCA3.pem          <host>:/opt/aws/certificates/
-scp 3e7a...-private.pem.key    <host>:/opt/aws/certificates/
-scp 3e7a...-public.pem.key     <host>:/opt/aws/certificates/
-scp 3e7a...certificate.pem.crt <host>:/opt/aws/certificates/
+scp AmazonRootCA1.pem          <host>:/etc/uhppoted/mqtt/greengrass/
+scp AmazonRootCA3.pem          <host>:/etc/uhppoted/mqtt/greengrass/
+scp 3e7a...-private.pem.key    <host>:/etc/uhppoted/mqtt/greengrass/
+scp 3e7a...-public.pem.key     <host>:/etc/uhppoted/mqtt/greengrass/
+scp 3e7a...certificate.pem.crt <host>:/etc/uhppoted/mqtt/greengrass/
 ```
-
-Create symbolic links to the certificates:
 ```
-sudo chown uhppoted:uhppoted /opt/aws/certificates/*
-cd /etc/uhppoted/mqtt/greengrass
-sudo ln -s /opt/aws/certificates/AmazonRootCA1.pem                       AmazonRootCA.pem
-sudo ln -s /greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem  CA.pem
-sudo ln -s /opt/aws/certificates/3e7a...-private.pem.key                 thing.key
-sudo ln -s /opt/aws/certificates/3e7a...-certificate.pem.crt             thing.cert
+sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/*
 ```
 
 You should now have two `things` in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home):
@@ -137,28 +126,21 @@ The next step is to install the following additional components to the _uhppoted
 - Auth (client device auth)
 - MQTT 3.1.1 broker
 - MQTT bridge 
-- IPDetector
+- ~~IPDetector~~
 
 Based on instructions from [Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html) instructions steps 1 and 2:
 
-   3.1 Open _Manage/Greengrass devices/Core devices_
-
-   3.2 Open _uhppoted-greengrass_ _Client devices_ tab
-   
-   3.3 Choose _Configure Cloud discovery configuration_
-
-   3.4 _Step 1: Select target core devices_:
+   1. Open _Manage/Greengrass devices/Core devices_
+   2. Open _uhppoted-greengrass_ _Client devices_ tab
+   3. Choose _Configure Cloud discovery configuration_
+   4. _Step 1: Select target core devices_:
        - Target type: `Core device`
        - Target name: `uhppoted-greengrass`
-   
-   3.5 _Step 2: Associate client devices_:
+   5. _Step 2: Associate client devices_:
        - Associate _uhppoted-mqtt_ (creating it if it wasn't created above)
-
-   3.6 _Step 3: Configure and deploy Greengrass components_:
-
-   3.5 Tick _Greengrass nucleus_ and leave 'as is'
-
-   3.6 Tick _Client device auth_
+   6. _Step 3: Configure and deploy Greengrass components_:
+   7. Choose _Greengrass nucleus_ and leave '_as is_'
+   8. Choose _Client device auth_
        - Use the policy below (it is identical to the one in the AWS tutorial except for the group and policy names):
 
 ```
@@ -199,6 +181,15 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
           "resources": [
             "*"
           ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "greengrass:Discover"
+            ],
+            "Resource": [
+                "arn:aws:iot:region:account-id:thing/*"
+            ]
         }
       }
     }
@@ -206,9 +197,8 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
 }
 ```
 
-3.7 Tick _MQTT 3.1.1 broker (Moquette)_ and leave 'as is'
-
-3.8 Tick _MQTT Bridge_ and update the configuraiton with the following topic mapping:
+9. Choose _MQTT 3.1.1 broker (Moquette)_ and leave 'as is'
+10. Choose _MQTT Bridge_ and update the configuraiton with the following topic mapping:
 ```
 {
   "mqttTopicMapping": {
@@ -221,28 +211,70 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
 }
 ```
 
-3.9 Tick _IP Detector_ and leave 'as is'
+11. ~~Tick _IP Detector_ and leave 'as is'~~
+12. Review and deploy
 
-3.10 Review and deploy
-
-3.11 Quick and dirty test:
-
-(based on [Test client device communications](https://docs.aws.amazon.com/greengrass/v2/developerguide/test-client-device-communications.html?icmpid=docs_gg_console))
+#### Check basic connectivity and certificate chain
 
 ```
+openssl s_client -connect localhost:8883 -showcerts
+
+openssl s_client \
+        -CAfile /etc/uhppoted/mqtt/greengrass/CA.pem \
+        -cert /etc/uhppoted/mqtt/greengrass/client.cert \
+        -key /etc/uhppoted/mqtt/greengrass/client.key \
+        -connect localhost:8883 
+
+openssl s_client \
+        -CAfile /etc/uhppoted/mqtt/greengrass/CA.pem \
+        -cert /etc/uhppoted/mqtt/greengrass/client.cert \
+        -key /etc/uhppoted/mqtt/greengrass/client.key \
+        -connect localhost:8883 -showcerts
+```
+
+#### ~~Quick and dirty test~~
+
+From [Test client device communications](https://docs.aws.amazon.com/greengrass/v2/developerguide/test-client-device-communications.html?icmpid=docs_gg_console)
+
+```
+cd /opt/aws
 git clone https://github.com/aws/aws-iot-device-sdk-python-v2.git
 python3 -m pip install --user ./aws-iot-device-sdk-python-v2
 cd aws-iot-device-sdk-python-v2/samples
+
+python3 basic_discovery.py --thing_name uhppoted-mqtt \
+  --topic 'uhppoted/events' \
+  --message 'woot!'  \
+  --ca_file CA.pem   \
+  --cert thing.cert  \
+  --key thing.key    \
+  --region us-east-1 \
+  --verbosity Info
 
 python3 basic_discovery.py   \
   --thing_name uhppoted-mqtt \
   --topic 'uhppoted/events'  \
   --message 'woot!'          \
-  --ca_file /opt/aws/certificates/AmazonRootCA.pem \
-  --cert /opt/aws/certificates/device.pem.crt      \
-  --key  /opt/aws/certificates/private.pem.key     \
+  --ca_file /etc/uhppoted/mqtt/greengrass/AmazonRootCA.pem \
+  --cert /etc/uhppoted/mqtt/greengrass/thing.cert \
+  --key  /etc/uhppoted/mqtt/greengrass/thing.key  \
   --region us-east-1 \
   --verbosity Debug
+```
+
+```
+python3 basic_connect.py \
+  --endpoint 127.0.0.1:8883 \
+  --ca_file CA.pem \
+  --cert thing.cert \
+  --key  thing.key
+
+python3 basic_connect.py \
+  --endpoint 127.0.0.1:8883 \
+  --ca_file /etc/uhppoted/mqtt/greengrass/AmazonRootCA.pem \
+  --cert /etc/uhppoted/mqtt/greengrass/thing.cert \
+  --key /etc/uhppoted/mqtt/greengrass/thing.key
+
 ```
 
 Ref. https://docs.aws.amazon.com/greengrass/v2/developerguide/troubleshooting-client-devices.html
@@ -252,15 +284,14 @@ Ref. https://docs.aws.amazon.com/greengrass/v2/developerguide/troubleshooting-cl
 
 ```
 2022-10-11T20:00:12.213Z [WARN] (pool-1-thread-2) com.aws.greengrass.detector.uploader.ConnectivityUpdater: Failed to upload the IP addresses.. {}
-software.amazon.awssdk.services.greengrassv2data.model.UnauthorizedException: Greengrass is not authorized to assume the Service Role associated with this account. (Service: GreengrassV2Data, Status Cod
-e: 401, Request ID: 7ef21c42-cd28-78ac-3fac-caa7bc792a2e, Extended Request ID: null)
+software.amazon.awssdk.services.greengrassv2data.model.UnauthorizedException: Greengrass is not authorized to assume the Service Role associated with this account. (Service: GreengrassV2Data, Status Code: 401, 
+Request ID: 7ef21c42-cd28-78ac-3fac-caa7bc792a2e, Extended Request ID: null)
         at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handleErrorResponse(CombinedResponseHandler.java:123)
         at software.amazon.awssdk.core.internal.http.CombinedResponseHandler.handleResponse(CombinedResponseHandler.java:79)
 ```
 
-Ref. https://repost.aws/questions/QUrO84DbX-QLe8I2fiLKEshg/green-grass-is-not-authorized-to-assume-the-service-role
-
-Ref. https://docs.aws.amazon.com/greengrass/v1/developerguide/security_iam_troubleshoot.html#troubleshoot-assume-service-role
-
-Ref. https://docs.aws.amazon.com/greengrass/v1/developerguide/service-role.html#manage-service-role-console
-
+- [green-grass-is-not-authorized-to-assume-the-service-role](https://repost.aws/questions/QUrO84DbX-QLe8I2fiLKEshg/green-grass-is-not-authorized-to-assume-the-service-role)
+- [troubleshoot-assume-service-role]( https://docs.aws.amazon.com/greengrass/v1/developerguide/security_iam_troubleshoot.html#troubleshoot-assume-service-role)
+- [security_iam_troubleshoot.html#troubleshoot-assume-service-role](https://docs.aws.amazon.com/greengrass/v1/developerguide/service-role.html#manage-service-role-console)
+- [greengrass-service-role](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/blob/main/doc_source/greengrass-service-role.md)
+- [greengrass-discovery-demo-application-is-not-working](https://stackoverflow.com/questions/49610000/greengrass-discovery-demo-application-is-not-working)

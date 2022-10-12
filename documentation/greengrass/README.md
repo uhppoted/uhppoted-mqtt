@@ -40,7 +40,7 @@ This guide is essentially a desperation resource distilled from:
 
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
 
-- an _AWS Greengrass_ `core` device with the _Auth_, _Moquette_ and _MQTT Bridge_ components
+- an _AWS Greengrass_ `core` device with the _Auth_, _Moquette_, _MQTT Bridge_ and _IP Detector_ components
 - an _AWS Greengrass_ `thing` device for _uhppoted-mqtt_
 - a daemonized _uhppoted-mqtt_
 
@@ -86,6 +86,7 @@ sudo addgroup --system ggc_group
 5. Create folders:
 ```
 sudo mkdir -p /opt/aws
+sudo mkdir -p /opt/uhppoted
 sudo mkdir -p /opt/aws/certificates
 sudo mkdir -p /etc/uhppoted/mqtt/greengrass
 sudo mkdir -p /var/uhppoted
@@ -140,7 +141,7 @@ you want to end up with:
    - Auth (client device auth)
    - MQTT 3.1.1 broker
    - MQTT bridge 
-   - IPDetector
+   - ~~IPDetector~~
 
    _References_:
    -  [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html)
@@ -159,13 +160,9 @@ you want to end up with:
 }
 ```
 
-3. Create a 'thing' device for _uhppoted-mqtt_ via the AWS console.
-
-_TODO_
+3. Create a `thing` device for _uhppoted-mqtt_ via the AWS console.
 
 ## _uhppoted-mqtt_
-
-1. uhppoted-mqtt
 
 Installing _uhppoted-mqtt_ is straightforward and described in the [README](https://github.com/uhppoted/uhppoted-mqtt#installation). 
 
@@ -176,7 +173,7 @@ If you're installing it as a service (daemon) the installation will automaticall
 
 The default installation is configured with full security enabled which is unnecessary for an integration with _Greengrass_ and also cumbersome to debug (it can always be reenabled incrementally once the system is up and running).
 
-To run without internal security, edit the _/etc/uhppoted/uhppoted.config_ file:
+To run without internal security, edit the _/etc/uhppoted/uhppoted.conf_ file:
 ```
 ...
 mqtt.security.HMAC.required = false
@@ -187,7 +184,7 @@ mqtt.security.outgoing.encrypt = false
 ...
 ```
 
-2. Certificates
+## Certificates
 
 By default, _Greengrass_ expects MQTT clients to connect with mutual TLS authentication - this is a GOOD thing, leave it like
 that. It does mean however that you need to provide TLS certificates for _uhppoted-mqtt_, which can be done manually or by retrieving them from the Greengrass certificate server. 
@@ -204,29 +201,39 @@ You need the following certificate components (in PEM format):
 - MQTT client certificates
 - MQTT client key
 
-Assuming the certificates are located in the _/greengrass/..._ folder:
+The AWS Root CA certificates and client certificate and key can be downloaded from the _AWS IoT_ console while creating 
+the _uhppoted-mqtt_ `thing` (see [Provision a thing device for uhppoted-mqtt](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md#provision-a-thing-device-for-uhppoted-mqtt)).
 
-1. Install the AWS Root CA certificate located at _/greengrass/v3/rootCA.pem in your system trust store - the instructions
-for Ubuntu can be found [here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
+If you skipped past or just forgot, the provisioning process will have also stashed the certificates in the _/greengrass/v2_ 
+folder so they can be copied from there:
+
+|-------------------------|----------------------------------------------------------------|
+| AWS Root CA certificate | `/greengrass/v2/rootCA.pem`                                    |
+| MQTT broker certificate | `/greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem` |
+| MQTT client certificate | `/greengrass/v2/thingCert.crt`                                 |
+| MQTT client key         | `/greengrass/v2/privKey.key`                                   |
+
+1. Install the AWS Root CA certificate in your system trust store - the instructions for Ubuntu can be found
+   [here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
 ```
 sudo apt-get install -y ca-certificates
-sudo cp /greengrass/v3/rootCA.pem /usr/local/share/ca-certificates
+sudo cp <RootCA.pem> /usr/local/share/ca-certificates
 sudo update-ca-certificates
 ```
 
-2. Copy the MQTT broker certificate from _/greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem_:
+2. Copy the MQTT broker CA certificate from to _/usr/local/etc/uhppoted/mqtt/greengrass_:
 ```
-cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem /usr/local/etc/uhppoted/mqtt/greengrass/broker.pem
-```
-
-3. Copy the MQTT client certificate from _/greengrass/v2/thingCert.crt_:
-```
-cp /greengrass/v2/thingCert.crt /usr/local/etc/uhppoted/mqtt/greengrass/client.cert
+cp <CA.pem> /usr/local/etc/uhppoted/mqtt/greengrass/broker.pem
 ```
 
-4. Copy the MQTT client key from _/greengrass/v2/privKey.key_:
+3. Copy the MQTT client certificate to  _/usr/local/etc/uhppoted/mqtt/greengrass_:
 ```
-cp /greengrass/v2/privKey.key /usr/local/etc/uhppoted/mqtt/greengrass/client.key
+cp <client.cert> /usr/local/etc/uhppoted/mqtt/greengrass/client.cert
+```
+
+4. Copy the MQTT client key to  _/usr/local/etc/uhppoted/mqtt/greengrass_:
+```
+cp <client key> /usr/local/etc/uhppoted/mqtt/greengrass/client.key
 ```
 
 5. Update the _uhppoted.conf_ file:
@@ -239,26 +246,21 @@ mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/
 ...
 ```
 
-### Provisioning certificates from the _AWS Greengrass_ certificate server
+#### TODO: Provisioning certificates from the _AWS Greengrass_ certificate server
 
 _(this assumes you included the _IPDetector_ module in the AWS Greengrass setup)_
 
 tl;dr; The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system.
 
-As above, you need the following certificate components (in PEM format):
-- AWS Root CA certificate
-- MQTT broker certificate
-- MQTT client certificates
-- MQTT client key
+### Firewall
 
--- TODO --
-
-3. Firewall
-
-On Ubuntu you may need to open the firewall for the MQTT port:
+On Ubuntu you may need to open the firewall for the MQTT port, e.g.:
 ```
-sudo ufw allow from %s to any port 8883 proto tcp
+sudo ufw allow from 127.0.0.1 to any port 8883 proto tcp
 ```
+
+(replace 127.0.0.1 as appropriate)
+
 
 ## References
 
