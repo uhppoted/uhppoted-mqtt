@@ -35,6 +35,7 @@ This guide is essentially a desperation resource distilled from:
 - [Implementing Local Client Devices with AWS IoT Greengrass](https://aws.amazon.com/blogs/iot/implementing-local-client-devices-with-aws-iot-greengrass)
 - [How to Bridge Mosquitto MQTT Broker to AWS IoT](https://aws.amazon.com/blogs/iot/how-to-bridge-mosquitto-mqtt-broker-to-aws-iot/)
 
+
 ## Outline
 
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:

@@ -3,8 +3,12 @@
 ### IN PROGRESS
 
 - [ ] Write up AWS GreenGrass setup
-      - [ ] Create separate policy/group/user for Greengrass CLI
+      - [x] Create separate policy/group/user for Greengrass CLI
+      - [ ] `core` and `thing` provisioning
+      - [ ] uhppoted-mqtt installation and configuration
+      - [ ] Discover API/script
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
+      - https://iot.stackexchange.com/questions/6347/connecting-cellular-module-sim7070g-to-aws-mqtt/6350
 
 - [ ] Remove _false_ `from mqtt.acl.verify`
 

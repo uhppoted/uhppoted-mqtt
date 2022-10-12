@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## [Unreleased]
+## [0.8.2](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.2) - 2022-10-14
 
 ### Added
-1. HOWTO writeup for integrating with AWS Greengrass.
+1. HOWTO writeup for integrating with AWS Greengrass (in progress).
 2. ARM7 specific `daemonize` implementation to delete the MQTT client lock file on service start.
 3. User guide for MQTT requests/responses and security
 4. Added `mqttd.acl.verify` to configuration
@@ -21,7 +21,7 @@
 8. Added 'swipe open' and 'swipe close' event reasons to message internationalisation.
 
 
-## [v0.8.1] - 2022-08-01
+## [0.8.1](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.1) - 2022-08-01
 
 ### Changed
 
@@ -34,23 +34,23 @@
 4. Resolved INADDR_ANY to interface IPv4 address for controller listener address health check.
 
 
-## [v0.8.0] - 2022-07-01
+## [0.8.0](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.0) - 2022-07-01
 
 ### Changed
 1. Updated for compatibility with [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) v0.8.0
 
-## [v0.7.3] - 2022-06-01
+## [0.7.3](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.7.3) - 2022-06-01
 
 ### Changed
 1. Updated for compatibility with [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) v0.7.3
 
-### v0.7.2
+### [0.7.2](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.7.2)
 
 1. Migrated to uhppoted-lib `config` command implementation
 2. Reworked `get-events` to return the `first`, `last` and `current` event indices.
 3. Reworked `get-event`  to handle `first`, `last`, `current`, `next` and a valid index.
 
-### v0.7.1
+### [0.7.1](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.7.1)
 
 1. Task list support:
    -  `set-task-list`
