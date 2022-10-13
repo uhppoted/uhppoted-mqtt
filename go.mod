@@ -6,8 +6,8 @@ require (
 	github.com/aws/aws-sdk-go v1.44.114
 	github.com/eclipse/paho.mqtt.golang v1.4.1
 	github.com/uhppoted/uhppote-core v0.8.2-0.20221012170946-d9f90fb812d0
-	github.com/uhppoted/uhppoted-lib v0.8.2-0.20221013163909-e934765e449f
-	golang.org/x/sys v0.0.0-20221010170243-090e33056c14
+	github.com/uhppoted/uhppoted-lib v0.8.2-0.20221013172451-f2427e352048
+	golang.org/x/sys v0.0.0-20221013171732-95e765b1cc43
 )
 
 require (

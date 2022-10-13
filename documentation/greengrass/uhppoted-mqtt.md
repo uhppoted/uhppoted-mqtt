@@ -40,9 +40,9 @@ mqtt.security.outgoing.encrypt = false
 
 Add MQTT to _ufw_:
 ```
-sudo ufw allow from 127.0.0.1 to any port 1883  proto tcp
-sudo ufw allow from 127.0.0.1 to any port 8883  proto tcp
-sudo ufw allow from 127.0.0.1 to any port 60000 proto udp
+hostname -I
+sudo ufw allow from <IP address> to any port 8883  proto tcp
+sudo ufw allow from <IP address> to any port 60000 proto udp
 ```
 
 ### Run in console mode
@@ -56,17 +56,13 @@ Run _uhppoted-mqtt_ in console mode:
 ### TODO
 
 ```
-2022/10/11 20:39:24 START
-2022/10/11 20:39:24 ERROR: open /etc/uhppoted/mqtt/greengrass/CA.pem : no such file or directory
-2022/10/11 20:39:24 ERROR: open /etc/uhppoted/greengrass/thing.key: no such file or directory
-2022/10/11 20:39:24 WARN  open /etc/uhppoted/mqtt/cards: no such file or directory
+...
 2022/10/11 20:39:24 INFO  mqttd        Listening on 155.138.131.33:60001
 2022/10/11 20:39:24 INFO  mqttd        Publishing events to uhppoted/gateway/events
 2022/10/11 20:39:24 INFO  listen       Initialising event listener
 2022/10/11 20:39:24 INFO  listen       Listening
 2022/10/11 20:39:24 [client]   x509: cannot validate certificate for 127.0.0.1 because it doesn't contain any IP SANs
 2022/10/11 20:39:24 [client]   failed to connect to broker, trying next
-
 ```
 
 https://stackoverflow.com/questions/71292261/golang-x509-cannot-validate-certificate

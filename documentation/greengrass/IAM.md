@@ -30,6 +30,9 @@ very bottom). If you do not have a service role, create one in [IAM](https://con
    - Permissions: _AWSGreengrassResourceAccessRolePolicy_
    - Name: _Greengrass_ServiceRole_
 
+- In the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ attach the newly created
+  _Greengrass_ServiceRole_
+
 ### Policies
 
 In the AWS IAM console, create two policies:
@@ -46,13 +49,14 @@ to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. As per 
 provides an unnecessary level of access to the system and should not be enabled for systems in production i.e. once you're
 up and running, it's a **really good idea** to delete the _uhppoted-greengrass-cli_ policy.
 
+
 #### `uhppoted-greengrass`
 
 1. Open the AWS [_IAM_](https://console.aws.amazon.com/iamv2) console
 2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
 3. Click on _Create policy_
-4. Open the _JSON_ tab and paste the following policy, replacing the \<account-id\> with the Amazon
-   account ID (it's in the account drop-down at the top right of the page):
+4. Open the _JSON_ tab and paste the following policy, **replacing the \<account-id\> with the Amazon
+   account ID** (it's in the account drop-down at the top right of the page):
 ```
 {
     "Version": "2012-10-17",
@@ -117,7 +121,7 @@ up and running, it's a **really good idea** to delete the _uhppoted-greengrass-c
 7. Click on _Next: Review_
 8. Fill in fields:
    - `Name`: `uhppoted-greengrass`
-   - `Description`: Greengrass policy for deploying uhppoted-mqtt
+   - `Description`: Greengrass policy for deploying _uhppoted-mqtt_
 9. Click on _Create Policy_
 
 
