@@ -19,8 +19,9 @@ The relevant sections in the _AWS Greengrass_ documentation are:
 
 ## Provision a `core` device
 
-From the [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html) instructions to install the `core` device on the Ubuntu host, 
-and using the _access key_ and _secret_ for the _uhppoted-greengrass_ user:
+Based on the [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html) instructions. 
+
+To install the `core` device on the Ubuntu host using the _access key_ and _secret_ for the _uhppoted-greengrass_ user:
 ```
 sudo su admin
 export AWS_ACCESS_KEY_ID=<uhppoted-greengrass user access key>
@@ -48,22 +49,23 @@ sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
 _Notes_:
 1. You may get a message that looks like:
 ```
-   Encountered error - User: arn:aws:iam::...:user/uhppoted-greengrass is not authorized to perform: iam:GetPolicy on
-   resource: policy arn:aws:iam::aws:policy/UhppotedGreengrassTokenExchangeRoleAccess because no identity-based policy
-   allows...
+   Encountered error - User: arn:aws:iam::...:user/uhppoted-greengrass is not authorized to perform: iam:GetPolicy
+   on resource: policy arn:aws:iam::aws:policy/UhppotedGreengrassTokenExchangeRoleAccess because no identity-based
+   policy allows...
 ```
    Normally that error is encountered because the _UhppotedGreengrassTokenExchangeRoleAccess_ does not exist (at least initially). 
    The _GreengrassInstaller_ will (most probably) automatically create the policy and the message can be treated as  a warning.
 
 2. The next error you will encounter on a fresh install is:
 ```
-   Error while trying to setup Greengrass Nucleus software.amazon.awssdk.services.iam.model.NoSuchEntityException: The role
-   with name UhppotedGreengrassTokenExchangeRole cannot be found. (Service: Iam, Status Code: 404, Request ID: 9fb...
+   Error while trying to setup Greengrass Nucleus software.amazon.awssdk.services.iam.model.NoSuchEntityException:
+   The role with name UhppotedGreengrassTokenExchangeRole cannot be found. (Service: Iam, Status Code: 404, 
+   Request ID: 9fb...
 ```
-   This is mostly because the _Greengrass_ installer expects to find the _UhppotedGreengrassTokenExchangeRole_ but doesn't even
-   though it has (most probably) just created it and whoever wrote the installer didn't do a wait-and-retry.
+   This is mostly because the _Greengrass_ installer expects to find the _UhppotedGreengrassTokenExchangeRole_ but 
+   doesn't even though it has (presumably) just created it and whoever wrote the installer didn't do a wait-and-retry.
 
-   The solution is to ... \<sigh\> just run the installer again i.e.:
+   The solution is to ... _\<sigh\>_ just run the installer again i.e.:
 ```
 sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
   -jar ./GreengrassInstaller/lib/Greengrass.jar \
@@ -79,14 +81,14 @@ sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
 ```
 
 
-On successful completeion of the above you should have:
-- the AWS Greengrass `core` device installed in _/greengrass/v2_ on the VPS
+On successful completion of the above you should have:
+- the _AWS Greengrass_ `core` device installed in _/greengrass/v2_ on the VPS
 - a _uhppoted-greengrass_ `core` device listed in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home) under
   _Manage/Greengrass devices/Core devices_
 
-### Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias
+##### Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias
 
-_(not sure about this)_
+_(-- not sure about this --)_
 
 In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer
 and either:
@@ -94,9 +96,11 @@ and either:
 - in IAM, create an UhppotedGreengrassTokenExchangeRole with the necessary permissions and set the alias to use the newly
   created role.
 
+
 ## Provision a `thing` device for _uhppoted-mqtt_
 
 Based on [Tutorial: Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html). 
+
 It's probably easier to just create the `thing` when you configure the `core` device, because that takes care of associating
 the `thing` with the `core`, but in the interests of doing things the difficult way:
 
@@ -110,9 +114,9 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a ne
    4. Choose _Auto-generate a new certificate_
    5. Attach the _GreengrassV2IoTThingPolicy_ policy
    6. Create `thing` and download certificate and key files:
-      - Device certificate
-      - Public key file
-      - Private key file
+      - device certificate
+      - public key file
+      - private key file
       - Amazon Root CA certificates
    7. Copy the certificates to the _VPS_ (or _Raspberry Pi_, etc) e.g.:
 ```
@@ -124,6 +128,21 @@ scp 3e7a...certificate.pem.crt <host>:/etc/uhppoted/mqtt/greengrass/thing.cert
 ```
 ```
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/*
+```
+
+   8 .Then, since we're not using _IP Detector_ just yet, copy the _Moquette_ broker certificate:
+```
+cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
+sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/*
+
+   9. Update the _uhppoted.conf_ file:
+```
+...
+mqtt.connection.client.ID = uhppoted-mqtt
+mqtt.connection.broker.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
+mqtt.connection.client.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/thing.cert
+mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/thing.key
+...
 ```
 
 You should now have two `things` in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home):
@@ -236,52 +255,4 @@ openssl s_client \
         -key /etc/uhppoted/mqtt/greengrass/client.key \
         -connect localhost:8883 -showcerts
 ```
-
-#### ~~Quick and dirty test~~
-
-From [Test client device communications](https://docs.aws.amazon.com/greengrass/v2/developerguide/test-client-device-communications.html?icmpid=docs_gg_console)
-
-```
-cd /opt/aws
-git clone https://github.com/aws/aws-iot-device-sdk-python-v2.git
-python3 -m pip install --user ./aws-iot-device-sdk-python-v2
-cd aws-iot-device-sdk-python-v2/samples
-
-python3 basic_discovery.py --thing_name uhppoted-mqtt \
-  --topic 'uhppoted/events' \
-  --message 'woot!'  \
-  --ca_file CA.pem   \
-  --cert thing.cert  \
-  --key thing.key    \
-  --region us-east-1 \
-  --verbosity Info
-
-python3 basic_discovery.py   \
-  --thing_name uhppoted-mqtt \
-  --topic 'uhppoted/events'  \
-  --message 'woot!'          \
-  --ca_file /etc/uhppoted/mqtt/greengrass/AmazonRootCA.pem \
-  --cert /etc/uhppoted/mqtt/greengrass/thing.cert \
-  --key  /etc/uhppoted/mqtt/greengrass/thing.key  \
-  --region us-east-1 \
-  --verbosity Debug
-```
-
-```
-python3 basic_connect.py \
-  --endpoint 127.0.0.1:8883 \
-  --ca_file CA.pem \
-  --cert thing.cert \
-  --key  thing.key
-
-python3 basic_connect.py \
-  --endpoint 127.0.0.1:8883 \
-  --ca_file /etc/uhppoted/mqtt/greengrass/AmazonRootCA.pem \
-  --cert /etc/uhppoted/mqtt/greengrass/thing.cert \
-  --key /etc/uhppoted/mqtt/greengrass/thing.key
-
-```
-
-Ref. [Troubleshooting client devices](https://docs.aws.amazon.com/greengrass/v2/developerguide/troubleshooting-client-devices.html)
-
 

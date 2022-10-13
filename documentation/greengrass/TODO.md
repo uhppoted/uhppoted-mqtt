@@ -16,3 +16,54 @@ Request ID: 7ef21c42-cd28-78ac-3fac-caa7bc792a2e, Extended Request ID: null)
 - [security_iam_troubleshoot.html#troubleshoot-assume-service-role](https://docs.aws.amazon.com/greengrass/v1/developerguide/service-role.html#manage-service-role-console)
 - [greengrass-service-role](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/blob/main/doc_source/greengrass-service-role.md)
 - [greengrass-discovery-demo-application-is-not-working](https://stackoverflow.com/questions/49610000/greengrass-discovery-demo-application-is-not-working)
+
+
+
+#### ~~Quick and dirty test~~
+
+From [Test client device communications](https://docs.aws.amazon.com/greengrass/v2/developerguide/test-client-device-communications.html?icmpid=docs_gg_console)
+
+```
+cd /opt/aws
+git clone https://github.com/aws/aws-iot-device-sdk-python-v2.git
+python3 -m pip install --user ./aws-iot-device-sdk-python-v2
+cd aws-iot-device-sdk-python-v2/samples
+
+python3 basic_discovery.py --thing_name uhppoted-mqtt \
+  --topic 'uhppoted/events' \
+  --message 'woot!'  \
+  --ca_file CA.pem   \
+  --cert thing.cert  \
+  --key thing.key    \
+  --region us-east-1 \
+  --verbosity Info
+
+python3 basic_discovery.py   \
+  --thing_name uhppoted-mqtt \
+  --topic 'uhppoted/events'  \
+  --message 'woot!'          \
+  --ca_file /etc/uhppoted/mqtt/greengrass/AmazonRootCA.pem \
+  --cert /etc/uhppoted/mqtt/greengrass/thing.cert \
+  --key  /etc/uhppoted/mqtt/greengrass/thing.key  \
+  --region us-east-1 \
+  --verbosity Debug
+```
+
+```
+python3 basic_connect.py \
+  --endpoint 127.0.0.1:8883 \
+  --ca_file CA.pem \
+  --cert thing.cert \
+  --key  thing.key
+
+python3 basic_connect.py \
+  --endpoint 127.0.0.1:8883 \
+  --ca_file /etc/uhppoted/mqtt/greengrass/AmazonRootCA.pem \
+  --cert /etc/uhppoted/mqtt/greengrass/thing.cert \
+  --key /etc/uhppoted/mqtt/greengrass/thing.key
+
+```
+
+Ref. [Troubleshooting client devices](https://docs.aws.amazon.com/greengrass/v2/developerguide/troubleshooting-client-devices.html)
+
+

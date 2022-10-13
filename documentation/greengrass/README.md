@@ -113,24 +113,25 @@ The basic requirements are:
 3. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
 4. An IAM user to use for creating, configuring and running the Greengrass devices. 
 
-More detail can be found in [HOWTO:Greengrass IAM](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/IAM.md) for those unfamiliar with IAM or needing more detail, but essentially you want to end up with:
+More detail can be found in [HOWTO: Greengrass IAM](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/IAM.md) for those unfamiliar with IAM or needing more detail, but essentially you want to end up with:
 
-1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the AWS Greengrass `core` and
+1. A _Greengrass_ServiceRole_ for the AWS Greengrass service
+2. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the _AWS Greengrass_ `core` and
    `thing` devices. The AWS [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
    in the Greengrass devleoper guide is a good starting point.
-2. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass `core` and
+3. A _uhppoted-greengrass_ group for the users to be assigned the permissions required to provision the AWS Greengrass `core` and
    `thing` devices. 
-3. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass `core` and `thing` devices. 
+4. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass `core` and `thing` devices. 
 
 And (_optionally_) for the AWS Greengrass CLI:
 
 1. A _uhppoted-greengrass-cli_ policy for the AWS Greengrass CLI. 
-2. A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass
+2. A _uhppoted-greengrass-cli_ group for the users to be assigned the permissions required to use the AWS Greengrass
     CLI.
 3. A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI.
 
-The CLI setup is a convenience and is not required if you don't anticipate needing to use the AWS Greengrass CLI to debug/manage
-`core` or `thing` devices - chances are you'll probably need it at some point though, particularly if this is your first time
+The CLI setup is a convenience and is not required if you don't anticipate needing to use the _AWS Greengrass CLI_ to debug/manage
+`core` or `thing` devices. Chances are you'll probably need it at some point though, particularly if this is your first time
 through. For more information, see [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html).
 
 
@@ -173,13 +174,13 @@ you want to end up with:
 
 Installing _uhppoted-mqtt_ is straightforward and described in the [README](https://github.com/uhppoted/uhppoted-mqtt#installation). 
 
-If you're installing it as a service (daemon) the installation will automatically create (or update) the _/etc/uhppotd/uhppoted.conf_ configuration file. If you're installing it as a console application and don't already have a _uhppoted.conf_ file you can generate one by running the following command:
+If you're installing it as a service/daemon (recommended) the installation will automatically create (or update) the _/etc/uhppotd/uhppoted.conf_ configuration file. If you're installing it as a console application and don't already have a _uhppoted.conf_ file you can generate one by running the following command:
 ```
 ./uhppoted-mqtt config > /etc/uhppoted/uhppoted.conf
 ```
 
 The default installation is configured with full security enabled which is unnecessary for an integration with _Greengrass_ and
-also makes debug difficult/impossible. It can always be re-enabled incrementally once the system is up and running..
+also makes debug difficult. It can always be re-enabled incrementally once the system is up and running.
 
 To run without internal security, edit the _/etc/uhppoted/uhppoted.conf_ file:
 ```
@@ -218,49 +219,49 @@ _/greengrass/v2_ folder so they can be copied from there:
 | Certificate             | Location                                                       |
 |-------------------------|----------------------------------------------------------------|
 | AWS Root CA certificate | `/greengrass/v2/rootCA.pem`                                    |
-| MQTT broker certificate | `/greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem` |
+| MQTT broker certificate | `/greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem` |
 | MQTT client certificate | `/greengrass/v2/thingCert.crt`                                 |
 | MQTT client key         | `/greengrass/v2/privKey.key`                                   |
 
 1. (_Optionally_) Install the AWS Root CA certificate in your system trust store. This should not really be necessary 
-    unless OpenSSL complains about not being able to verify the trust chain. The instructions for _Ubuntu_ can be found 
+    unless _OpenSSL_ complains about not being able to verify the trust chain. The instructions for _Ubuntu_ can be found 
     [here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
 ```
 sudo apt-get install -y ca-certificates
-sudo cp /greengrass/v2/rootCA.pem /usr/local/share/ca-certificates
+sudo cp /greengrass/v2/rootCA.pem /usr/local/share/ca-certificates/AmazonRootCA.pem
 sudo update-ca-certificates
 ```
 
 2. Copy the MQTT broker CA certificate from to _/usr/local/etc/uhppoted/mqtt/greengrass_:
 ```
-cp <CA.pem> /usr/local/etc/uhppoted/mqtt/greengrass/broker.pem
+cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
 ```
 
 3. Copy the MQTT client certificate to  _/usr/local/etc/uhppoted/mqtt/greengrass_:
 ```
-cp <client.cert> /usr/local/etc/uhppoted/mqtt/greengrass/client.cert
+cp /greengrass/v2/thingCert.crt /usr/local/etc/uhppoted/mqtt/greengrass/thing.cert
 ```
 
 4. Copy the MQTT client key to  _/usr/local/etc/uhppoted/mqtt/greengrass_:
 ```
-cp <client key> /usr/local/etc/uhppoted/mqtt/greengrass/client.key
+cp /greengrass/v2/privKey.key /usr/local/etc/uhppoted/mqtt/greengrass/thing.key
 ```
 
 5. Update the _uhppoted.conf_ file:
 ```
 ...
 mqtt.connection.client.ID = uhppoted-mqtt
-mqtt.connection.broker.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/broker.cert
-mqtt.connection.client.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/client.cert
-mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/client.key
+mqtt.connection.broker.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
+mqtt.connection.client.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/thing.cert
+mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/thing.key
 ...
 ```
 
-##### Provisioning certificates from the _AWS Greengrass_ certificate server_
+##### Provisioning certificates from the _AWS Greengrass_ certificate server
 
 _(this assumes you included the _IPDetector_ module in the AWS Greengrass setup)_
 
-_tl;dr;_ The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system.
+_tl;dr; The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system._
 
 ### Firewall
 
