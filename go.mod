@@ -3,7 +3,7 @@ module github.com/uhppoted/uhppoted-mqtt
 go 1.19
 
 require (
-	github.com/aws/aws-sdk-go v1.44.115
+	github.com/aws/aws-sdk-go v1.44.116
 	github.com/eclipse/paho.mqtt.golang v1.4.1
 	github.com/uhppoted/uhppote-core v0.8.2
 	github.com/uhppoted/uhppoted-lib v0.8.2
