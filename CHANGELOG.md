@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [Unreleased]
+
+### Changed
+1. Removed the 'false' option for acl.verify (ref. https://github.com/uhppoted/uhppoted/discussions/17)
+
 ## [0.8.2](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.2) - 2022-10-14
 
 ### Added

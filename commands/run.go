@@ -190,11 +190,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		mqttd.AWS.Region = c.AWS.Region
 	}
 
-	// FIXME: temporary - remove
-	if strings.Contains(strings.ToLower(c.ACL.Verify), "false") {
-		mqttd.ACL.Verify[acl.None] = true
-	}
-
 	if strings.Contains(strings.ToLower(c.ACL.Verify), "none") {
 		mqttd.ACL.Verify[acl.None] = true
 	}
