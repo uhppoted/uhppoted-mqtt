@@ -2,6 +2,9 @@
 
 ### IN PROGRESS
 
+- [ ] Figure out missing conf.LockfileRemove for Linux
+- [x] Remove ARM7 specific files after removing softlock
+
 - [ ] Write up AWS GreenGrass setup
       - [x] Create separate policy/group/user for Greengrass CLI
       - [ ] `core` and `thing` provisioning

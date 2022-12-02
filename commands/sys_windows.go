@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+const RemoveLockfile = true
 const RemoveClientLockfile = true
 
 func workdir() string {

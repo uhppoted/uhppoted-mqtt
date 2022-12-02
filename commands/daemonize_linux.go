@@ -1,5 +1,3 @@
-//go:build linux && !arm
-
 package commands
 
 import (
