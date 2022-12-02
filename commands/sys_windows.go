@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 )
 
+const RemoveClientLockfile = true
+
 func workdir() string {
 	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)
 	if err != nil {
