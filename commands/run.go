@@ -74,7 +74,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 	// ... create lockfile
 	pidfile := config.Lockfile{
 		File:   cmd.pidFile,
-		Remove: RemoveLockfile, // FIXME use conf.LockfileRemove when go package server gets updated
+		Remove: conf.LockfileRemove,
 	}
 
 	if pidfile.File == "" {
