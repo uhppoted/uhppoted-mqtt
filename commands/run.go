@@ -304,18 +304,18 @@ func (r *Run) listen(
 
 	clientlock := config.Lockfile{
 		File:   filepath.Join(dir, fmt.Sprintf("%s.lock", mqttd.Connection.ClientID)),
-		Remove: RemoveClientLockfile,
+		Remove: lockfile.RemoveLockfile,
 	}
 
-	if lock, err := lockfile.MakeLockFile(clientlock); err != nil {
+	if kraken, err := lockfile.MakeLockFile(clientlock); err != nil {
 		return err
 	} else {
 		defer func() {
-			lock.Release()
+			kraken.Release()
 		}()
 
 		log.AddFatalHook(func() {
-			lock.Release()
+			kraken.Release()
 		})
 	}
 

@@ -3,11 +3,14 @@
 ## [Unreleased]
 
 ### Added
-1. Provisionally added ARM64 to release builds
+1. Added ARM64 to release build artifacts
 
 ### Changed
 1. Removed the 'false' option for acl.verify (ref. https://github.com/uhppoted/uhppoted/discussions/17)
-2. Replaced MQTT client 'soft-lock' with _flock_ equivalent
+2. Replaced service lockfile implementation with _flock_ equivalent
+3. Replaced MQTT client 'soft-lock' with _flock_ equivalent
+4. Updated _systemd_ unit file to wait on `network-online.target`
+5. Removed _zip_ files from release artifacts (no longer necessary)
 
 ### Removed
 1. Removed ARM7 specific daemonize (only required for _softlock_).
