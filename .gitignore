@@ -7,3 +7,4 @@ go.work.sum
 documentation/docker
 documentation/etc
 documentation/greengrass/tmp
+release-notes.md
