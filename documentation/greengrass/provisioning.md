@@ -56,7 +56,7 @@ _Notes_:
    Normally that error is encountered because the _UhppotedGreengrassTokenExchangeRoleAccess_ does not exist (at least initially). 
    The _GreengrassInstaller_ will (most probably) automatically create the policy and the message can be treated as  a warning.
 
-2. The next error you will encounter on a fresh install is:
+2. The next error you may encounter on a fresh install is:
 ```
    Error while trying to setup Greengrass Nucleus software.amazon.awssdk.services.iam.model.NoSuchEntityException:
    The role with name UhppotedGreengrassTokenExchangeRole cannot be found. (Service: Iam, Status Code: 404, 
@@ -86,15 +86,15 @@ On successful completion of the above you should have:
 - a _uhppoted-greengrass_ `core` device listed in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home) under
   _Manage/Greengrass devices/Core devices_
 
-##### Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias
+##### _Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias_
 
-_(-- not sure about this --)_
+_(-- Leaving this here for reference - no longer seems to be necessary --)_
 
-In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer
+_In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer
 and either:
-- set it to alias the _Greengrass_ServiceRole_
+- set it to alias the Greengrass_ServiceRole
 - in IAM, create an UhppotedGreengrassTokenExchangeRole with the necessary permissions and set the alias to use the newly
-  created role.
+  created role._
 
 
 ## Provision a `thing` device for _uhppoted-mqtt_
@@ -112,7 +112,7 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a ne
       - _name_: `uhppoted-mqtt`
       - _device shadow_: `No shadow`
    4. Choose _Auto-generate a new certificate_
-   5. Attach the _GreengrassV2IoTThingPolicy_ policy
+   5. Attach the _UhppotedGreengrassThingPolicy_ policy
    6. Create `thing` and download certificate and key files:
       - device certificate
       - public key file
@@ -123,26 +123,16 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a ne
 scp AmazonRootCA1.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem
 scp AmazonRootCA3.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA3.pem
 scp 3e7a...-private.pem.key    <host>:/etc/uhppoted/mqtt/greengrass/thing.key
-scp 3e7a...-public.pem.key     <host>:/etc/uhppoted/mqtt/greengrass/thing.pub
 scp 3e7a...certificate.pem.crt <host>:/etc/uhppoted/mqtt/greengrass/thing.cert
 ```
 ```
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/*
 ```
 
-   8 .Then, since we're not using _IP Detector_ just yet, copy the _Moquette_ broker certificate:
+   8. ~~Then, since we're not using _IP Detector_ just yet, copy the _Moquette_ broker certificate:
 ```
-cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
+cp /greengrass/v2/rootCA.pem /etc/uhppoted/mqtt/greengrass/CA.cert
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/*
-
-   9. Update the _uhppoted.conf_ file:
-```
-...
-mqtt.connection.client.ID = uhppoted-mqtt
-mqtt.connection.broker.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
-mqtt.connection.client.certificate = /usr/local/etc/uhppoted/mqtt/greengrass/thing.cert
-mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/thing.key
-...
 ```
 
 You should now have two `things` in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home):
@@ -218,7 +208,7 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
 ```
 
 9. Choose _MQTT 3.1.1 broker (Moquette)_ and leave 'as is'
-10. Choose _MQTT Bridge_ and update the configuraiton with the following topic mapping:
+10. Choose _MQTT Bridge_ and update the configuration with the following topic mapping:
 ```
 {
   "mqttTopicMapping": {
@@ -231,28 +221,44 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
 }
 ```
 
+
 11. ~~Tick _IP Detector_ and leave 'as is'~~
 
-_For the moment, uncheck _IP Detector_ and manually add an endpoint with the IP address of the machine the
-`core` device is running on._
+**For the moment, uncheck _IP Detector_ and manually add an endpoint with the _IP address_ of the machine the
+`core` device is running on.**
+
 
 12. Review and deploy
 
 #### Check basic connectivity and certificate chain
 
+1. Without client authentication:
+
 ```
 openssl s_client -connect localhost:8883 -showcerts
 
-openssl s_client \
-        -CAfile /etc/uhppoted/mqtt/greengrass/CA.pem \
-        -cert /etc/uhppoted/mqtt/greengrass/client.cert \
-        -key /etc/uhppoted/mqtt/greengrass/client.key \
-        -connect localhost:8883 
+openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem \
+                 -cert   /etc/uhppoted/mqtt/greengrass/thing.cert \
+                 -key    /etc/uhppoted/mqtt/greengrass/thing.key \
+                 -connect localhost:8883 -showcerts
+    
+openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/CA.cert \
+                 -cert   /etc/uhppoted/mqtt/greengrass/thing.cert \
+                 -key    /etc/uhppoted/mqtt/greengrass/thing.key \
+                 -connect localhost:8883 -showcerts
+```
 
-openssl s_client \
-        -CAfile /etc/uhppoted/mqtt/greengrass/CA.pem \
-        -cert /etc/uhppoted/mqtt/greengrass/client.cert \
-        -key /etc/uhppoted/mqtt/greengrass/client.key \
-        -connect localhost:8883 -showcerts
+2. Without client authentication:
+
+```
+openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem \
+                 -cert   /etc/uhppoted/mqtt/greengrass/thing.cert \
+                 -key    /etc/uhppoted/mqtt/greengrass/thing.key \
+                 -connect localhost:8883 -showcerts
+    
+openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/CA.cert \
+                 -cert   /etc/uhppoted/mqtt/greengrass/thing.cert \
+                 -key    /etc/uhppoted/mqtt/greengrass/thing.key \
+                 -connect localhost:8883 -showcerts
 ```
 

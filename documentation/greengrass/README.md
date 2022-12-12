@@ -95,6 +95,7 @@ sudo mkdir -p /opt/aws
 sudo mkdir -p /opt/uhppoted
 sudo mkdir -p /opt/aws/certificates
 sudo mkdir -p /etc/uhppoted/mqtt/greengrass
+sudo mkdir -p /etc/uhppoted/mqtt/greengrass/discovery
 sudo mkdir -p /var/uhppoted
 
 sudo chown -R admin:admin /opt/aws
@@ -113,12 +114,12 @@ The basic requirements are:
 3. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
 4. An IAM user to use for creating, configuring and running the Greengrass devices. 
 
-More detail can be found in [HOWTO: Greengrass IAM](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/IAM.md) for those unfamiliar with IAM or needing more detail, but essentially you want to end up with:
+More detail can be found in [HOWTO: Greengrass IAM](IAM.md) for those unfamiliar with IAM or needing more detail, but essentially you want to end up with:
 
 1. A _Greengrass_ServiceRole_ for the AWS Greengrass service
 2. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the _AWS Greengrass_ `core` and
    `thing` devices. The AWS [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
-   in the Greengrass devleoper guide is a good starting point.
+   in the Greengrass developer guide is a good starting point.
 3. A _uhppoted-greengrass_ group for the users to be assigned the permissions required to provision the AWS Greengrass `core` and
    `thing` devices. 
 4. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass `core` and `thing` devices. 
@@ -137,7 +138,7 @@ through. For more information, see [Greengrass CLI](https://docs.aws.amazon.com/
 
 ## AWS Greengrass
 
-The next step is to provision the `core` and `thing` devices on _AWS Greengrass_. There is more detail in [HOWTO:Provisioning AWS Greengrass](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md), but essentially 
+The next step is to provision the `core` and `thing` devices on _AWS Greengrass_. There is more detail in [HOWTO:Provisioning AWS Greengrass](provisioning.md), but essentially 
 you want to end up with:
 
 - a `core` device that acts as the MQTT broker for _uhppoted-mqtt_ and forwards messages to/from the AWS Greengrass 
@@ -172,7 +173,8 @@ you want to end up with:
 
 ## _uhppoted-mqtt_
 
-Installing _uhppoted-mqtt_ is straightforward and described in the [README](https://github.com/uhppoted/uhppoted-mqtt#installation). 
+Installing _uhppoted-mqtt_ is straightforward and described in the [README](https://github.com/uhppoted/uhppoted-mqtt#installation), 
+but a step-by-step guide is [here](uhppoted-mqtt.md).
 
 If you're installing it as a service/daemon (recommended) the installation will automatically create (or update) the _/etc/uhppotd/uhppoted.conf_ configuration file. If you're installing it as a console application and don't already have a _uhppoted.conf_ file you can generate one by running the following command:
 ```
