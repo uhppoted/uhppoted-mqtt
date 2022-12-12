@@ -3,10 +3,8 @@ package commands
 import (
 	"bufio"
 	"bytes"
-	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/hex"
 	"fmt"
 	syslog "log"
 	"os"
@@ -19,6 +17,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-lib/locales"
+	"github.com/uhppoted/uhppoted-lib/lockfile"
 	"github.com/uhppoted/uhppoted-lib/monitoring"
 
 	"github.com/uhppoted/uhppoted-mqtt/acl"
@@ -37,13 +36,7 @@ type Run struct {
 	debug               bool
 	healthCheckInterval time.Duration
 	watchdogInterval    time.Duration
-	softlock            softlock
-}
-
-type softlock struct {
-	enabled  bool
-	interval time.Duration
-	wait     time.Duration
+	lockfile            config.Lockfile
 }
 
 const LOG_TAG = ""
@@ -78,26 +71,27 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 		return fmt.Errorf("Unable to create working directory '%v': %v", cmd.dir, err)
 	}
 
-	pid := fmt.Sprintf("%d\n", os.Getpid())
-
-	_, err := os.Stat(cmd.pidFile)
-	if err == nil {
-		return fmt.Errorf("PID lockfile '%v' already in use", cmd.pidFile)
-	} else if !os.IsNotExist(err) {
-		return fmt.Errorf("Error checking PID lockfile '%v' (%v)", cmd.pidFile, err)
+	// ... create lockfile
+	pidfile := config.Lockfile{
+		File:   cmd.pidFile,
+		Remove: conf.LockfileRemove,
 	}
 
-	if err := os.WriteFile(cmd.pidFile, []byte(pid), 0644); err != nil {
-		return fmt.Errorf("Unable to create PID lockfile: %v", err)
+	if pidfile.File == "" {
+		pidfile.File = filepath.Join(os.TempDir(), fmt.Sprintf("%s.pid", SERVICE))
 	}
 
-	defer func() {
-		os.Remove(cmd.pidFile)
-	}()
+	if lock, err := lockfile.MakeLockFile(pidfile); err != nil {
+		return err
+	} else {
+		defer func() {
+			lock.Release()
+		}()
 
-	log.AddFatalHook(func() {
-		os.Remove(cmd.pidFile)
-	})
+		log.AddFatalHook(func() {
+			lock.Release()
+		})
+	}
 
 	return f(conf)
 }
@@ -108,10 +102,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	cmd.healthCheckInterval = c.HealthCheckInterval
 	cmd.watchdogInterval = c.WatchdogInterval
-
-	cmd.softlock.enabled = c.MQTT.Softlock.Enabled
-	cmd.softlock.interval = c.MQTT.Softlock.Interval
-	cmd.softlock.wait = c.MQTT.Softlock.Wait
 
 	// ... initialise MQTT
 
@@ -190,11 +180,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		mqttd.AWS.Region = c.AWS.Region
 	}
 
-	// FIXME: temporary - remove
-	if strings.Contains(strings.ToLower(c.ACL.Verify), "false") {
-		mqttd.ACL.Verify[acl.None] = true
-	}
-
 	if strings.Contains(strings.ToLower(c.ACL.Verify), "none") {
 		mqttd.ACL.Verify[acl.None] = true
 	}
@@ -208,7 +193,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	}
 
 	// ... TLS
-
 	if strings.HasPrefix(mqttd.Connection.Broker, "tls:") {
 		pem, err := os.ReadFile(c.Connection.BrokerCertificate)
 		if err != nil {
@@ -313,22 +297,29 @@ func (r *Run) listen(
 	interrupt chan os.Signal) error {
 
 	// ... acquire MQTT client lock
-	if lockfile, err := r.lock(mqttd.Connection.ClientID, interrupt); err != nil {
+	dir := os.TempDir()
+	if r.pidFile != "" {
+		dir = filepath.Dir(r.pidFile)
+	}
+
+	clientlock := config.Lockfile{
+		File:   filepath.Join(dir, fmt.Sprintf("%s.lock", mqttd.Connection.ClientID)),
+		Remove: lockfile.RemoveLockfile,
+	}
+
+	if kraken, err := lockfile.MakeLockFile(clientlock); err != nil {
 		return err
-	} else if lockfile == "" {
-		return fmt.Errorf("invalid MQTT client lockfile '%v'", lockfile)
 	} else {
 		defer func() {
-			os.Remove(lockfile)
+			kraken.Release()
 		}()
 
 		log.AddFatalHook(func() {
-			os.Remove(lockfile)
+			kraken.Release()
 		})
 	}
 
 	// ... MQTT
-
 	if err := mqttd.Run(u, devices, authorized, logger); err != nil {
 		return err
 	}
@@ -383,95 +374,4 @@ func authorized(file string) ([]string, error) {
 	}
 
 	return lines, scanner.Err()
-}
-
-// Uses SHA-256 hash of lockfile contents because os.Stat updates the mtime
-// of the lockfile and in any event, mtime has a resolution of 1 minute.
-func (r *Run) lock(clientID string, interrupt chan os.Signal) (string, error) {
-	workdir := filepath.Dir(r.pidFile)
-	lockfile := filepath.Join(workdir, fmt.Sprintf("%s.lock", clientID))
-
-	hash := func(file string) (string, error) {
-		if bytes, err := os.ReadFile(file); err != nil {
-			return "", err
-		} else {
-			sum := sha256.Sum256(bytes)
-
-			return hex.EncodeToString(sum[:]), nil
-		}
-	}
-
-	touch := func() error {
-		pid := fmt.Sprintf("%d", os.Getpid())
-		now := time.Now().Format("2006-01-02 15:04:05")
-		v := fmt.Sprintf("%v\n%v\n", pid, now)
-
-		return os.WriteFile(lockfile, []byte(v), 0644)
-	}
-
-	checksum, err := hash(lockfile)
-
-	switch {
-	case err != nil && !os.IsNotExist(err):
-		return "", err
-
-	case err != nil && os.IsNotExist(err):
-		if err := touch(); err != nil {
-			return "", err
-		}
-
-	case err == nil && !r.softlock.enabled:
-		return "", fmt.Errorf("MQTT client lockfile '%v' already in use", lockfile)
-
-	case err == nil && r.softlock.enabled && checksum == "":
-		return "", fmt.Errorf("invalid MQTT client lockfile checksum")
-
-	case err == nil && r.softlock.enabled && checksum != "":
-		log.Warnf(LOG_TAG, "MQTT client lockfile '%v' exists, delaying for %v", lockfile, r.softlock.wait)
-
-		wait := time.After(r.softlock.wait)
-
-		select {
-		case <-wait:
-
-		case <-interrupt:
-			return "", fmt.Errorf("interrupted")
-		}
-
-		h, err := hash(lockfile)
-		switch {
-		case err != nil && !os.IsNotExist(err):
-			return "", err
-
-		case err != nil && os.IsNotExist(err):
-			if err := touch(); err != nil {
-				return "", err
-			}
-
-		case h != checksum:
-			return "", fmt.Errorf("MQTT client lockfile '%v' in use", lockfile)
-
-		default:
-			log.Warnf(LOG_TAG, "replacing MQTT client lockfile '%v'", lockfile)
-			if err := touch(); err != nil {
-				return "", err
-			}
-		}
-
-	default:
-		return "", fmt.Errorf("failed to acquire MQTT client lock")
-	}
-
-	if r.softlock.enabled {
-		tick := time.Tick(r.softlock.interval)
-		go func() {
-			for {
-				<-tick
-				log.Infof(LOG_TAG, "touching MQTT client lockfile '%v'", lockfile)
-				touch()
-			}
-		}()
-	}
-
-	return lockfile, nil
 }

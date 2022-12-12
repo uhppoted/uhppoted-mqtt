@@ -2,6 +2,9 @@
 
 ### IN PROGRESS
 
+- [ ] Figure out missing conf.LockfileRemove for Linux
+- [x] Remove ARM7 specific files after removing softlock
+
 - [ ] Write up AWS GreenGrass setup
       - [x] Create separate policy/group/user for Greengrass CLI
       - [ ] `core` and `thing` provisioning
@@ -9,6 +12,8 @@
       - [ ] Discover API/script
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
       - https://iot.stackexchange.com/questions/6347/connecting-cellular-module-sim7070g-to-aws-mqtt/6350
+      - [NodeRed/GreenGrass](https://iot.stackexchange.com/questions/2646/deploy-scripts-to-aws-greengrass-without-aws-lambda)
+
 
 - [ ] Remove _false_ `from mqtt.acl.verify`
 
