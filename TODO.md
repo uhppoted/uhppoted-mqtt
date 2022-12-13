@@ -7,13 +7,15 @@
 
 - [ ] Write up AWS GreenGrass setup
       - [x] Added quickstart section to README
-      - [ ] Create _UhppotedGreengrassTokenExchangeRoleAccess_ policy
-      - [ ] Discover API/script
+      - [x] Move CLI stuff to a seperate HOWTO
       - [ ] Fix all document links so that they are relative
-      - [ ] Move CLI stuff to a seperate HOWTO
+      - (?) Create _UhppotedGreengrassTokenExchangeRoleAccess_ policy
+      - [ ] Discover API/script
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
       - https://iot.stackexchange.com/questions/6347/connecting-cellular-module-sim7070g-to-aws-mqtt/6350
       - [NodeRed/GreenGrass](https://iot.stackexchange.com/questions/2646/deploy-scripts-to-aws-greengrass-without-aws-lambda)
+
+- [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 
 ## TODO
 

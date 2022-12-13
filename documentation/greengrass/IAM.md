@@ -21,35 +21,23 @@ _Greengrass_ requires a service role to for provisioning and managing AWS IoT de
 [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the very bottom). 
 
 If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
-- Open the _Roles_ section
-- Click on _Create_
-- Choose:
-   - _AWS Service_
-   - _Greengrass_ (under _Use cases for other AWS services_)
-   - Permissions: _AWSGreengrassResourceAccessRolePolicy_
-   - Name: _Greengrass_ServiceRole_
+   - Open the _Roles_ section
+   - Click on _Create_
+   - Choose:
+      - _AWS Service_
+      - _Greengrass_ (under _Use cases for other AWS services_)
+      - Permissions: _AWSGreengrassResourceAccessRolePolicy_
+      - Name: _Greengrass_ServiceRole_
 
-- In the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ attach the newly created
-  _Greengrass_ServiceRole_
+   - In the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ attach the newly created
+     _Greengrass_ServiceRole_
+
 
 ### Policies
 
-In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create two policies:
-
-1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the AWS Greengrass 'core' and
-   'thing' devices. 
-2. An _(optional) _uhppoted-greengrass-cli_ policy for the _AWS Greengrass CLI_
-
-The _uhppoted-greengrass_ policy described below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
-
-The _uhppoted-greengrass-cli_ policy is a convenience for this HOWTO and is not required if you don't anticipate needing
-to use the AWS Greengrass CLI to debug/manage 'core' or 'thing' devices. As per the recommendation in the 
-[Greengrass CLI guide](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html), the CLI 
-provides an unnecessary level of access to the system and should not be enabled for systems in production i.e. once you're
-up and running, it is a **really good idea** to delete the _uhppoted-greengrass-cli_ policy.
-
-
-#### `uhppoted-greengrass`
+In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create a _uhppoted-greengrass_ policy for 
+provisioning (a.k.a. installing and configuring) the AWS Greengrass 'core' and 'thing' devices. The _uhppoted-greengrass_ 
+policy below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
 
 1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
 2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
@@ -117,7 +105,7 @@ up and running, it is a **really good idea** to delete the _uhppoted-greengrass-
 }
 ```
 
-_NOTE: the resource ARNs in the above policy are permissive for the puposes of this guide. You probably want to restrict
+_NOTE: the resource ARNs in the above policy are permissive for the purposes of this guide. You probably want to restrict
 them to a smaller set of resources. The Policy Editor is your friend._
 
 6. Click on _Next: Tags_
@@ -128,45 +116,10 @@ them to a smaller set of resources. The Policy Editor is your friend._
 9. Click on _Create Policy_
 
 
-#### `uhppoted-greengrass-cli`
-
-1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
-2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
-3. Click on _Create policy_
-4. Open the _JSON_ tab and paste the following policy:
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "greengrass:List*",
-                "greengrass:Get*"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-```
-
-5. Click on _Next: Tags_
-6. Click on _Next: Review_
-7. Fill in name and description fields:
-   - `Name`: `uhppoted-greengrass-cli`
-   - `Description`: Greengrass policy for the CLI
-8. Click on _Create Policy_
-
-
 ### Groups
 
-In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create two groups:
-
-1. A _uhppoted-greengrass_ group for the users to be given the permissions required to provision the AWS Greengrass `core` and
-   `thing` devices. 
-2. A _uhppoted-greengrass-cli_ group for the users to be given the permissions required to use the AWS Greengrass CLI (optional).
-
-Steps:
+In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create a _uhppoted-greengrass_ group for the users to
+be given the permissions required to provision the AWS Greengrass `core` and `thing` devices:
 
 1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
 2. Open the [_User groups_](https://console.aws.amazon.com/iamv2/home#/groups) page
@@ -175,19 +128,13 @@ Steps:
 5. Attach the _uhppoted-greengrass_ policy created above to the group
 6. Click on _Create group_
 
-Optionally, repeat steps 3-6 to create a _uhppoted-greengrass-cli_ group with the _uhppoted-greengrass-cli_ policy attached.
-
 
 ### Users
 
 _(skip this section if you're using temporary credentials)_
 
-In the AWS IAM console, create two users:
-
-1. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass 'core' and 'thing' devices. 
-2. A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI (optional).
-
-Steps:
+In the AWS IAM console, create a _uhppoted-greengrass_ user for provisioning the AWS Greengrass 'core' and 'thing'
+devices:
 
 1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
 2. Open the [_Users_](https://console.aws.amazon.com/iamv2/home#/users) page
@@ -201,7 +148,4 @@ Steps:
 10. Click _Create user_
 11. Copy the access key and secret key for later use
 12. Click _Close_
-
-Optionally, repeat steps 3-12 to create a _uhppoted-greengrass-cli_ user in the _uhppoted-greengrass-cli_ group.
-
 

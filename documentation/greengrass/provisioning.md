@@ -54,7 +54,7 @@ _Notes_:
    policy allows...
 ```
    Normally that error is encountered because the _UhppotedGreengrassTokenExchangeRoleAccess_ does not exist (at least initially). 
-   The _GreengrassInstaller_ will (most probably) automatically create the policy and the message can be treated as  a warning.
+   The _Greengrass Installer_ will (most probably) automatically create the policy and the message can be treated as  a warning.
 
 2. The next error you may encounter on a fresh install is:
 ```
@@ -119,8 +119,8 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a ne
       - Amazon Root CA certificates
    7. Copy the certificates to the _VPS_ (or _Raspberry Pi_, etc) e.g.:
 ```
-scp AmazonRootCA1.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem
-scp AmazonRootCA3.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA3.pem
+scp AmazonRootCA1.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA1.cert
+scp AmazonRootCA3.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA3.cert
 scp 3e7a...-private.pem.key    <host>:/etc/uhppoted/mqtt/greengrass/thing.key
 scp 3e7a...certificate.pem.crt <host>:/etc/uhppoted/mqtt/greengrass/thing.cert
 ```
@@ -218,9 +218,7 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
 11. ~~Tick _IP Detector_ and leave 'as is'~~
 
 **For the moment, uncheck _IP Detector_ and manually add an endpoint with the _IP address_ of the machine the
-`core` device is running on.**
-
-Then, since we're not using _IP Detector_ just yet, copy the _Moquette_ broker certificate:
+`core` device is running on. Then, since we're not using _IP Detector_ just yet, copy the _Moquette_ broker certificate:**
 ```
 sudo cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem /etc/uhppoted/mqtt/greengrass/CA.cert
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/CA.cert
@@ -233,20 +231,20 @@ sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/CA.cert
 
 #### Check basic connectivity and certificate chain
 
-- without client authentication:
+- Without client authentication:
 ```
 openssl s_client -connect localhost:8883 -showcerts
 ```
 
-- with client authentication, using the Amazon Root CA certificate:
+- With client authentication, using the Amazon Root CA certificate:
 ```
-openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem \
+openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.cert \
                  -cert   /etc/uhppoted/mqtt/greengrass/thing.cert \
                  -key    /etc/uhppoted/mqtt/greengrass/thing.key \
                  -connect localhost:8883 -showcerts
 ```
 
-- with client authentication using the local broker CA certificate:
+- With client authentication using the local broker CA certificate:
 ```
 openssl s_client -CAfile /etc/uhppoted/mqtt/greengrass/CA.cert \
                  -cert   /etc/uhppoted/mqtt/greengrass/thing.cert \

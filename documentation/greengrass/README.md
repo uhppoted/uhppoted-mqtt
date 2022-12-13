@@ -44,16 +44,19 @@ This guide is essentially a desperation resource distilled from:
 ## Quickstart
 
 1. Work through the [Preparation](#preparation) section below
-2. Work through the [IAM](IAM.md) HOWTO to setup the AWS policies, groups and users
-3. Work through the [Provisioning](provisioning.md) HOWTO to setup the AWS IoT core devices
-4. Work through the [uhpppoted-mqtt](uhppoted-mqtt.md) HOWTO to setup and configure _uhppoted-mqtt_
-5. Open the [AWS IoT Core test client](console.aws.amazon.com/iot/home/test) and subscribe to _#_
+2. Work through the [IAM](IAM.md) _HOWTO_ to setup the AWS policies, groups and users
+3. Work through the [Provisioning](provisioning.md) _HOWTO_ to setup the AWS IoT core devices
+4. Work through the [uhpppoted-mqtt](uhppoted-mqtt.md) _HOWTO_ to setup and configure _uhppoted-mqtt_
+5. Open the [AWS IoT Core test client](https://console.aws.amazon.com/iot/home/test) and subscribe to `#`
+6. Voilá!
+
+The write-up below adds a bit more detail about the process.
 
 ## Outline
 
 For this guide, the target system will comprise a clean Ubuntu 22.04 LTS VPS with:
 
-- an _AWS Greengrass_ `core` device with the _Auth_, _Moquette_, _MQTT Bridge_ and _IP Detector_ components
+- an _AWS Greengrass_ `core` device with the _Auth_, _Moquette_, _MQTT Bridge_ ~~and _IP Detector_~~ components
 - an _AWS Greengrass_ `thing` device for _uhppoted-mqtt_
 - a daemonized _uhppoted-mqtt_
 
@@ -63,7 +66,7 @@ It should be similar'ish for anything else but YMMV. For the rest of this guide:
 - the `thing` device will be named and referred to as _uhppoted-thing_. Think of it as _uhppoted-mqtt_ - the controllers
   themselves don't feature except as a source/destination of MQTT messages.
 - both `core` and `thing` will be installed on the same machine. This is not a requirement but in the interests of keeping
-  this HOWTO reasonable it does avoid having to configure firewall rules and NATs, etc.
+  this _HOWTO_ reasonable it does avoid having to configure firewall rules and NATs, etc.
 
 ## Preparation
 
@@ -102,7 +105,6 @@ sudo mkdir -p /opt/aws
 sudo mkdir -p /opt/uhppoted
 sudo mkdir -p /opt/aws/certificates
 sudo mkdir -p /etc/uhppoted/mqtt/greengrass
-sudo mkdir -p /etc/uhppoted/mqtt/greengrass/discovery
 sudo mkdir -p /var/uhppoted
 
 sudo chown -R admin:admin /opt/aws
@@ -114,8 +116,8 @@ sudo chown -R uhppoted:uhppoted /var/uhppoted
 5. Update firewall rules to allow local connections to the MQTT broker (TCP, port 8883) and any UHPPOTE controllers (UDP, port 6000):
 ```
 hostname -I
-sudo ufw allow from \<host-ip-address\> to any port 8883  proto tcp
-sudo ufw allow from \<host-ip-address\> to any port 60000 proto udp
+sudo ufw allow from <host-ip-address> to any port 8883  proto tcp
+sudo ufw allow from <host-ip-address> to any port 60000 proto udp
 ```
 
 ## AWS IAM
@@ -137,17 +139,6 @@ More detail can be found in [HOWTO: Greengrass IAM](IAM.md) for those unfamiliar
 3. A _uhppoted-greengrass_ group for the users to be assigned the permissions required to provision the AWS Greengrass `core` and
    `thing` devices. 
 4. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass `core` and `thing` devices. 
-
-And (_optionally_) for the AWS Greengrass CLI:
-
-1. A _uhppoted-greengrass-cli_ policy for the AWS Greengrass CLI. 
-2. A _uhppoted-greengrass-cli_ group for the users to be assigned the permissions required to use the AWS Greengrass
-    CLI.
-3. A _uhppoted-greengrass-cli_ user for the AWS Greengrass CLI.
-
-The CLI setup is a convenience and is not required if you don't anticipate needing to use the _AWS Greengrass CLI_ to debug/manage
-`core` or `thing` devices. Chances are you'll probably need it at some point though, particularly if this is your first time
-through. For more information, see [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-cli-component.html).
 
 
 ## AWS Greengrass
@@ -227,29 +218,29 @@ You need the following certificate components (in PEM format):
 - MQTT client certificates
 - MQTT client key
 
-The AWS Root CA certificates and client certificate and key can be downloaded from the _AWS IoT_ console while creating 
+1. The AWS Root CA certificates and client certificate and key can be downloaded from the _AWS IoT_ console while creating 
 the _uhppoted-mqtt_ `thing` (see [Provision a thing device for uhppoted-mqtt](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md#provision-a-thing-device-for-uhppoted-mqtt)). Copy the certificates
 and key to:
 
-| File                       | Folder                                          |
-|----------------------------|-------------------------------------------------|
-| AmazonRootCA1.pem          | /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem |
-| AmazonRootCA3.pem          | /etc/uhppoted/mqtt/greengrass/AmazonRootCA3.pem |
-| 3e7a...-private.pem.key    | /etc/uhppoted/mqtt/greengrass/thing.key         |
-| 3e7a...certificate.pem.crt | /etc/uhppoted/mqtt/greengrass/thing.cert        |
+| File                       | Folder                                           |
+|----------------------------|--------------------------------------------------|
+| AmazonRootCA1.pem          | /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.cert |
+| AmazonRootCA3.pem          | /etc/uhppoted/mqtt/greengrass/AmazonRootCA3.cert |
+| 3e7a...-private.pem.key    | /etc/uhppoted/mqtt/greengrass/thing.key          |
+| 3e7a...certificate.pem.crt | /etc/uhppoted/mqtt/greengrass/thing.cert         |
 
 
-1. (_Optionally_) Install the AWS Root CA certificate in your system trust store. This should not really be necessary 
-    unless _OpenSSL_ complains about not being able to verify the trust chain. The instructions for _Ubuntu_ can be found 
-    [here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
+(_Optionally_) Install the AWS Root CA certificate in your system trust store. This should not really be necessary 
+unless _OpenSSL_ complains about not being able to verify the trust chain. The instructions for _Ubuntu_ can be found 
+[here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
 ```
 sudo apt-get install -y ca-certificates
-sudo cp /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem /usr/local/share/ca-certificates/AmazonRootCA1.pem
-sudo cp /etc/uhppoted/mqtt/greengrass/AmazonRootCA3.pem /usr/local/share/ca-certificates/AmazonRootCA3.pem
+sudo cp /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.cert /usr/local/share/ca-certificates/AmazonRootCA1.cert
+sudo cp /etc/uhppoted/mqtt/greengrass/AmazonRootCA3.cert /usr/local/share/ca-certificates/AmazonRootCA3.cert
 sudo update-ca-certificates
 ```
 
-2. Copy the MQTT broker CA certificate from to _/usr/local/etc/uhppoted/mqtt/greengrass_:
+2. Copy the MQTT broker CA certificate from _/usr/local/etc/uhppoted/mqtt/greengrass_:
 ```
 cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
 ```
@@ -270,13 +261,6 @@ _(this assumes you included the _IPDetector_ module in the AWS Greengrass setup)
 
 _tl;dr; The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system._
 
-### Firewall
-
-On Ubuntu you may need to open the firewall for the MQTT port, e.g.:
-```
-hostname -I
-sudo ufw allow from <hostname> to any port 8883 proto tcp
-```
 
 ## References
 
@@ -284,3 +268,4 @@ sudo ufw allow from <hostname> to any port 8883 proto tcp
 2. [Stackoverflow:How can I make a topic/action to be allowed only to authorized users?](https://iot.stackexchange.com/questions/5640/how-can-i-make-a-topic-action-to-be-allowed-only-to-authorized-users)
 3. [AWS Lambda tar.gz](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/aws-lambda-tar.py)
 4. [Add docs about manual connection of client devices to GG Core without cloud discovery](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20)
+
