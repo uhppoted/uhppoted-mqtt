@@ -2,40 +2,18 @@
 
 ### IN PROGRESS
 
-- [ ] Greengrass + Paho:
-```
-x509: certificate signed by unknown authority 
-```
-      - (?) maybe need a certificate chain in CA.cert
-      - (?) or a certificate pool
-      - https://groups.google.com/g/golang-nuts/c/v5ShM8R7Tdc
-```
-You can use your own set of root certs with a tls.Config. Setup is
-something like:
-
-* x509.NewCertPool to create a new cert pool
-* AppendCertsFromPEM to add your root certs to the pool
-* Create a tls.Config and set RootCAs to your pool
-* Call Config's BuildNameToCertificate
-* Use the Config in your http.Transport
-```
-      - https://github.com/google/go-github/issues/1049
-      - https://stackoverflow.com/questions/62828165/got-x-509-certificate-signed-by-unknown-authority-when-the-server-tried-to-sen
-      - https://medium.com/the-go-journey/x509-certificate-signed-by-unknown-authority-running-a-go-app-inside-a-docker-container-a12869337eb
-
-
 - [x] Figure out missing conf.LockfileRemove for Linux
 - [x] Remove ARM7 specific files after removing softlock
 
 - [ ] Write up AWS GreenGrass setup
-      - [ ] Fix all document links so that they are relative
+      - [x] Added quickstart section to README
+      - [ ] Create _UhppotedGreengrassTokenExchangeRoleAccess_ policy
       - [ ] Discover API/script
+      - [ ] Fix all document links so that they are relative
+      - [ ] Move CLI stuff to a seperate HOWTO
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
       - https://iot.stackexchange.com/questions/6347/connecting-cellular-module-sim7070g-to-aws-mqtt/6350
       - [NodeRed/GreenGrass](https://iot.stackexchange.com/questions/2646/deploy-scripts-to-aws-greengrass-without-aws-lambda)
-
-
-- [x] Remove _false_ `from mqtt.acl.verify`
 
 ## TODO
 

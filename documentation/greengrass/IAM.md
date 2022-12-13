@@ -17,11 +17,10 @@ with creating and using temporary credentials, rather use those.
 
 _Ref._ [Greengrass service role](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-service-role.html)
 
-_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices.
+_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices. The service role is in the
+[_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the very bottom). 
 
-The service role is in the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the
-very bottom). If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
-
+If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
 - Open the _Roles_ section
 - Click on _Create_
 - Choose:

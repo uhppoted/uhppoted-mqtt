@@ -41,6 +41,13 @@ This guide is essentially a desperation resource distilled from:
 - [Implementing Local Client Devices with AWS IoT Greengrass](https://aws.amazon.com/blogs/iot/implementing-local-client-devices-with-aws-iot-greengrass)
 - [How to Bridge Mosquitto MQTT Broker to AWS IoT](https://aws.amazon.com/blogs/iot/how-to-bridge-mosquitto-mqtt-broker-to-aws-iot/)
 
+## Quickstart
+
+1. Work through the [Preparation](#preparation) section below
+2. Work through the [IAM](IAM.md) HOWTO to setup the AWS policies, groups and users
+3. Work through the [Provisioning](provisioning.md) HOWTO to setup the AWS IoT core devices
+4. Work through the [uhpppoted-mqtt](uhppoted-mqtt.md) HOWTO to setup and configure _uhppoted-mqtt_
+5. Open the [AWS IoT Core test client](console.aws.amazon.com/iot/home/test) and subscribe to _#_
 
 ## Outline
 
@@ -102,6 +109,13 @@ sudo chown -R admin:admin /opt/aws
 sudo chown -R uhppoted:uhppoted /opt/uhppoted
 sudo chown -R uhppoted:uhppoted /etc/uhppoted
 sudo chown -R uhppoted:uhppoted /var/uhppoted
+```
+
+5. Update firewall rules to allow local connections to the MQTT broker (TCP, port 8883) and any UHPPOTE controllers (UDP, port 6000):
+```
+hostname -I
+sudo ufw allow from \<host-ip-address\> to any port 8883  proto tcp
+sudo ufw allow from \<host-ip-address\> to any port 60000 proto udp
 ```
 
 ## AWS IAM
