@@ -86,16 +86,15 @@ On successful completion of the above you should have:
 - a _uhppoted-greengrass_ `core` device listed in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home) under
   _Manage/Greengrass devices/Core devices_
 
-##### _Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias_
+----
+_(leaving this here for reference - no longer seems to be necessary)_
 
-_(-- Leaving this here for reference - no longer seems to be necessary --)_
+##### ~~_Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias_~~
 
-_In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer
-and either:
-- set it to alias the Greengrass_ServiceRole
-- in IAM, create an UhppotedGreengrassTokenExchangeRole with the necessary permissions and set the alias to use the newly
-  created role._
-
+_ ~~In the [AWS IoT console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer and either:_~~
+- ~~_set it to alias the Greengrass\_ServiceRole_~~
+- ~~_in IAM, create an UhppotedGreengrassTokenExchangeRole with the necessary permissions and set the alias to use the newly created role._~~
+----
 
 ## Provision a `thing` device for _uhppoted-mqtt_
 

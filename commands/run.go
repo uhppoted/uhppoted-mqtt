@@ -194,9 +194,9 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 
 	// ... TLS
 	allowInsecure := false
-	//	if c.Connection.Verify == "allow-insecure" {
-	//		allowInsecure = true
-	//	}
+	if c.Connection.Verify == "allow-insecure" {
+		allowInsecure = true
+	}
 
 	if strings.HasPrefix(mqttd.Connection.Broker, "tls:") {
 		pem, err := os.ReadFile(c.Connection.BrokerCertificate)

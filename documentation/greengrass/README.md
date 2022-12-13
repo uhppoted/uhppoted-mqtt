@@ -151,6 +151,7 @@ you want to end up with:
    - MQTT 3.1.1 broker
    - MQTT bridge 
    - ~~IPDetector~~
+     - Configure the endpoint address manually to the VPS IP address
 
    _References_:
    -  [Install AWS IoT Greengrass Core software with automatic resource provisioning](https://docs.aws.amazon.com/greengrass/v2/developerguide/quick-installation.html)
@@ -182,7 +183,7 @@ If you're installing it as a service/daemon (recommended) the installation will 
 ```
 
 The default installation is configured with full security enabled which is unnecessary for an integration with _Greengrass_ and
-also makes debug difficult. It can always be re-enabled incrementally once the system is up and running.
+also makes debugging difficult. It can always be re-enabled incrementally once the system is up and running.
 
 To run without internal security, edit the _/etc/uhppoted/uhppoted.conf_ file:
 ```
@@ -213,24 +214,24 @@ You need the following certificate components (in PEM format):
 - MQTT client key
 
 The AWS Root CA certificates and client certificate and key can be downloaded from the _AWS IoT_ console while creating 
-the _uhppoted-mqtt_ `thing` (see [Provision a thing device for uhppoted-mqtt](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md#provision-a-thing-device-for-uhppoted-mqtt)).
+the _uhppoted-mqtt_ `thing` (see [Provision a thing device for uhppoted-mqtt](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md#provision-a-thing-device-for-uhppoted-mqtt)). Copy the certificates
+and key to:
 
-If you skipped past (or just forgot), the provisioning process will have also stashed the certificates in the
-_/greengrass/v2_ folder so they can be copied from there:
+| File                       | Folder                                          |
+|----------------------------|-------------------------------------------------|
+| AmazonRootCA1.pem          | /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem |
+| AmazonRootCA3.pem          | /etc/uhppoted/mqtt/greengrass/AmazonRootCA3.pem |
+| 3e7a...-private.pem.key    | /etc/uhppoted/mqtt/greengrass/thing.key         |
+| 3e7a...certificate.pem.crt | /etc/uhppoted/mqtt/greengrass/thing.cert        |
 
-| Certificate             | Location                                                       |
-|-------------------------|----------------------------------------------------------------|
-| AWS Root CA certificate | `/greengrass/v2/rootCA.pem`                                    |
-| MQTT broker certificate | `/greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem` |
-| MQTT client certificate | `/greengrass/v2/thingCert.crt`                                 |
-| MQTT client key         | `/greengrass/v2/privKey.key`                                   |
 
 1. (_Optionally_) Install the AWS Root CA certificate in your system trust store. This should not really be necessary 
     unless _OpenSSL_ complains about not being able to verify the trust chain. The instructions for _Ubuntu_ can be found 
     [here](https://ubuntu.com/server/docs/security-trust-store) but for reference:
 ```
 sudo apt-get install -y ca-certificates
-sudo cp /greengrass/v2/rootCA.pem /usr/local/share/ca-certificates/AmazonRootCA.pem
+sudo cp /etc/uhppoted/mqtt/greengrass/AmazonRootCA1.pem /usr/local/share/ca-certificates/AmazonRootCA1.pem
+sudo cp /etc/uhppoted/mqtt/greengrass/AmazonRootCA3.pem /usr/local/share/ca-certificates/AmazonRootCA3.pem
 sudo update-ca-certificates
 ```
 
@@ -239,17 +240,7 @@ sudo update-ca-certificates
 cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/CA.pem /usr/local/etc/uhppoted/mqtt/greengrass/CA.cert
 ```
 
-3. Copy the MQTT client certificate to  _/usr/local/etc/uhppoted/mqtt/greengrass_:
-```
-cp /greengrass/v2/thingCert.crt /usr/local/etc/uhppoted/mqtt/greengrass/thing.cert
-```
-
-4. Copy the MQTT client key to  _/usr/local/etc/uhppoted/mqtt/greengrass_:
-```
-cp /greengrass/v2/privKey.key /usr/local/etc/uhppoted/mqtt/greengrass/thing.key
-```
-
-5. Update the _uhppoted.conf_ file:
+3. Update the _uhppoted.conf_ file:
 ```
 ...
 mqtt.connection.client.ID = uhppoted-mqtt
