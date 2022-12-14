@@ -2,20 +2,22 @@
 
 ### IN PROGRESS
 
-- [ ] Figure out missing conf.LockfileRemove for Linux
-- [x] Remove ARM7 specific files after removing softlock
-
 - [ ] Write up AWS GreenGrass setup
-      - [x] Create separate policy/group/user for Greengrass CLI
-      - [ ] `core` and `thing` provisioning
-      - [ ] uhppoted-mqtt installation and configuration
+      - [x] Fix all document links so that they are relative
+      - (?) Create _UhppotedGreengrassTokenExchangeRoleAccess_ policy
+```
+Encountered error - User: arn:aws:iam::NNNN:user/uhppoted-greengrass is not authorized to perform: iam:GetPolicy on resource: policy arn:aws:iam::aws:policy/UhppotedGreengrassTokenExchangeRoleAccess because no identity-based policy allows the iam:GetPolicy action (Service: Iam, Status Code: 403, Request ID: 428d25c4-7bbb-42b9-bf8d-71c001d0f60e); No permissions to lookup managed policy, looking for a user defined policy...
+IAM policy named "UhppotedGreengrassTokenExchangeRoleAccess" already exists. Please attach it to the IAM role if not already
+Configuring Nucleus with provisioned resource details...
+```
+
       - [ ] Discover API/script
       - https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-discover-api.html
       - https://iot.stackexchange.com/questions/6347/connecting-cellular-module-sim7070g-to-aws-mqtt/6350
       - [NodeRed/GreenGrass](https://iot.stackexchange.com/questions/2646/deploy-scripts-to-aws-greengrass-without-aws-lambda)
 
-
-- [ ] Remove _false_ `from mqtt.acl.verify`
+- [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
+- [x] Remove '... displaying configuration information' message
 
 ## TODO
 
