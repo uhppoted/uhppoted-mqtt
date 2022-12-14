@@ -35,9 +35,15 @@ If you do not have a service role, create one in [IAM](https://console.aws.amazo
 
 ### Policies
 
-In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create a _uhppoted-greengrass_ policy for 
-provisioning (a.k.a. installing and configuring) the AWS Greengrass 'core' and 'thing' devices. The _uhppoted-greengrass_ 
-policy below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
+In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create the following policies:
+
+- _uhppoted-greengrass_ policy for  provisioning (a.k.a. installing and configuring) the AWS Greengrass 'core' and 'thing' 
+devices. 
+- _UhppotedGreengrassTokenExchangeRoleAccess_ policy for the _core_ device to accesss S3 and Cloudwatch
+
+#### __uhppoted-greengrass_ policy
+
+The _uhppoted-greengrass_ policy below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
 
 1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
 2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
@@ -116,6 +122,34 @@ them to a smaller set of resources. The Policy Editor is your friend._
 9. Click on _Create Policy_
 
 
+#### _UhppotedGreengrassTokenExchangeRoleAccess_
+
+Create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+Note: 
+- The Greengrass installer does create this if it doesn't exist but it's messy about it and you generally 
+have to run the installer twice.
+
+
 ### Groups
 
 In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create a _uhppoted-greengrass_ group for the users to
@@ -126,7 +160,8 @@ be given the permissions required to provision the AWS Greengrass `core` and `th
 3. Click on _Create group_
 4. Enter the group name _uhppoted-greengrass_
 5. Attach the _uhppoted-greengrass_ policy created above to the group
-6. Click on _Create group_
+6. Attach the _UhppotedGreengrassTokenExchangeRoleAccess__ policy created above to the group
+7. Click on _Create group_
 
 
 ### Users
@@ -146,6 +181,6 @@ devices:
 8. Click _Next: Tags_
 9. Click _Next: Review_
 10. Click _Create user_
-11. Copy the access key and secret key for later use
+11. **NB: Copy the access key and secret key for later use**
 12. Click _Close_
 

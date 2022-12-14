@@ -47,7 +47,7 @@ This guide is essentially a desperation resource distilled from:
 2. Work through the [IAM](IAM.md) _HOWTO_ to setup the AWS policies, groups and users
 3. Work through the [Provisioning](provisioning.md) _HOWTO_ to setup the AWS IoT core devices
 4. Work through the [uhpppoted-mqtt](uhppoted-mqtt.md) _HOWTO_ to setup and configure _uhppoted-mqtt_
-5. Open the [AWS IoT Core test client](https://console.aws.amazon.com/iot/home/test) and subscribe to `#`
+5. Open the _AWS IoT Core test client_ and subscribe to `#`
 6. Voilá!
 
 The write-up below adds a bit more detail about the process.
@@ -116,8 +116,8 @@ sudo chown -R uhppoted:uhppoted /var/uhppoted
 5. Update firewall rules to allow local connections to the MQTT broker (TCP, port 8883) and any UHPPOTE controllers (UDP, port 6000):
 ```
 hostname -I
-sudo ufw allow from <host-ip-address> to any port 8883  proto tcp
-sudo ufw allow from <host-ip-address> to any port 60000 proto udp
+sudo ufw allow from $(hostname -I | cut -d ' ' -f 1) to any port 8883  proto tcp
+sudo ufw allow from $(hostname -I | cut -d ' ' -f 1) to any port 60000 proto udp
 ```
 
 ## AWS IAM

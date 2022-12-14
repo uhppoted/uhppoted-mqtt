@@ -5,6 +5,8 @@
 ### Download and install _uhppoted-mqtt_
 ```
 sudo su uhppoted
+```
+```
 cd /opt/uhppoted
 
 curl -OL https://github.com/uhppoted/uhppoted-mqtt/releases/download/v0.8.3/uhppoted-mqtt_v0.8.3.tar.gz
@@ -13,12 +15,14 @@ tar xvzf uhppoted-mqtt_v0.8.3.tar.gz
 mkdir uhppoted-mqtt
 cd uhppoted-mqtt
 ln -s /opt/uhppoted/uhppoted-mqtt_v0.8.3/linux/uhppoted-mqtt uhppoted-mqtt
-./uhppoted-mqtt config > /etc/uhppoted/uhppoted.conf
+./uhppoted-mqtt config >> /etc/uhppoted/uhppoted.conf
 ```
 
 ### Update _uhppoted-mqtt_ configuration for _AWS Greengrass_
 
 Edit _/etc/uhppoted/uhppoted.conf_:
+
+- Set the MQTT broker connection information
 ```
 ...
 mqtt.connection.client.ID = uhppoted-thing
@@ -27,7 +31,10 @@ mqtt.connection.broker.certificate = /etc/uhppoted/mqtt/greengrass/CA.cert
 mqtt.connection.client.certificate = /etc/uhppoted/mqtt/greengrass/thing.cert
 mqtt.connection.client.key = /etc/uhppoted/mqtt/greengrass/thing.key
 ; mqtt.connection.verify = allow-insecure
+```
 
+- Disable security (and add back in as/when required)
+```
 mqtt.security.HMAC.required = false
 mqtt.security.authentication = NONE
 mqtt.security.nonce.required = false
@@ -36,6 +43,7 @@ mqtt.security.outgoing.encrypt = false
 ...
 ```
 
+- Configure any UHPPOTE controllers in the # DEVICES section
 
 ### Run in console mode
 

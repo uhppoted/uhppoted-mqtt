@@ -217,19 +217,24 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
 
 11. ~~Tick _IP Detector_ and leave 'as is'~~
 
-**For the moment, uncheck _IP Detector_ and manually add an endpoint with the _IP address_ of the machine the
-`core` device is running on. Then, since we're not using _IP Detector_ just yet, copy the _Moquette_ broker certificate:**
+**For the moment**
+
+- Uncheck _IP Detector_ and add a _managed endpoint_ with the IP address of the machine the`core` device is running on. 
+
+
+13. Review and deploy
+
+Review and deploy and wait for the deployment to complete.
+
+14. Copy broker CA certificate
+
+Since we're not using _IP Detect, copy the _Moquette_ broker certificate:
 ```
 sudo cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem /etc/uhppoted/mqtt/greengrass/CA.cert
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/CA.cert
 ```
 
-(alternatively, set `mqtt.connection.verify=allow-insecure` in _/etc/uhppoted/uhppoted.conf_ when configuring _uhppoted-mqtt_).
-
-
-12. Review and deploy
-
-#### Check basic connectivity and certificate chain
+15. Check basic connectivity and certificate chain
 
 - Without client authentication:
 ```
