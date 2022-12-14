@@ -6,6 +6,8 @@
 ```
 sudo su uhppoted
 ```
+
+**IF** you're using a _release_ version:
 ```
 cd /opt/uhppoted
 

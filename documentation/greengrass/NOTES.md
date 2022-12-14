@@ -75,18 +75,45 @@ python3 basic_connect.py \
 Ref. [Troubleshooting client devices](https://docs.aws.amazon.com/greengrass/v2/developerguide/troubleshooting-client-devices.html)
 
 
-### TODO
+## Notes
 
+Installer creates the following in IoT:
+
+### Policies
+
+UhppotedGreengrassThingPolicy
 ```
-...
-2022/10/11 20:39:24 INFO  mqttd        Listening on 155.138.131.33:60001
-2022/10/11 20:39:24 INFO  mqttd        Publishing events to uhppoted/gateway/events
-2022/10/11 20:39:24 INFO  listen       Initialising event listener
-2022/10/11 20:39:24 INFO  listen       Listening
-2022/10/11 20:39:24 [client]   x509: cannot validate certificate for 127.0.0.1 because it doesn't contain any IP SANs
-2022/10/11 20:39:24 [client]   failed to connect to broker, trying next
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect",
+        "iot:Publish",
+        "iot:Subscribe",
+        "iot:Receive",
+        "greengrass:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+GreengrassTESCertificatePolicyUhppotedGreengrassCoreTokenExchangeRoleAliasInfo
+```
+{
+  "Version": "2012-10-17",
+  "Statement": {
+    "Effect": "Allow",
+    "Action": "iot:AssumeRoleWithCertificate",
+    "Resource": "arn:aws:iot:us-east-1:026688924291:rolealias/UhppotedGreengrassCoreTokenExchangeRoleAlias"
+  }
+}
 ```
 
-https://stackoverflow.com/questions/71292261/golang-x509-cannot-validate-certificate
+### Role Aliases
 
+UhppotedGreengrassCoreTokenExchangeRoleAliasInfo
 
+Role: UhppotedGreengrassTokenExchangeRole

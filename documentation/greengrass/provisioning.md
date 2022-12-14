@@ -107,9 +107,9 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a ne
    4. Choose _Auto-generate a new certificate_
    5. Attach the _UhppotedGreengrassThingPolicy_ policy
    6. Create `thing` and download certificate and key files:
-      - device certificate
-      - public key file
-      - private key file
+      - Device certificate
+      - Public key file
+      - Private key file
       - Amazon Root CA certificates
    7. Copy the certificates to the _VPS_ (or _Raspberry Pi_, etc) e.g.:
 ```
