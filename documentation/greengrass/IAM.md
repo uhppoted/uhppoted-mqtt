@@ -43,7 +43,7 @@ If you do not have a service role, create one in [IAM](https://console.aws.amazo
 devices. 
 - _UhppotedGreengrassTokenExchangeRoleAccess_ policy for the _core_ device to accesss S3 and Cloudwatch
 
-#### __uhppoted-greengrass_ policy
+#### _uhppoted-greengrass_ policy
 
 The _uhppoted-greengrass_ policy below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
 
@@ -147,7 +147,7 @@ Similarly, create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
 
 With the following name and description fields:
    - `Name`: `UhppotedGreengrassTokenExchangeRoleAccess`
-   - `Description`: Greengrass policy for uhppoted-core device access to S3 and CloudWatch
+   - `Description`: Greengrass policy for uhppoted-greengrass core device access to S3 and CloudWatch
 
 
 Notes: 
@@ -165,7 +165,7 @@ be given the permissions required to provision the AWS Greengrass `core` and `th
 3. Click on _Create group_
 4. Enter the group name _uhppoted-greengrass_
 5. Attach the _uhppoted-greengrass_ policy created above to the group
-6. Attach the _UhppotedGreengrassTokenExchangeRoleAccess__ policy created above to the group
+6. Attach the _UhppotedGreengrassTokenExchangeRoleAccess_ policy created above to the group
 7. Click on _Create group_
 
 
@@ -186,6 +186,6 @@ devices:
 8. Click _Next: Tags_
 9. Click _Next: Review_
 10. Click _Create user_
-11. **NB: Copy the access key and secret key for later use**
+11. **Copy the access key and secret key for later use**
 12. Click _Close_
 

@@ -28,6 +28,7 @@ sudo su admin
 ```
 export AWS_ACCESS_KEY_ID=<uhppoted-greengrass user access key>
 ```
+```
 export AWS_SECRET_ACCESS_KEY=<uhppoted-greengrass user secret key>
 ```
 ```
