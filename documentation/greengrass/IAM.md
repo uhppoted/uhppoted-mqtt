@@ -35,7 +35,9 @@ If you do not have a service role, create one in [IAM](https://console.aws.amazo
 
 ### Policies
 
-In the [_AWS IAM console_](https://console.aws.amazon.com/iamv2), create the following policies:
+1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
+2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
+3. Create the following policies:
 
 - _uhppoted-greengrass_ policy for  provisioning (a.k.a. installing and configuring) the AWS Greengrass 'core' and 'thing' 
 devices. 
@@ -45,10 +47,8 @@ devices.
 
 The _uhppoted-greengrass_ policy below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
 
-1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
-2. Open the [_Policies_](https://console.aws.amazon.com/iamv2/home#/policies) tab
-3. Click on _Create policy_
-4. Open the _JSON_ tab and paste the following policy, **replacing the \<account-id\> with the Amazon
+1. Click on _Create policy_
+2. Open the _JSON_ tab and paste the following policy, **replacing the \<account-id\> with the Amazon
    account ID** (it's in the account drop-down at the top right of the page):
 ```
 {
@@ -114,17 +114,17 @@ The _uhppoted-greengrass_ policy below is based on the [Minimal IAM policy for i
 _NOTE: the resource ARNs in the above policy are permissive for the purposes of this guide. You probably want to restrict
 them to a smaller set of resources. The Policy Editor is your friend._
 
-6. Click on _Next: Tags_
-7. Click on _Next: Review_
-8. Fill in the name and description fields:
+3. Click on _Next: Tags_
+4. Click on _Next: Review_
+5. Fill in the name and description fields:
    - `Name`: `uhppoted-greengrass`
    - `Description`: Greengrass policy for deploying _uhppoted-mqtt_
-9. Click on _Create Policy_
+6. Click on _Create Policy_
 
 
 #### _UhppotedGreengrassTokenExchangeRoleAccess_
 
-Create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
+Similarly, create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
 
 ```
 {
@@ -145,8 +145,13 @@ Create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
 }
 ```
 
-Note: 
-- The Greengrass installer does create this if it doesn't exist but it's messy about it and you generally 
+With the following name and description fields:
+   - `Name`: `UhppotedGreengrassTokenExchangeRoleAccess`
+   - `Description`: Greengrass policy for uhppoted-core device access to S3 and CloudWatch
+
+
+Notes: 
+- The Greengrass installer creates this policy if it doesn't exist but it's messy about it and you generally 
 have to run the installer twice.
 
 

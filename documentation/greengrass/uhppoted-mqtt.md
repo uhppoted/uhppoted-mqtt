@@ -15,16 +15,26 @@ tar xvzf uhppoted-mqtt_v0.8.3.tar.gz
 mkdir uhppoted-mqtt
 cd uhppoted-mqtt
 ln -s /opt/uhppoted/uhppoted-mqtt_v0.8.3/linux/uhppoted-mqtt uhppoted-mqtt
-./uhppoted-mqtt config >> /etc/uhppoted/uhppoted.conf
+./uhppoted-mqtt config > /etc/uhppoted/uhppoted.conf
+```
+
+**IF** you're using the _development_ version:
+```
+cd /opt/uhppoted
+
+git clone https://github.com/uhppoted/uhppoted-mqtt
+cd uhppoted-mqtt
+make build
+ln -s /opt/uhppoted/uhppoted-mqtt/bin/uhppoted-mqtt uhppoted-mqtt
+./uhppoted-mqtt config > /etc/uhppoted/uhppoted.conf
 ```
 
 ### Update _uhppoted-mqtt_ configuration for _AWS Greengrass_
 
 Edit _/etc/uhppoted/uhppoted.conf_:
 
-- Set the MQTT broker connection information
+- Set the MQTT broker connection information **using the host IP address for the MQTT broker***
 ```
-...
 mqtt.connection.client.ID = uhppoted-thing
 mqtt.connection.broker = tls://<host-ip-address>:8883
 mqtt.connection.broker.certificate = /etc/uhppoted/mqtt/greengrass/CA.cert
@@ -40,7 +50,6 @@ mqtt.security.authentication = NONE
 mqtt.security.nonce.required = false
 mqtt.security.outgoing.sign = false
 mqtt.security.outgoing.encrypt = false
-...
 ```
 
 - Configure any UHPPOTE controllers in the # DEVICES section

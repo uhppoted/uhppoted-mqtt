@@ -18,6 +18,14 @@ Request ID: 7ef21c42-cd28-78ac-3fac-caa7bc792a2e, Extended Request ID: null)
 - [greengrass-discovery-demo-application-is-not-working](https://stackoverflow.com/questions/49610000/greengrass-discovery-demo-application-is-not-working)
 
 
+#### May be appplicable with IP Detect
+
+_Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias_
+
+_ In the [AWS IoT console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer and either:_
+- _set it to alias the Greengrass\_ServiceRole_
+- _in IAM, create an UhppotedGreengrassTokenExchangeRole with the necessary permissions and set the alias to use the newly created role._
+
 
 #### ~~Quick and dirty test~~
 

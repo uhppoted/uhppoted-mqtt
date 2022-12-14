@@ -24,7 +24,10 @@ Based on the [Install AWS IoT Greengrass Core software with automatic resource p
 To install the `core` device on the Ubuntu host using the _access key_ and _secret_ for the _uhppoted-greengrass_ user:
 ```
 sudo su admin
+```
+```
 export AWS_ACCESS_KEY_ID=<uhppoted-greengrass user access key>
+```
 export AWS_SECRET_ACCESS_KEY=<uhppoted-greengrass user secret key>
 ```
 ```
@@ -86,16 +89,6 @@ On successful completion of the above you should have:
 - a _uhppoted-greengrass_ `core` device listed in the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home) under
   _Manage/Greengrass devices/Core devices_
 
-----
-_(leaving this here for reference - not required without IP Detector)_
-
-##### _Update the _UhppotedGreengrassCoreTokenExchangeRole_ alias_
-
-_ In the [AWS IoT console](https://console.aws.amazon.com/iot/home), edit the TokenExchangeRole created by the installer and either:_
-- _set it to alias the Greengrass\_ServiceRole_
-- _in IAM, create an UhppotedGreengrassTokenExchangeRole with the necessary permissions and set the alias to use the newly created role._
-----
-
 ## Provision a `thing` device for _uhppoted-mqtt_
 
 Based on [Tutorial: Interact with local IoT devices over MQTT](https://docs.aws.amazon.com/greengrass/v2/developerguide/client-devices-tutorial.html). 
@@ -149,7 +142,7 @@ Based on instructions from [Interact with local IoT devices over MQTT](https://d
        - Target type: `Core device`
        - Target name: `uhppoted-greengrass`
    5. _Step 2: Associate client devices_:
-       - Associate _uhppoted-thing_ (creating it if it wasn't created above)
+       - Associate _uhppoted-thing_ 
    6. _Step 3: Configure and deploy Greengrass components_:
    7. Choose _Greengrass nucleus_ and leave '_as is_'
    8. Choose _Client device auth_
