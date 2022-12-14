@@ -222,7 +222,7 @@ Review and deploy and wait for the deployment to complete.
 
 14. Copy broker CA certificate
 
-Since we're not using _IP Detect, copy the _Moquette_ broker certificate:
+Since we're not using _IP Detect_, copy the _Moquette_ broker certificate:
 ```
 sudo cp /greengrass/v2/work/aws.greengrass.clientdevices.Auth/ca.pem /etc/uhppoted/mqtt/greengrass/CA.cert
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/CA.cert

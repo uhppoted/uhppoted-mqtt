@@ -47,8 +47,8 @@ This guide is essentially a desperation resource distilled from:
 2. Work through the [IAM](IAM.md) _HOWTO_ to setup the AWS policies, groups and users
 3. Work through the [Provisioning](provisioning.md) _HOWTO_ to setup the AWS IoT core devices
 4. Work through the [uhpppoted-mqtt](uhppoted-mqtt.md) _HOWTO_ to setup and configure _uhppoted-mqtt_
-5. Open the [AWS IoT Core Test client](https://console.aws.amazon.com/iot/home#/test) and subscribe to `#`
-6. Voilá!
+5. Open the [AWS IoT Core Test client](https://console.aws.amazon.com/iot/home#/test) and subscribe to the `#` topic
+6. Voilà!
 
 The write-up below adds a bit more detail about the process.
 
