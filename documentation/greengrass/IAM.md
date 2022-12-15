@@ -13,26 +13,6 @@ are:
 For simplicity this HOWTO creates a permanent user which can and should be deleted when no longer required. If you're familiar
 with creating and using temporary credentials, rather use those.
 
-### AWS Greengrass Service Role
-
-_Ref._ [Greengrass service role](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-service-role.html)
-
-_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices. The service role is in the
-[_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the very bottom). 
-
-If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
-   - Open the _Roles_ section
-   - Click on _Create_
-   - Choose:
-      - _AWS Service_
-      - _Greengrass_ (under _Use cases for other AWS services_)
-      - Permissions: _AWSGreengrassResourceAccessRolePolicy_
-      - Name: _Greengrass_ServiceRole_
-
-   - In the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ attach the newly created
-     _Greengrass_ServiceRole_
-
-
 ### Policies
 
 1. Open the [_AWS IAM console_](https://console.aws.amazon.com/iamv2)
@@ -43,7 +23,7 @@ If you do not have a service role, create one in [IAM](https://console.aws.amazo
 devices. 
 - _UhppotedGreengrassTokenExchangeRoleAccess_ policy for the _core_ device to accesss S3 and Cloudwatch
 
-#### _uhppoted-greengrass_ policy
+#### _uhppoted-greengrass_
 
 The _uhppoted-greengrass_ policy below is based on the [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html) from the AWS Greengrass Developer Guide.
 
@@ -118,13 +98,17 @@ them to a smaller set of resources. The Policy Editor is your friend._
 4. Click on _Next: Review_
 5. Fill in the name and description fields:
    - `Name`: `uhppoted-greengrass`
-   - `Description`: Greengrass policy for deploying _uhppoted-mqtt_
+   - `Description`: _Greengrass policy for deploying _uhppoted-mqtt_
 6. Click on _Create Policy_
 
 
 #### _UhppotedGreengrassTokenExchangeRoleAccess_
 
-Similarly, create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
+The __UhppotedGreengrassTokenExchangeRoleAccess__ policy below is based on [Service role permissions for core devices](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html) from the AWS Greengrass Developer Guide. The Greengrass installer creates this policy if it doesn't exist but it's messy about it and by creating it upfront you avoid weird warnings and having to
+run the installer twice.
+
+1. Click on _Create policy_
+2. Open the _JSON_ tab and paste the following policy:
 
 ```
 {
@@ -144,15 +128,69 @@ Similarly, create a _UhppotedGreengrassTokenExchangeRoleAccess_ policy:
     ]
 }
 ```
-
-With the following name and description fields:
+3. Click on _Next: Tags_
+4. Click on _Next: Review_
+5. Fill in the name and description fields:
    - `Name`: `UhppotedGreengrassTokenExchangeRoleAccess`
-   - `Description`: Greengrass policy for uhppoted-greengrass core device access to S3 and CloudWatch
+   - `Description`: _Greengrass policy for uhppoted-greengrass core device access to S3 and CloudWatch
+6. Click on _Create Policy_
 
 
-Notes: 
-- The Greengrass installer creates this policy if it doesn't exist but it's messy about it and you generally 
-have to run the installer twice.
+### Roles
+
+#### AWS Greengrass Service Role
+
+_Ref._ [Greengrass service role](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-service-role.html)
+
+_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices. The service role is in the
+[_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the very bottom). 
+
+If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
+   1. Open the _Roles_ section
+   2. Click on _Create_
+   3. Choose:
+      - _AWS Service_
+      - _Greengrass_ (under _Use cases for other AWS services_)
+      - Permissions: _AWSGreengrassResourceAccessRolePolicy_
+      - Name: _Greengrass_ServiceRole_
+
+   4. In the [_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ attach the newly created
+     _Greengrass_ServiceRole_
+
+
+#### Token Exchange Role
+
+_Ref._ [Device service role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html)
+
+The _Token Exchange Role_ sets the permissions required for the _uhppoted-greengrass_ IoT _core_ device to access
+S3 and Cloudwatch. The Greengrass installer creates this role if it doesn't exist but creating it upfront avoids
+some warnings and errors and having to run the installer twice.
+
+   1. Open the _Roles_ section
+   2. Click on _Create_
+   3. Choose:
+      - _Custom trust policy_
+      - Use the following trust policy:
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "credentials.iot.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+      - Attach the UhppotedGreengrassTokenExchangeRoleAccess policy created above
+      - Update the name and description fields:
+        - Name: _UhppotedGreengrassTokenExchangeRole_
+        - Description: _Token exchange role for uhppoted-greengrass IoT core device to access S3 and Cloudwatch_
+
+   4. Click on _Create_
 
 
 ### Groups

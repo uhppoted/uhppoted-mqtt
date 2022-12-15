@@ -78,9 +78,7 @@ sudo apt install -y openjdk-8-jdk
 sudo apt install -y golang
 ```
 
-   _Note_: 
-
-   - _Debian's default golang package is quite out of date - install the latest and greatest from [https://go.dev/doc/install](https://go.dev/doc/install)._
+   _Note: Debian's default golang package is quite out of date - install the latest and greatest from [https://go.dev/doc/install](https://go.dev/doc/install)._
 
 2. Create _admin_ user:
 ```

@@ -45,7 +45,7 @@ mqtt.connection.client.key = /etc/uhppoted/mqtt/greengrass/thing.key
 ; mqtt.connection.verify = allow-insecure
 ```
 
-- Disable security (and add back in as/when required)
+- Disable security (it can be reinstated as/when needed)
 ```
 mqtt.security.HMAC.required = false
 mqtt.security.authentication = NONE
