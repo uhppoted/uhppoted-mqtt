@@ -51,7 +51,9 @@ sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
 ```
 
 _Notes_:
-1. You may get a message that looks like:
+
+1. Unless you've created the _UhppotedGreengrassTokenExchangeRoleAccess_ policy and the _UhppotedGreengrassTokenExchangeRole_
+   you may get a message that looks like:
 ```
    Encountered error - User: arn:aws:iam::...:user/uhppoted-greengrass is not authorized to perform: iam:GetPolicy
    on resource: policy arn:aws:iam::aws:policy/UhppotedGreengrassTokenExchangeRoleAccess because no identity-based
