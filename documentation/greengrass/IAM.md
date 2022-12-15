@@ -104,7 +104,8 @@ them to a smaller set of resources. The Policy Editor is your friend._
 
 #### _UhppotedGreengrassTokenExchangeRoleAccess_
 
-The __UhppotedGreengrassTokenExchangeRoleAccess__ policy below is based on [Service role permissions for core devices](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html) from the AWS Greengrass Developer Guide. The Greengrass installer creates this policy if it doesn't exist but it's messy about it and by creating it upfront you avoid weird warnings and having to
+The _UhppotedGreengrassTokenExchangeRoleAccess_ policy below is based on the policy from [Service role permissions for core devices](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html)
+from the AWS Greengrass Developer Guide. The Greengrass installer creates this policy if it doesn't exist but it's messy about it and by creating it upfront you avoid weird warnings and having to
 run the installer twice.
 
 1. Click on _Create policy_
@@ -142,8 +143,8 @@ run the installer twice.
 
 _Ref._ [Greengrass service role](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-service-role.html)
 
-_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices. The service role is in the
-[_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_ (right at the very bottom). 
+_Greengrass_ requires a service role to for provisioning and managing AWS IoT devices (the service role is in the
+[_AWS Iot console_](https://console.aws.amazon.com/iot/home) under _Settings_, right at the very bottom). 
 
 If you do not have a service role, create one in [IAM](https://console.aws.amazon.com/iamv2/home):
    1. Open the _Roles_ section
