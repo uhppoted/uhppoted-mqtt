@@ -122,18 +122,22 @@ sudo ufw allow from $(hostname -I | cut -d ' ' -f 1) to any port 60000 proto udp
 
 The basic requirements are:
 
-1. A Greengrass service role with the permissions required to deploy and manage Greengrass devices.
-2. An IAM policy with the necessary permissions required to create, configure and run a Greengrass 'core' 
+1. An IAM policy with the necessary permissions required to create, configure and run a Greengrass 'core' 
    device with a _Moquette_ MQTT broker.
-3. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
-4. An IAM user to use for creating, configuring and running the Greengrass devices. 
+2. An IAM policy with the necessary permissions required for the _core_ device to access S3 and Cloudwatch.
+3. A Greengrass service role with the permissions required to deploy and manage Greengrass devices.
+4. A token exhange role for the core device to access S3 and Cloudwatch.
+5. An IAM group with the necessary policies and permissions for users needed to create and run the devices.
+6. An IAM user to use for creating, configuring and running the Greengrass devices. 
 
 More detail can be found in [HOWTO: Greengrass IAM](IAM.md) for those unfamiliar with IAM or needing more detail, but essentially you want to end up with:
 
-1. A _Greengrass_ServiceRole_ for the AWS Greengrass service
-2. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the _AWS Greengrass_ `core` and
+1. A _uhppoted-greengrass_ policy for provisioning (a.ka. installing and configuring) the _AWS Greengrass_ `core` and
    `thing` devices. The AWS [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
    in the Greengrass developer guide is a good starting point.
+2. A _UhppotedGreengrassTokenExchangeRoleAccess_ for access to S3 and Cloudwatch
+3. A _Greengrass_ServiceRole_ for the Greengrass installer and the uhppoted-greengrass _core_ device
+4. A _UhppotedGreengrassTokenExchangeRole_ for the uhppoted-greengrass _core_ device
 3. A _uhppoted-greengrass_ group for the users to be assigned the permissions required to provision the AWS Greengrass `core` and
    `thing` devices. 
 4. A _uhppoted-greengrass_ user for provisioning the AWS Greengrass `core` and `thing` devices. 
