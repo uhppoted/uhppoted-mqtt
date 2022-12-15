@@ -4,6 +4,7 @@
 
 ### Added
 1. Added ARM64 to release build artifacts
+2. Basic working version of AWS Greengrass integration HOWTO
 
 ### Changed
 1. Removed the 'false' option for acl.verify (ref. https://github.com/uhppoted/uhppoted/discussions/17)
@@ -13,7 +14,7 @@
 5. Removed _zip_ files from release artifacts (no longer necessary)
 
 ### Removed
-1. Removed ARM7 specific daemonize (only required for _softlock_).
+1. Removed ARM7 specific daemonize (was only required for _softlock_).
 
 
 ## [0.8.2](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.2) - 2022-10-14
