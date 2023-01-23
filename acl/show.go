@@ -15,7 +15,7 @@ func (a *ACL) Show(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error)
 	}{}
 
 	if err := json.Unmarshal(request, &body); err != nil {
-		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.BadRequest, err)
+		return common.MakeError(StatusBadRequest, "Cannot parse request", err), fmt.Errorf("%w: %v", uhppoted.ErrBadRequest, err)
 	}
 
 	if body.CardNumber == nil {
