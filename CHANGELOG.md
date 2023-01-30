@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+1. `doc.go` package overview documentation.
+
 
 ## [0.8.3](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.3) - 2022-12-16
 
