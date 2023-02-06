@@ -139,7 +139,6 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 	api := uhppoted.UHPPOTED{
 		UHPPOTE:         u,
 		ListenBatchSize: 32,
-		Log:             log,
 	}
 
 	dev := device.Device{

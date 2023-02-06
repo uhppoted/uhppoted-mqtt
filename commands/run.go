@@ -268,8 +268,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		u,
 		c.HealthCheckInterval,
 		c.HealthCheckIdle,
-		c.HealthCheckIgnore,
-		logger)
+		c.HealthCheckIgnore)
 
 	mqtt.SetDisconnectsEnabled(c.MQTT.Disconnects.Enabled)
 	mqtt.SetDisconnectsInterval(c.MQTT.Disconnects.Interval)
@@ -334,7 +333,7 @@ func (r *Run) listen(
 	// ... monitoring
 
 	monitor := mqtt.NewSystemMonitor(mqttd)
-	watchdog := monitoring.NewWatchdog(healthcheck, logger)
+	watchdog := monitoring.NewWatchdog(healthcheck)
 	k := time.NewTicker(r.healthCheckInterval)
 
 	defer k.Stop()
