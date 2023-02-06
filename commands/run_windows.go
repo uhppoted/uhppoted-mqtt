@@ -3,7 +3,7 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
+	syslog "log"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -21,7 +21,7 @@ import (
 type service struct {
 	name   string
 	conf   *config.Config
-	logger *log.Logger
+	logger *syslog.Logger
 	cmd    *Run
 }
 
@@ -54,7 +54,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 }
 
 func (r *Run) Execute(args ...interface{}) error {
-	log.Printf("%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "Microsoft Windows", os.Getpid())
+	syslog.Printf("%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "Microsoft Windows", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.start(c)
@@ -64,17 +64,18 @@ func (r *Run) Execute(args ...interface{}) error {
 }
 
 func (r *Run) start(c *config.Config) error {
-	var logger *log.Logger
+	var logger *syslog.Logger
 
-	eventlogger, err := eventlog.Open(SERVICE)
-	if err != nil {
-		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
-		logger = log.New(&events, "", log.Ldate|log.Ltime|log.LUTC)
-	} else {
+	if r.console {
+		logger = syslog.New(os.Stdout, "", syslog.LstdFlags)
+	} else if eventlogger, err := eventlog.Open(SERVICE); err == nil {
 		defer eventlogger.Close()
 
 		events := EventLog{eventlogger}
-		logger = log.New(&events, SERVICE, log.Ldate|log.Ltime|log.LUTC)
+		logger = syslog.New(&events, SERVICE, syslog.Ldate|syslog.Ltime|syslog.LUTC)
+	} else {
+		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
+		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	}
 
 	logger.Printf("%s service - start\n", SERVICE)
@@ -95,8 +96,8 @@ func (r *Run) start(c *config.Config) error {
 	}
 
 	logger.Printf("%s service - starting\n", SERVICE)
-	err = svc.Run(SERVICE, &uhppoted)
-	if err != nil {
+
+	if err := svc.Run(SERVICE, &uhppoted); err != nil {
 		fmt.Printf("   Unable to execute ServiceManager.Run request (%v)\n", err)
 		fmt.Println()
 		fmt.Printf("   To run %s as a command line application, type:\n", SERVICE)
@@ -109,6 +110,7 @@ func (r *Run) start(c *config.Config) error {
 	}
 
 	logger.Printf("%s daemon - started\n", SERVICE)
+
 	return nil
 }
 

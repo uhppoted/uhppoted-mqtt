@@ -6,10 +6,9 @@ import (
 )
 
 func workdir() string {
-	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)
-	if err != nil {
+	if programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT); err != nil {
 		return `C:\uhppoted`
+	} else {
+		return filepath.Join(programData, "uhppoted")
 	}
-
-	return filepath.Join(programData, "uhppoted")
 }
