@@ -17,7 +17,8 @@ Configuring Nucleus with provisioned resource details...
       - [NodeRed/GreenGrass](https://iot.stackexchange.com/questions/2646/deploy-scripts-to-aws-greengrass-without-aws-lambda)
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
-- [x] Remove '... displaying configuration information' message
+- [ ] Clean up Paho logging
+- [ ] MQTT v5
 
 ## TODO
 

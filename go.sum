@@ -17,8 +17,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/uhppoted/uhppote-core v0.8.4-0.20230125200306-b18041c89978 h1:A5ZTHh9IIWTVK5e4K2IVcb1JsydcqJ8JR1kJ9YLJ9V4=
 github.com/uhppoted/uhppote-core v0.8.4-0.20230125200306-b18041c89978/go.mod h1:DsKVqUqHPQoZx4C4qp0fmYuyDXfFH8k+ejTriM9pOE4=
-github.com/uhppoted/uhppoted-lib v0.8.4-0.20230203220138-a6313dc39994 h1:JFqN1ehK7hYXXE/1IK/5c7UOYxxv9d8ngakOC9srtxM=
-github.com/uhppoted/uhppoted-lib v0.8.4-0.20230203220138-a6313dc39994/go.mod h1:vcSrLHvtB/oRw575rrJnOEz8Ks8EYtRLwrnHNbcpdJ4=
+github.com/uhppoted/uhppoted-lib v0.8.4-0.20230206190124-ac6181475deb h1:GyksjP7GFymKsrWKFd+2OpeGA4MTWOtpCppK93v+lFs=
+github.com/uhppoted/uhppoted-lib v0.8.4-0.20230206190124-ac6181475deb/go.mod h1:vcSrLHvtB/oRw575rrJnOEz8Ks8EYtRLwrnHNbcpdJ4=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=

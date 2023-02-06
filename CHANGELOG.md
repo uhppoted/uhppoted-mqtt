@@ -5,6 +5,9 @@
 ### Added
 1. `doc.go` package overview documentation.
 
+### Updated
+1. Replaced (most) logging with uhppoted-lib logging.
+
 
 ## [0.8.3](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.3) - 2022-12-16
 

@@ -2,7 +2,6 @@ package device
 
 import (
 	"encoding/json"
-	"log"
 
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
@@ -17,7 +16,6 @@ const (
 
 type Device struct {
 	AuthorizedCards []string
-	Log             *log.Logger
 }
 
 var protocol string = ""

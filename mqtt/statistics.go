@@ -2,8 +2,6 @@ package mqtt
 
 import (
 	"time"
-
-	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 type statistics struct {
@@ -69,9 +67,9 @@ func (s *statistics) monitor() {
 			case N := <-stats.disconnected:
 				stats.disconnects[index] += N
 				count := sum(stats.disconnects)
-				log.Infof(LOG_TAG, "DISCONNECT %v of %v in %v", count, s.max, s.interval)
+				infof("DISCONNECT %v of %v in %v", count, s.max, s.interval)
 				if stats.enabled && count >= uint64(stats.max) {
-					log.Fatalf(LOG_TAG, "DISCONNECT COUNT %v REACHED MAXIMUM ALLOWED (%v)", count, stats.max)
+					fatalf("DISCONNECT COUNT %v REACHED MAXIMUM ALLOWED (%v)", count, stats.max)
 				}
 
 			case <-stats.tick:

@@ -1,12 +1,10 @@
 package mqtt
 
 import (
-	"context"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
-	syslog "log"
 	"os"
 	"regexp"
 	"time"
@@ -90,7 +88,6 @@ type dispatcher struct {
 	mqttd    *MQTTD
 	uhppoted *uhppoted.UHPPOTED
 	devices  []uhppote.Device
-	log      *syslog.Logger
 	table    map[string]fdispatch
 }
 
@@ -123,18 +120,8 @@ var regex = struct {
 	base64: regexp.MustCompile(`^"[A-Za-z0-9+/]*[=]{0,2}"$`),
 }
 
-const LOG_TAG = "mqttd"
-
-func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized []string, log *syslog.Logger) error {
-	paho.CRITICAL = log
-	paho.ERROR = log
-	paho.WARN = log
-
+func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized []string) error {
 	device.SetProtocol(mqttd.Protocol)
-
-	if mqttd.Debug {
-		paho.DEBUG = log
-	}
 
 	api := uhppoted.UHPPOTED{
 		UHPPOTE:         u,
@@ -143,7 +130,6 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 
 	dev := device.Device{
 		AuthorizedCards: authorized,
-		Log:             log,
 	}
 
 	acl := acl.ACL{
@@ -159,7 +145,6 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		mqttd:    mqttd,
 		uhppoted: &api,
 		devices:  devices,
-		log:      log,
 
 		table: map[string]fdispatch{
 			mqttd.Topics.Requests + "/devices:get":                 fdispatch{"get-devices", dev.GetDevices},
@@ -196,13 +181,13 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		},
 	}
 
-	if client, err := mqttd.subscribeAndServe(&d, log); err != nil {
+	if client, err := mqttd.subscribeAndServe(&d); err != nil {
 		return fmt.Errorf("ERROR: Error connecting to '%s': %v", mqttd.Connection.Broker, err)
 	} else {
 		mqttd.client = client
 	}
 
-	if err := mqttd.listen(&api, u, log); err != nil {
+	if err := mqttd.listen(&api, u); err != nil {
 		return fmt.Errorf("ERROR: Failed to bind to listen port '%d': %v", 12345, err)
 	}
 
@@ -215,15 +200,15 @@ func (m *MQTTD) Close() {
 	}
 
 	if m.client != nil {
-		log.Infof(LOG_TAG, "closing connection to %s", m.Connection.Broker)
+		infof("closing connection to %s", m.Connection.Broker)
 		m.client.Disconnect(250)
-		log.Infof(LOG_TAG, "closed connection to %s", m.Connection.Broker)
+		infof("closed connection to %s", m.Connection.Broker)
 	}
 
 	m.client = nil
 }
 
-func (m *MQTTD) subscribeAndServe(d *dispatcher, logger *syslog.Logger) (paho.Client, error) {
+func (m *MQTTD) subscribeAndServe(d *dispatcher) (paho.Client, error) {
 	var handler paho.MessageHandler = func(client paho.Client, msg paho.Message) {
 		d.dispatch(client, msg)
 	}
@@ -232,28 +217,28 @@ func (m *MQTTD) subscribeAndServe(d *dispatcher, logger *syslog.Logger) (paho.Cl
 		options := client.OptionsReader()
 		servers := options.Servers()
 		for _, url := range servers {
-			log.Infof(LOG_TAG, "connected to %s", url)
+			infof("connected to %s", url)
 		}
 
 		token := m.client.Subscribe(m.Topics.Requests+"/#", 0, handler)
 		if err := token.Error(); err != nil {
-			log.Errorf(LOG_TAG, "unable to subscribe to %s (%v)", m.Topics.Requests, err)
+			errorf("unable to subscribe to %s (%v)", m.Topics.Requests, err)
 		} else {
-			log.Infof(LOG_TAG, "subscribed to %s", m.Topics.Requests)
+			infof("subscribed to %s", m.Topics.Requests)
 		}
 	}
 
 	var disconnected paho.ConnectionLostHandler = func(client paho.Client, err error) {
-		log.Errorf(LOG_TAG, "connection to MQTT broker lost (%v)", err)
+		errorf("connection to MQTT broker lost (%v)", err)
 
 		stats.onDisconnected()
 
 		go func() {
 			time.Sleep(10 * time.Second)
-			log.Infof(LOG_TAG, "retrying connection to MQTT broker %v", m.Connection.Broker)
+			infof("retrying connection to MQTT broker %v", m.Connection.Broker)
 			token := client.Connect()
 			if err := token.Error(); err != nil {
-				log.Errorf(LOG_TAG, "failed to reconnect to MQTT broker (%v)", err)
+				errorf("failed to reconnect to MQTT broker (%v)", err)
 			}
 		}()
 	}
@@ -289,13 +274,13 @@ func (m *MQTTD) subscribeAndServe(d *dispatcher, logger *syslog.Logger) (paho.Cl
 	return client, nil
 }
 
-func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE, logger *syslog.Logger) error {
-	log.Infof(LOG_TAG, "listening on %v", u.ListenAddr())
-	log.Infof(LOG_TAG, "publishing events to %s", m.Topics.Events)
+func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
+	infof("listening on %v", u.ListenAddr())
+	infof("publishing events to %s", m.Topics.Events)
 
 	last := uhppoted.NewEventMap(m.EventMap)
-	if err := last.Load(logger); err != nil {
-		log.Warnf(LOG_TAG, "error loading event map [%v]", err)
+	if err := last.Load(); err != nil {
+		warnf("error loading event map [%v]", err)
 	}
 
 	handler := func(e uhppoted.Event) bool {
@@ -306,7 +291,7 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE, logger *syslo
 		}
 
 		if err := m.send(&m.Encryption.EventsKeyID, m.Topics.Events, nil, event, msgEvent, true); err != nil {
-			log.Warnf(LOG_TAG, "%v", err)
+			warnf("%v", err)
 			return false
 		}
 
@@ -323,23 +308,20 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE, logger *syslo
 }
 
 func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
-	ctx := context.WithValue(context.Background(), "client", client)
-	ctx = context.WithValue(ctx, "log", d.log)
-
 	if fn, ok := d.table[msg.Topic()]; ok {
 		msg.Ack()
 
-		log.Debugf(LOG_TAG, "%v", string(msg.Payload()))
+		debugf("%v", string(msg.Payload()))
 
 		go func() {
 			rq, err := d.mqttd.unwrap(msg.Payload())
 			if err != nil {
-				log.Warnf(LOG_TAG, "%v", err)
+				warnf("%v", err)
 				return
 			}
 
 			if err := d.mqttd.authorise(rq.ClientID, msg.Topic()); err != nil {
-				log.Warnf(LOG_TAG, "%-20v error authorising request (%v)", fn.method, err)
+				warnf("%-20v error authorising request (%v)", fn.method, err)
 				return
 			}
 
@@ -364,7 +346,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 			response, err := fn.f(d.uhppoted, rq.Request)
 
 			if err != nil {
-				log.Warnf(LOG_TAG, "%-20v %v", fn.method, err)
+				warnf("%-20v %v", fn.method, err)
 				if response != nil {
 					reply := struct {
 						Error interface{} `json:"error"`
@@ -373,7 +355,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 					}
 
 					if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgError, false); err != nil {
-						log.Warnf("%-20v %v", fn.method, err)
+						warnf("%-20v %v", fn.method, err)
 					}
 				}
 			} else if response != nil {
@@ -384,7 +366,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 				}
 
 				if err := d.mqttd.send(rq.ClientID, replyTo, &meta, reply, msgReply, false); err != nil {
-					log.Warnf("%-20v %v", fn.method, err)
+					warnf("%-20v %v", fn.method, err)
 				}
 			}
 		}()
@@ -473,4 +455,24 @@ func isBase64(request []byte) bool {
 
 func clean(s string) string {
 	return regex.clean.ReplaceAllString(s, " ")
+}
+
+func debugf(format string, args ...any) {
+	log.Debugf("mqttd", format, args...)
+}
+
+func infof(format string, args ...any) {
+	log.Infof("mqttd", format, args...)
+}
+
+func warnf(format string, args ...any) {
+	log.Warnf("mqttd", format, args...)
+}
+
+func errorf(format string, args ...any) {
+	log.Errorf("mqttd", format, args...)
+}
+
+func fatalf(format string, args ...any) {
+	log.Fatalf("mqttd", format, args...)
 }

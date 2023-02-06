@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	paho "github.com/eclipse/paho.mqtt.golang"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
@@ -250,7 +251,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	mqttd.Encryption.Nonce = *nonce
 
 	// ... locales
-
 	if c.MQTT.Locale != "" {
 		folder := filepath.Dir(c.MQTT.Locale)
 		file := filepath.Base(c.MQTT.Locale)
@@ -263,7 +263,6 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	}
 
 	// ... monitoring
-
 	healthcheck := monitoring.NewHealthCheck(
 		u,
 		c.HealthCheckInterval,
@@ -275,14 +274,12 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	mqtt.SetMaxDisconnects(c.MQTT.Disconnects.Max)
 
 	// ... authorized card list
-
 	cards, err := authorized(c.MQTT.Cards)
 	if err != nil {
 		log.Warnf(LOG_TAG, "%v", err)
 	}
 
 	// ... listen
-
 	err = cmd.listen(u, &mqttd, devices, &healthcheck, cards, logger, interrupt)
 	if err != nil {
 		log.Errorf(LOG_TAG, "%v", err)
@@ -324,14 +321,21 @@ func (r *Run) listen(
 	}
 
 	// ... MQTT
-	if err := mqttd.Run(u, devices, authorized, logger); err != nil {
+	paho.CRITICAL = logger
+	paho.ERROR = logger
+	paho.WARN = logger
+
+	if mqttd.Debug {
+		paho.DEBUG = logger
+	}
+
+	if err := mqttd.Run(u, devices, authorized); err != nil {
 		return err
 	}
 
 	defer mqttd.Close()
 
 	// ... monitoring
-
 	monitor := mqtt.NewSystemMonitor(mqttd)
 	watchdog := monitoring.NewWatchdog(healthcheck)
 	k := time.NewTicker(r.healthCheckInterval)
@@ -346,7 +350,6 @@ func (r *Run) listen(
 	}()
 
 	// ... wait until interrupted
-
 	w := time.NewTicker(r.watchdogInterval)
 
 	defer w.Stop()
