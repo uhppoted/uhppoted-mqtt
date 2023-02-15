@@ -96,8 +96,8 @@ debug: build
                                                         "reply-to":    "$(REPLYTO)", \
                                                         "device-id":   $(SERIALNO), \
                                                         "profile":     { "id": 29, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
+                                                                         "start-date": "2023-01-01", \
+                                                                         "end-date":   "2023-12-31", \
                                                                          "weekdays":   "Monday,Wednesday,Thursday", \
                                                                          "segments": [ \
                                                                             { "start": "08:15", "end": "11:30" }, \
@@ -282,9 +282,10 @@ put-card:
                                                       "reply-to":   "$(REPLYTO)",   \
                                                       "device-id":  $(SERIALNO),    \
                                                       "card": { "card-number": $(CARD),      \
-                                                                "start-date":  "2021-01-01", \
-                                                                "end-date": "2021-12-31",    \
-                                                                "doors": { "1":true, "2":false, "3":55, "4":false } } \
+                                                                "start-date":  "2023-01-01", \
+                                                                "end-date": "2023-12-31",    \
+                                                                "doors": { "1":true, "2":false, "3":55, "4":false }, \
+                                                                "PIN": 7531 } \
                                                     }}}'
 
 delete-card:
@@ -317,8 +318,8 @@ set-time-profile:
                                                         "reply-to":    "$(REPLYTO)", \
                                                         "device-id":   $(SERIALNO), \
                                                         "profile":     { "id": 29, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
+                                                                         "start-date": "2023-01-01", \
+                                                                         "end-date":   "2023-12-31", \
                                                                          "weekdays":   "Monday,Wednesday,Thursday", \
                                                                          "segments": [ \
                                                                             { "start": "08:15", "end": "11:30" }, \
@@ -351,8 +352,8 @@ set-time-profiles:
                                                         "device-id":   $(SERIALNO),    \
                                                         "profiles":    [ \
                                                                          { "id": 29, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
+                                                                         "start-date": "2023-01-01", \
+                                                                         "end-date":   "2023-12-31", \
                                                                          "weekdays":   "Monday,Wednesday,Thursday", \
                                                                          "segments": [ \
                                                                             { "start": "08:15", "end": "11:30" }, \
@@ -360,8 +361,8 @@ set-time-profiles:
                                                                          ], \
                                                                          "linked-profile": 0 }, \
                                                                          { "id": 31, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
+                                                                         "start-date": "2023-01-01", \
+                                                                         "end-date":   "2023-12-31", \
                                                                          "weekdays":   "Monday,Wednesday,Thursday", \
                                                                          "segments": [ \
                                                                             { "start": "08:15", "end": "11:30" }, \
@@ -369,16 +370,16 @@ set-time-profiles:
                                                                          ], \
                                                                          "linked-profile": 0 }, \
                                                                          { "id": 32, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
+                                                                         "start-date": "2023-01-01", \
+                                                                         "end-date":   "2023-12-31", \
                                                                          "weekdays":   "Monday,Wednesday", \
                                                                          "segments": [ \
                                                                             { "start": "08:30", "end": "15:30" } \
                                                                          ], \
                                                                          "linked-profile": 0 }, \
                                                                          { "id": 33, \
-                                                                         "start-date": "2021-01-01", \
-                                                                         "end-date":   "2021-12-31", \
+                                                                         "start-date": "2023-01-01", \
+                                                                         "end-date":   "2023-12-31", \
                                                                          "weekdays":   "Saturday,Sunday", \
                                                                          "segments": [ \
                                                                             { "start": "10:30", "end": "17:30" } \
@@ -396,8 +397,8 @@ set-task-list:
                                                                          { \
                                                                            "task": "trigger once",     \
                                                                            "door": 3,                  \
-                                                                           "start-date": "2021-01-01", \
-                                                                           "end-date":   "2021-12-31", \
+                                                                           "start-date": "2023-01-01", \
+                                                                           "end-date":   "2023-12-31", \
                                                                            "weekdays":   "Monday,Wednesday,Friday", \
                                                                            "start":      "08:27" \
                                                                          } \
@@ -475,8 +476,8 @@ acl-grant:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:grant'    \
                  --message '{ "message": { "request": {                \
                                            "card-number": 8165538,     \
-                                           "start-date": "2021-01-01", \
-                                           "end-date": "2021-12-31",   \
+                                           "start-date": "2023-01-01", \
+                                           "end-date": "2023-12-31",   \
                                            "doors": [ "Gryffindor", "Slytherin" ], \
                                            "client-id": "QWERTY54",              \
                                            "reply-to": "uhppoted\/reply\/97531", \
@@ -484,8 +485,8 @@ acl-grant:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:grant'    \
                  --message '{ "message": { "request": {                \
                                            "card-number": 8165538,     \
-                                           "start-date": "2021-01-01", \
-                                           "end-date": "2021-12-31",   \
+                                           "start-date": "2023-01-01", \
+                                           "end-date": "2023-12-31",   \
                                            "profile": 29,              \
                                            "doors": [ "Dungeon" ], \
                                            "client-id": "QWERTY54",              \
@@ -496,8 +497,8 @@ acl-revoke:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/card:revoke' \
                  --message '{ "message": { "request": { \
                                            "card-number": 8165538, \
-                                           "start-date": "2020-01-01", \
-                                           "end-date": "2020-12-31", \
+                                           "start-date": "2023-01-01", \
+                                           "end-date": "2023-12-31", \
                                            "doors": [ "Dungeon" ], \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \

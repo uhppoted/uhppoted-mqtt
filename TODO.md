@@ -22,6 +22,7 @@ Configuring Nucleus with provisioned resource details...
 
 ## TODO
 
+- [ ] [MQTT Dash](https://iot.stackexchange.com/questions/6561/generic-mobile-applications-for-smart-home-devices)
 - [ ] [UCANs](https://ucan.xyz/)
 - [ ] (optionally) Generate uhppoted.conf if it doesn't exist
 - [ ] Make reconnect time configurable

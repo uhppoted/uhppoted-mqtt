@@ -31,6 +31,7 @@ type Run struct {
 	configuration       string
 	dir                 string
 	pidFile             string
+	logLevel            string
 	logFile             string
 	logFileSize         int
 	console             bool

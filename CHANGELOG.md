@@ -4,6 +4,7 @@
 
 ### Added
 1. `doc.go` package overview documentation.
+3. Added PIN support to get-card and put-card APIs.
 
 ### Updated
 1. Replaced (most) logging with uhppoted-lib logging.

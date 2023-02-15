@@ -16,6 +16,7 @@ import (
 var RUN = Run{
 	configuration: "/usr/local/etc/com.github.uhppoted/uhppoted.conf",
 	dir:           "/usr/local/var/com.github.uhppoted",
+	logLevel:      "info",
 	pidFile:       fmt.Sprintf("/usr/local/var/com.github.uhppoted/%s.pid", SERVICE),
 	logFile:       fmt.Sprintf("/usr/local/var/com.github.uhppoted/logs/%s.log", SERVICE),
 	logFileSize:   10,
@@ -29,6 +30,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 	flagset.StringVar(&r.configuration, "config", r.configuration, "Sets the configuration file path")
 	flagset.StringVar(&r.dir, "dir", r.dir, "Work directory")
 	flagset.StringVar(&r.pidFile, "pid", r.pidFile, "Sets the service PID file path")
+	flagset.StringVar(&r.logLevel, "log-level", r.logFile, "Sets the logging level (debug, info, warning or error)")
 	flagset.StringVar(&r.logFile, "logfile", r.logFile, "Sets the log file path")
 	flagset.IntVar(&r.logFileSize, "logfilesize", r.logFileSize, "Sets the log file size before forcing a log rotate")
 	flagset.BoolVar(&r.console, "console", r.console, "Writes log entries to stdout")

@@ -91,11 +91,13 @@ func (d *Device) GetCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 
 func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	type card struct {
-		CardNumber uint32                `json:"card-number"`
-		From       *types.Date           `json:"start-date"`
-		To         *types.Date           `json:"end-date"`
-		Doors      map[uint8]interface{} `json:"doors"`
+		CardNumber uint32        `json:"card-number"`
+		From       *types.Date   `json:"start-date"`
+		To         *types.Date   `json:"end-date"`
+		Doors      map[uint8]any `json:"doors"`
+		PIN        uint32        `json:"PIN,omitempty"`
 	}
+
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Card     *card              `json:"card"`
@@ -113,67 +115,79 @@ func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card", nil), fmt.Errorf("Invalid/missing card")
 	}
 
-	c := *body.Card
+	if body.Card.PIN > 999999 {
+		return common.MakeError(uhppoted.StatusBadRequest,
+			"Invalid card PIN",
+			fmt.Errorf("PIN %v out of range", body.Card.PIN)), fmt.Errorf("Invalid card PIN (%v)", body.Card.PIN)
+	}
 
-	rq := uhppoted.PutCardRequest{
-		DeviceID: *body.DeviceID,
-		Card: types.Card{
-			CardNumber: c.CardNumber,
-			From:       c.From,
-			To:         c.To,
-			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
-		},
+	deviceID := uint32(*body.DeviceID)
+	c := types.Card{
+		CardNumber: body.Card.CardNumber,
+		From:       body.Card.From,
+		To:         body.Card.To,
+		Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+		PIN:        types.PIN(body.Card.PIN),
 	}
 
 	for _, k := range []uint8{1, 2, 3, 4} {
-		switch v := c.Doors[k].(type) {
+		switch v := body.Card.Doors[k].(type) {
 		case bool:
 			if v {
-				rq.Card.Doors[k] = 1
+				c.Doors[k] = 1
 			}
 
 		case int:
 			if v >= 2 && v < 254 {
-				rq.Card.Doors[k] = uint8(v)
+				c.Doors[k] = uint8(v)
 			}
 
 		case float64:
 			if int(v) >= 2 && int(v) < 254 {
-				rq.Card.Doors[k] = uint8(v)
+				c.Doors[k] = uint8(v)
 			}
 		}
 	}
 
-	response, err := impl.PutCard(rq)
-	if err != nil {
-		return common.MakeError(uhppoted.StatusInternalServerError, fmt.Sprintf("Could not store card %v to %d", body.Card.CardNumber, *body.DeviceID), err), err
+	if ok, err := impl.PutCard(deviceID, c); err != nil {
+		return common.MakeError(uhppoted.StatusInternalServerError,
+			fmt.Sprintf("Could not store card %v to %d", c.CardNumber, deviceID),
+			err), err
+	} else if !ok {
+		return common.MakeError(
+				uhppoted.StatusInternalServerError,
+				fmt.Sprintf("Failed to store card %v to %d", c.CardNumber, deviceID),
+				fmt.Errorf("put-card returned %v", ok)),
+			fmt.Errorf("put-card for card %v:%v returned %v", deviceID, c.CardNumber, ok)
 	}
 
-	doors := map[uint8]interface{}{1: false, 2: false, 3: false, 4: false}
-	for _, k := range []uint8{1, 2, 3, 4} {
-		v := response.Card.Doors[k]
-		switch v {
-		case 0:
-			doors[k] = false
-		case 1:
-			doors[k] = true
-		default:
-			doors[k] = v
-		}
-	}
-
-	return struct {
+	response := struct {
 		DeviceID uhppoted.DeviceID `json:"device-id"`
 		Card     card              `json:"card"`
 	}{
-		DeviceID: response.DeviceID,
+		DeviceID: uhppoted.DeviceID(deviceID),
 		Card: card{
-			CardNumber: response.Card.CardNumber,
-			From:       response.Card.From,
-			To:         response.Card.To,
-			Doors:      doors,
+			CardNumber: c.CardNumber,
+			From:       c.From,
+			To:         c.To,
+			Doors:      map[uint8]any{1: false, 2: false, 3: false, 4: false},
+			PIN:        uint32(c.PIN),
 		},
-	}, nil
+	}
+
+	for _, k := range []uint8{1, 2, 3, 4} {
+		v := c.Doors[k]
+		switch v {
+		case 0:
+			response.Card.Doors[k] = false
+		case 1:
+			response.Card.Doors[k] = true
+		default:
+			response.Card.Doors[k] = v
+		}
+	}
+
+	return response, nil
 }
 
 func (d *Device) DeleteCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
