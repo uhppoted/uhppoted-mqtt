@@ -16,6 +16,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
 	filelogger "github.com/uhppoted/uhppoted-lib/eventlog"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 type service struct {
@@ -56,7 +57,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 }
 
 func (r *Run) Execute(args ...interface{}) error {
-	syslog.Printf("%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "Microsoft Windows", os.Getpid())
+	log.Infof("", "%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "Microsoft Windows", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.start(c)
@@ -65,10 +66,10 @@ func (r *Run) Execute(args ...interface{}) error {
 	return r.execute(f)
 }
 
-func (r *Run) start(c *config.Config) error {
+func (cmd *Run) start(c *config.Config) error {
 	var logger *syslog.Logger
 
-	if r.console {
+	if cmd.console {
 		logger = syslog.New(os.Stdout, "", syslog.LstdFlags)
 	} else if eventlogger, err := eventlog.Open(SERVICE); err == nil {
 		defer eventlogger.Close()
@@ -76,17 +77,19 @@ func (r *Run) start(c *config.Config) error {
 		events := EventLog{eventlogger}
 		logger = syslog.New(&events, SERVICE, syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	} else {
-		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
+		events := filelogger.Ticker{Filename: cmd.logFile, MaxSize: cmd.logFileSize}
 		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	}
 
-	logger.Printf("%s service - start\n", SERVICE)
+	log.SetLogger(logger)
+	log.SetLevel(cmd.logLevel)
+	log.Infof("", "%s service - start\n", SERVICE)
 
-	if r.console {
+	if cmd.console {
 		interrupt := make(chan os.Signal, 1)
 
 		signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
-		r.run(c, logger, interrupt)
+		cmd.run(c, logger, interrupt)
 		return nil
 	}
 
@@ -94,10 +97,10 @@ func (r *Run) start(c *config.Config) error {
 		name:   SERVICE,
 		conf:   c,
 		logger: logger,
-		cmd:    r,
+		cmd:    cmd,
 	}
 
-	logger.Printf("%s service - starting\n", SERVICE)
+	log.Infof("", "%s service - starting\n", SERVICE)
 
 	if err := svc.Run(SERVICE, &uhppoted); err != nil {
 		fmt.Printf("   Unable to execute ServiceManager.Run request (%v)\n", err)
@@ -107,11 +110,11 @@ func (r *Run) start(c *config.Config) error {
 		fmt.Printf("     > %s --console\n", SERVICE)
 		fmt.Println()
 
-		logger.Fatalf("Error executing ServiceManager.Run request: %v", err)
+		log.Fatalf("", "Error executing ServiceManager.Run request: %v", err)
 		return err
 	}
 
-	logger.Printf("%s daemon - started\n", SERVICE)
+	log.Infof("", "%s daemon - started\n", SERVICE)
 
 	return nil
 }

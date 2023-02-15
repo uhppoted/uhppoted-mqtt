@@ -234,7 +234,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		return
 	}
 
-	rsa, err := auth.NewRSA(c.RSA.KeyDir, logger)
+	rsa, err := auth.NewRSA(c.RSA.KeyDir)
 	if mqttd.Authentication == "RSA" && err != nil {
 		log.Errorf(LOG_TAG, "%v", err)
 		return

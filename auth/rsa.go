@@ -12,12 +12,13 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 type keyset struct {
@@ -30,10 +31,9 @@ type keyset struct {
 type RSA struct {
 	signingKeys    keyset
 	encryptionKeys keyset
-	log            *log.Logger
 }
 
-func NewRSA(keydir string, logger *log.Logger) (*RSA, error) {
+func NewRSA(keydir string) (*RSA, error) {
 	var err error
 
 	r := RSA{
@@ -49,11 +49,10 @@ func NewRSA(keydir string, logger *log.Logger) (*RSA, error) {
 			clientKeys: map[string]*rsa.PublicKey{},
 			directory:  filepath.Join(keydir, "encryption"),
 		},
-		log: logger,
 	}
 
 	f := func(ks *keyset) error {
-		keys, err := loadPublicKeys(ks.directory, logger)
+		keys, err := loadPublicKeys(ks.directory)
 		if err != nil {
 			return err
 		}
@@ -68,24 +67,24 @@ func NewRSA(keydir string, logger *log.Logger) (*RSA, error) {
 
 	r.signingKeys.key, err = loadPrivateKey(filepath.Join(r.signingKeys.directory, "mqttd.key"))
 	if err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("RSA", "%v", err)
 	}
 
 	r.encryptionKeys.key, err = loadPrivateKey(filepath.Join(r.encryptionKeys.directory, "mqttd.key"))
 	if err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("RSA", "%v", err)
 	}
 
 	if err := f(&r.signingKeys); err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("RSA", "%v", err)
 	}
 
 	if err := f(&r.encryptionKeys); err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("RSA", "%v", err)
 	}
 
-	watch("signing keys", r.signingKeys.directory, func() error { return f(&r.signingKeys) }, logger)
-	watch("encryption keys", r.encryptionKeys.directory, func() error { return f(&r.encryptionKeys) }, logger)
+	watch("signing keys", r.signingKeys.directory, func() error { return f(&r.signingKeys) })
+	watch("encryption keys", r.encryptionKeys.directory, func() error { return f(&r.encryptionKeys) })
 
 	return &r, nil
 }
@@ -228,7 +227,7 @@ func loadPrivateKey(filepath string) (*rsa.PrivateKey, error) {
 	return pk, nil
 }
 
-func loadPublicKeys(dir string, log *log.Logger) (map[string]*rsa.PublicKey, error) {
+func loadPublicKeys(dir string) (map[string]*rsa.PublicKey, error) {
 	keys := map[string]*rsa.PublicKey{}
 	filemode, err := os.Stat(dir)
 	if err != nil {
@@ -252,24 +251,24 @@ func loadPublicKeys(dir string, log *log.Logger) (map[string]*rsa.PublicKey, err
 
 			bytes, err := ioutil.ReadFile(filepath.Join(dir, filename))
 			if err != nil {
-				log.Printf("WARN  %v", err)
+				log.Warnf("RSA", "%v", err)
 			}
 
 			block, _ := pem.Decode(bytes)
 			if block == nil || block.Type != "PUBLIC KEY" {
-				log.Printf("WARN  %s is not a valid RSA public key", filename)
+				log.Warnf("RSA", "%s is not a valid RSA public key", filename)
 				continue
 			}
 
 			key, err := x509.ParsePKIXPublicKey(block.Bytes)
 			if err != nil {
-				log.Printf("WARN  %s is not a valid RSA public key (%v)", filename, err)
+				log.Warnf("RSA", "%s is not a valid RSA public key (%v)", filename, err)
 				continue
 			}
 
 			pubkey, ok := key.(*rsa.PublicKey)
 			if !ok {
-				log.Printf("WARN  %s is not a valid RSA public key", filename)
+				log.Warnf("RSA", "%s is not a valid RSA public key", filename)
 				continue
 			}
 
@@ -281,11 +280,11 @@ func loadPublicKeys(dir string, log *log.Logger) (map[string]*rsa.PublicKey, err
 }
 
 // NOTE: interim file watcher implementation pending fsnotify in Go 1.4
-func watch(name string, directory string, reload func() error, logger *log.Logger) {
+func watch(name string, directory string, reload func() error) {
 	go func() {
 		finfo, err := os.Stat(directory)
 		if err != nil {
-			logger.Printf("WARN Failed to get directory information for '%s': %v", directory, err)
+			log.Warnf("RSA", "Failed to get directory information for '%s': %v", directory, err)
 			return
 		}
 
@@ -296,7 +295,7 @@ func watch(name string, directory string, reload func() error, logger *log.Logge
 			finfo, err := os.Stat(directory)
 			if err != nil {
 				if !logged {
-					logger.Printf("WARN Failed to get directory information for '%s': %v", directory, err)
+					log.Warnf("RSA", "Failed to get directory information for '%s': %v", directory, err)
 					logged = true
 				}
 
@@ -305,15 +304,15 @@ func watch(name string, directory string, reload func() error, logger *log.Logge
 
 			logged = false
 			if finfo.ModTime() != lastModified {
-				log.Printf("INFO  Reloading information from %s\n", directory)
+				log.Infof("RSA", "Reloading information from %s\n", directory)
 
 				err := reload()
 				if err != nil {
-					log.Printf("ERROR Failed to reload information from %s: %v", directory, err)
+					log.Errorf("RSA", "Failed to reload information from %s: %v", directory, err)
 					continue
 				}
 
-				log.Printf("WARN  Updated %s from %s", name, directory)
+				log.Warnf("RSA", "Updated %s from %s", name, directory)
 				lastModified = finfo.ModTime()
 			}
 		}

@@ -3,7 +3,7 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
+	syslog "log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -11,6 +11,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-lib/eventlog"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 var RUN = Run{
@@ -40,7 +41,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 }
 
 func (r *Run) Execute(args ...interface{}) error {
-	log.Printf("%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "MacOS", os.Getpid())
+	log.Infof("", "%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "MacOS", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.exec(c)
@@ -49,15 +50,15 @@ func (r *Run) Execute(args ...interface{}) error {
 	return r.execute(f)
 }
 
-func (r *Run) exec(c *config.Config) error {
-	logger := log.New(os.Stdout, "", log.LstdFlags)
+func (cmd *Run) exec(c *config.Config) error {
+	logger := syslog.New(os.Stdout, "", syslog.LstdFlags)
 	interrupt := make(chan os.Signal, 1)
 
 	signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	if !r.console {
-		events := eventlog.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
-		logger = log.New(&events, "", log.Ldate|log.Ltime|log.LUTC)
+	if !cmd.console {
+		events := eventlog.Ticker{Filename: cmd.logFile, MaxSize: cmd.logFileSize}
+		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 		rotate := make(chan os.Signal, 1)
 
 		signal.Notify(rotate, syscall.SIGHUP)
@@ -65,13 +66,16 @@ func (r *Run) exec(c *config.Config) error {
 		go func() {
 			for {
 				<-rotate
-				log.Printf("Rotating %s log file '%s'\n", SERVICE, r.logFile)
+				log.Infof("", "Rotating %s log file '%s'\n", SERVICE, cmd.logFile)
 				events.Rotate()
 			}
 		}()
 	}
 
-	r.run(c, logger, interrupt)
+	log.SetLogger(logger)
+	log.SetLevel(cmd.logLevel)
+
+	cmd.run(c, logger, interrupt)
 
 	return nil
 }

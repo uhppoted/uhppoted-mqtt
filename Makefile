@@ -130,7 +130,7 @@ config: build
 	./bin/uhppoted-mqtt config
 
 run: build
-	./bin/uhppoted-mqtt run --console
+	./bin/uhppoted-mqtt run --log-level debug --console
 
 get-devices:
 	mqtt publish --topic 'uhppoted/gateway/requests/devices:get' \
