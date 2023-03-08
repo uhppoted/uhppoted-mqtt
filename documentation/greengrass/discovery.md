@@ -1,12 +1,11 @@
 # Greengrass Discovery
 
 Enabling the Greengrass _IP Detector_ components allows the _uhppoted-mqtt_ broker certificates and endpoints to be 
-retrieved from AWS rather than configured manually. 
-
-Tim Irwin has kindly provided a [script](uhppoted-setup.sh) that does this (and a bit more) - the write up below
+retrieved from AWS rather than configured manually. Tim Irwin has kindly provided a [script](uhppoted-setup.sh) that does this (and a whole lot more) - the write up below
 describes what is involved.
 
-As per the AWS [Use IP detector to automatically manage endpoints](https://docs.aws.amazon.com/greengrass/v2/developerguide/manage-core-device-endpoints.html#use-ip-detector) documentation, _IP Detector_ is suitable for 'simple' network topologies.
+Please note that - as per the AWS [Use IP detector to automatically manage endpoints](https://docs.aws.amazon.com/greengrass/v2/developerguide/manage-core-device-endpoints.html#use-ip-detector) documentation, _IP Detector_
+is not suitable for 'complex' network topologies.
 
 
 ## Enable IP Detector
@@ -15,13 +14,12 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), configure t
 with the _IP Detector_ component:
 
    1. Open _Manage/Greengrass devices/Core devices_ and click on the _uhppoted-greengrass_ device.
-   2. Open the _Client devices tab
-   3. Click on _Configure Cloud discovery_
-   4. If you've worked through the initial setup everything should already be configure - except for 
-      the IP Detector.
-   5. Check the _IP Detector_ component and click on the _Edit configuration_
+   2. Open the _Client_ devices tab.
+   3. Click on _Configure Cloud discovery_.
+   4. If you've worked through the initial setup everything except for the _IP Detector_ should already be configured.
+   5. Check the _IP Detector_ component and click on _Edit configuration_
    6. Update the configuration to include the local IPv4 addresses (since presumable _uhppoted-mqtt_ is running on
-      the same host as the Greengrass core device)
+      the same host as the _Greengrass_ `core` device)
 ```
 {
     "includeIPv4LoopbackAddrs": true
@@ -43,12 +41,8 @@ You should see log entries for the _IP Detector_:
 ## Retrieve broker certificate and endpoints from AWS
 
 The certificate and endpoints for uhppoted-greengrass_ core device can be retrieved via the [_AWS Greengrass 
-discovery_ REST API](https://docs.aws.amazon.com/greengrass/v1/developerguide/gg-discover-api.html):
+Discovery_ REST API](https://docs.aws.amazon.com/greengrass/v1/developerguide/gg-discover-api.html):
 
-```
-curl --cert "/etc/uhppoted/mqtt/greengrass/thing.cert" --key "/etc/uhppoted/mqtt/greengrass/thing.key" https://greengrass-ats.iot.us-east-1.amazonaws.com:8443/greengrass/discover/thing/uhppoted-thing
-```
-(or using `jq`):
 ```
 curl --cert "/etc/uhppoted/mqtt/greengrass/thing.cert" --key "/etc/uhppoted/mqtt/greengrass/thing.key" https://greengrass-ats.iot.us-east-1.amazonaws.com:8443/greengrass/discover/thing/uhppoted-thing | jq .
 ```
@@ -62,8 +56,8 @@ curl --cert "/etc/uhppoted/mqtt/greengrass/thing.cert" --key "/etc/uhppoted/mqtt
           "thingArn": "arn:aws:iot:us-east-1:XXXXXXXXXXXX:thing/uhppoted-greengrass",
           "Connectivity": [
             {
-              "Id": "155.138.156.243",
-              "HostAddress": "155.138.156.243",
+              "Id": "155.156.157.158",
+              "HostAddress": "155.156.157.158",
               "PortNumber": 8883,
               "Metadata": ""
             },
