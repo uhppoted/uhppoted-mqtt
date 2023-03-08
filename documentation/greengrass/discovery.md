@@ -1,11 +1,12 @@
 # Greengrass Discovery
 
-Enabling the Greengrass _IP Detector_ components allows the _uhppoted-mqtt_ broker certificates and endpoints to be 
+Enabling the Greengrass _IP Detector_ component allows the _uhppoted-mqtt_ broker certificates and endpoints to be 
 retrieved from AWS rather than configured manually. Tim Irwin has kindly provided a [script](uhppoted-setup.sh) that does this (and a whole lot more) - the write up below
 describes what is involved.
 
-Please note that - as per the AWS [Use IP detector to automatically manage endpoints](https://docs.aws.amazon.com/greengrass/v2/developerguide/manage-core-device-endpoints.html#use-ip-detector) documentation, _IP Detector_
-is not suitable for 'complex' network topologies.
+Please note that - as per the AWS [Use IP detector to automatically manage endpoints](https://docs.aws.amazon.com/greengrass/v2/developerguide/manage-core-device-endpoints.html#use-ip-detector) documentation - _IP Detector_
+is not suitable for 'complex' network topologies. For _uhppoted-mqtt_ on the same LAN or host as the `core` device
+however, it works just fine.
 
 
 ## Enable IP Detector
@@ -40,7 +41,7 @@ You should see log entries for the _IP Detector_:
 
 ## Retrieve broker certificate and endpoints from AWS
 
-The certificate and endpoints for uhppoted-greengrass_ core device can be retrieved via the [_AWS Greengrass 
+The certificate and endpoints for the _uhppoted-greengrass_ core device can be retrieved via the [_AWS Greengrass 
 Discovery_ REST API](https://docs.aws.amazon.com/greengrass/v1/developerguide/gg-discover-api.html):
 
 ```
