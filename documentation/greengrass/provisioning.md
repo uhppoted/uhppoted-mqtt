@@ -115,10 +115,13 @@ In the [_AWS IoT_ console](https://console.aws.amazon.com/iot/home), create a ne
       - Amazon Root CA certificates
    7. Copy the certificates to the _VPS_ (or _Raspberry Pi_, etc) e.g.:
 ```
-scp AmazonRootCA1.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA1.cert
-scp AmazonRootCA3.pem          <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA3.cert
-scp 3e7a...-private.pem.key    <host>:/etc/uhppoted/mqtt/greengrass/thing.key
-scp 3e7a...certificate.pem.crt <host>:/etc/uhppoted/mqtt/greengrass/thing.cert
+sudo mkdir -p /etc/uhppoted/mqtt/greengrass
+```
+```
+scp AmazonRootCA1.pem           <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA1.cert
+scp AmazonRootCA3.pem           <host>:/etc/uhppoted/mqtt/greengrass/AmazonRootCA3.cert
+scp 3e7a...-private.pem.key     <host>:/etc/uhppoted/mqtt/greengrass/thing.key
+scp 3e7a...-certificate.pem.crt <host>:/etc/uhppoted/mqtt/greengrass/thing.cert
 ```
 ```
 sudo chown uhppoted:uhppoted /etc/uhppoted/mqtt/greengrass/*

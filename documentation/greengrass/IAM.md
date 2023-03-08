@@ -133,7 +133,7 @@ run the installer twice.
 4. Click on _Next: Review_
 5. Fill in the name and description fields:
    - `Name`: `UhppotedGreengrassTokenExchangeRoleAccess`
-   - `Description`: _Greengrass policy for uhppoted-greengrass core device access to S3 and CloudWatch
+   - `Description`: _Greengrass policy for uhppoted-greengrass core device access to S3 and CloudWatch_
 6. Click on _Create Policy_
 
 
@@ -186,10 +186,10 @@ some warnings and errors and having to run the installer twice.
   ]
 }
 ```
-      - Attach the UhppotedGreengrassTokenExchangeRoleAccess policy created above
-      - Update the name and description fields:
-        - Name: _UhppotedGreengrassTokenExchangeRole_
-        - Description: _Token exchange role for uhppoted-greengrass IoT core device to access S3 and Cloudwatch_
+   - Attach the UhppotedGreengrassTokenExchangeRoleAccess policy created above
+   - Update the name and description fields:
+   - Name: _UhppotedGreengrassTokenExchangeRole_
+   - Description: _Token exchange role for uhppoted-greengrass IoT core device to access S3 and Cloudwatch_
 
    4. Click on _Create_
 
@@ -219,12 +219,16 @@ devices:
 2. Open the [_Users_](https://console.aws.amazon.com/iamv2/home#/users) page
 3. Click _Add users_
 4. Enter the user name _uhppoted-greengrass_
-5. Select the _Access key - Programmatic access_ AWS credential type
-6. Click _Next: Permissions_
-7. Check the _uhppoted-greengrass_ group under the _Add user to group_ section
-8. Click _Next: Tags_
-9. Click _Next: Review_
-10. Click _Create user_
+5. Click _Next: Permissions_
+6. Check the _uhppoted-greengrass_ group under the _Add user to group_ section
+7. Click _Next: Tags_
+8. Click _Next: Review_
+9. Click _Create user_
+10. Open the _uhppoted-greengrass_ user _Security credentials_ tab
+11. Choose _Create access key_
+    - Check either _Application running outside AWS_ or _Other_
+    - Click through _Tag_
+    - Click _Create access key_
 11. **Copy the access key and secret key for later use**
 12. Click _Close_
 

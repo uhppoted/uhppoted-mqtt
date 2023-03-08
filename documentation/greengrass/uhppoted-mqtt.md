@@ -38,7 +38,7 @@ Edit _/etc/uhppoted/uhppoted.conf_:
 - Set the MQTT broker connection information **using the host IP address for the MQTT broker**
 ```
 mqtt.connection.client.ID = uhppoted-thing
-mqtt.connection.broker = tls://<host-ip-address>:8883
+mqtt.connection.broker = tls://localhost:8883
 mqtt.connection.broker.certificate = /etc/uhppoted/mqtt/greengrass/CA.cert
 mqtt.connection.client.certificate = /etc/uhppoted/mqtt/greengrass/thing.cert
 mqtt.connection.client.key = /etc/uhppoted/mqtt/greengrass/thing.key
