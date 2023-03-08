@@ -26,10 +26,10 @@ with more than a reasonable amount of coffee:
    installation this is a GOOD thing but is somewhat overkill when _uhppoted-mqtt_ and the _Moquette_ are on the same device
    and a reasonable set of firewall rules are in place. Howsoever...
 
-2. Clients are expected to dynamically obtain the X.509 certificates required to connect to _Moquette_ using AWS
-   _Greengrass Discovery_.
+2. ~~Clients are expected to dynamically obtain the X.509 certificates required to connect to _Moquette_ using AWS
+   _Greengrass Discovery_.~~
 
-3. The workaround for clients not using Greengrass Discovery is not officially documented (ref. [Add docs about manual connection of client devices to GG Core without cloud discovery](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20)).
+3. ~~The workaround for clients not using Greengrass Discovery is not officially documented (ref. [Add docs about manual connection of client devices to GG Core without cloud discovery](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20)).~~
 
 4. Then there's the message routing...
 
@@ -41,6 +41,10 @@ This guide is essentially a desperation resource distilled from:
 - [Implementing Local Client Devices with AWS IoT Greengrass](https://aws.amazon.com/blogs/iot/implementing-local-client-devices-with-aws-iot-greengrass)
 - [How to Bridge Mosquitto MQTT Broker to AWS IoT](https://aws.amazon.com/blogs/iot/how-to-bridge-mosquitto-mqtt-broker-to-aws-iot/)
 
+- (Things You Must Know When Setting up AWS IoT Greengrass On Amazon EC2)[https://www.trek10.com/blog/things-you-must-know-when-setting-up-greengrass-on-ec2]
+- [Get started with Greengrass](https://www.digi.com/resources/documentation/digidocs/embedded/dey/2.6/cc6/yocto_t_aws-get-started-gg)
+- [Make a robot with AWS IoT Workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/446304b7-b946-4c40-b78f-08bf0025d8f6/en-US)
+
 ## Quickstart
 
 1. Work through the [Preparation](#preparation) section below
@@ -49,6 +53,7 @@ This guide is essentially a desperation resource distilled from:
 4. Work through the [uhpppoted-mqtt](uhppoted-mqtt.md) _HOWTO_ to setup and configure _uhppoted-mqtt_
 5. Open the [AWS IoT Core Test client](https://console.aws.amazon.com/iot/home#/test) and subscribe to the `#` topic
 6. Voilà!
+7. (Optional/recommended) Enable [IP Detect](discovery.md).
 
 The write-up below adds a bit more detail about the process.
 

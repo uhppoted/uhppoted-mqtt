@@ -9,6 +9,7 @@
 ### Updated
 1. Replaced (most) logging with uhppoted-lib logging.
 2. Fixed Windows event logging.
+3. Added Cloud Discovery section to AWS Greengrass HOWTO.
 
 
 ## [0.8.3](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.3) - 2022-12-16
