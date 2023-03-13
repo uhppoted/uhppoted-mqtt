@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.4    | Added support for card keypad PINs                                                        |
 | v0.8.3    | Reworked lockfiles to use `flock` _syscall_                                               |
 | v0.8.2    | Added softlock for client connection and first draft of command documentation             |
 | v0.8.1    | Added human readable event fields and fixed health check for INADDR_ANY addresses         |
