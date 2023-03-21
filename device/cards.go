@@ -92,8 +92,8 @@ func (d *Device) GetCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
 	type card struct {
 		CardNumber uint32        `json:"card-number"`
-		From       *types.Date   `json:"start-date"`
-		To         *types.Date   `json:"end-date"`
+		From       types.Date    `json:"start-date"`
+		To         types.Date    `json:"end-date"`
 		Doors      map[uint8]any `json:"doors"`
 		PIN        uint32        `json:"PIN,omitempty"`
 	}

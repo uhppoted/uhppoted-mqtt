@@ -262,7 +262,7 @@ func validate(impl uhppoted.IUHPPOTED, deviceID uint32, cardNumber uint32, door 
 
 	// Check start/end validity dates
 	today := types.Date(time.Now())
-	if card.From == nil || card.To == nil || today.Before(*card.From) || today.After(*card.To) {
+	if card.From.IsZero() || card.To.IsZero() || today.Before(card.From) || today.After(card.To) {
 		return fmt.Errorf("Card %v is not valid for %v", card.CardNumber, today)
 	}
 
