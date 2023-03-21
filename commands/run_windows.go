@@ -140,28 +140,25 @@ func (s *service) Execute(args []string, r <-chan svc.ChangeRequest, status chan
 	status <- svc.Status{State: svc.Running, Accepts: commands}
 
 loop:
-	for {
-		select {
-		case c := <-r:
-			s.logger.Printf("%s service - select: %v  %v\n", SERVICE, c.Cmd, c.CurrentStatus)
-			switch c.Cmd {
-			case svc.Interrogate:
-				s.logger.Printf("%s service - svc.Interrogate %v\n", SERVICE, c.CurrentStatus)
-				status <- c.CurrentStatus
+	for c := range r {
+		s.logger.Printf("%s service - select: %v  %v\n", SERVICE, c.Cmd, c.CurrentStatus)
+		switch c.Cmd {
+		case svc.Interrogate:
+			s.logger.Printf("%s service - svc.Interrogate %v\n", SERVICE, c.CurrentStatus)
+			status <- c.CurrentStatus
 
-			case svc.Stop:
-				interrupt <- syscall.SIGINT
-				s.logger.Printf("%s service- svc.Stop\n", SERVICE)
-				break loop
+		case svc.Stop:
+			interrupt <- syscall.SIGINT
+			s.logger.Printf("%s service- svc.Stop\n", SERVICE)
+			break loop
 
-			case svc.Shutdown:
-				interrupt <- syscall.SIGTERM
-				s.logger.Printf("%s service - svc.Shutdown\n", SERVICE)
-				break loop
+		case svc.Shutdown:
+			interrupt <- syscall.SIGTERM
+			s.logger.Printf("%s service - svc.Shutdown\n", SERVICE)
+			break loop
 
-			default:
-				s.logger.Printf("%s service - svc.????? (%v)\n", SERVICE, c.Cmd)
-			}
+		default:
+			s.logger.Printf("%s service - svc.????? (%v)\n", SERVICE, c.Cmd)
 		}
 	}
 

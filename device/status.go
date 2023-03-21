@@ -30,7 +30,7 @@ func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 	}
 
 	if body.DeviceID == 0 {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	deviceID := body.DeviceID

@@ -156,7 +156,7 @@ func (cmd *Daemonize) register(i *info) error {
 	s, err := m.OpenService(cmd.name)
 	if err == nil {
 		s.Close()
-		return fmt.Errorf("service %s already exists", cmd.Name)
+		return fmt.Errorf("service %v already exists", cmd.Name)
 	}
 
 	s, err = m.CreateService(cmd.name, i.Executable, config, "is", "auto-started")
@@ -228,7 +228,9 @@ func (cmd *Daemonize) conf(i *info) error {
 	// replace line endings
 	var b strings.Builder
 
-	err := cfg.Write(&b)
+	if err := cfg.Write(&b); err != nil {
+		return err
+	}
 
 	// write back config with any updated information
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)

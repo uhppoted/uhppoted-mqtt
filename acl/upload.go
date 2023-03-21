@@ -21,12 +21,12 @@ func (a *ACL) Upload(impl uhppoted.IUHPPOTED, request []byte) (interface{}, erro
 	}
 
 	if body.URL == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", nil), fmt.Errorf("Missing/invalid upload URI")
+		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", nil), fmt.Errorf("missing/invalid upload URI")
 	}
 
 	uri, err := url.Parse(*body.URL)
 	if err != nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", err), fmt.Errorf("Invalid upload URL '%v' (%w)", body.URL, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid upload URI", err), fmt.Errorf("invalid upload URL '%v' (%w)", body.URL, err)
 	}
 
 	acl, errors := api.GetACL(a.UHPPOTE, a.Devices)

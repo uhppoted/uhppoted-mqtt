@@ -23,12 +23,12 @@ func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, er
 	}
 
 	if body.URL == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", nil), fmt.Errorf("Missing/invalid download URL")
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", nil), fmt.Errorf("missing/invalid download URL")
 	}
 
 	uri, err := url.Parse(*body.URL)
 	if err != nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("Invalid download URL '%v' (%w)", body.URL, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("invalid download URL '%v' (%w)", body.URL, err)
 	}
 
 	acl, err := a.fetch("acl:download", uri.String(), body.MimeType)
@@ -37,7 +37,7 @@ func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, er
 	}
 
 	if acl == nil {
-		return common.MakeError(StatusBadRequest, "Error downloading ACL", nil), fmt.Errorf("Download return nil ACL")
+		return common.MakeError(StatusBadRequest, "Error downloading ACL", nil), fmt.Errorf("download return nil ACL")
 	}
 
 	for k, l := range *acl {

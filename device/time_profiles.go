@@ -19,11 +19,11 @@ func (d *Device) GetTimeProfile(impl uhppoted.IUHPPOTED, request []byte) (interf
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.ProfileID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing time profile ID", nil), fmt.Errorf("Invalid/missing time profile ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing time profile ID", nil), fmt.Errorf("invalid/missing time profile ID")
 	}
 
 	rq := uhppoted.GetTimeProfileRequest{
@@ -50,11 +50,11 @@ func (d *Device) PutTimeProfile(impl uhppoted.IUHPPOTED, request []byte) (interf
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.Profile == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing time profile", nil), fmt.Errorf("Invalid/missing time profile")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing time profile", nil), fmt.Errorf("invalid/missing time profile")
 	}
 
 	rq := uhppoted.PutTimeProfileRequest{
@@ -80,7 +80,7 @@ func (d *Device) ClearTimeProfiles(impl uhppoted.IUHPPOTED, request []byte) (int
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	rq := uhppoted.ClearTimeProfilesRequest{
@@ -110,7 +110,7 @@ func (d *Device) GetTimeProfiles(impl uhppoted.IUHPPOTED, request []byte) (inter
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetTimeProfilesRequest{
@@ -138,7 +138,7 @@ func (d *Device) PutTimeProfiles(impl uhppoted.IUHPPOTED, request []byte) (inter
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	rq := uhppoted.PutTimeProfilesRequest{

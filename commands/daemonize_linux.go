@@ -304,7 +304,7 @@ func (cmd *Daemonize) genkeys(i *info) error {
 func getUserGroup(s string) (int, int, error) {
 	match := regexp.MustCompile(`(\w+?):(\w+)`).FindStringSubmatch(s)
 	if match == nil {
-		return 0, 0, fmt.Errorf("Invalid user:group '%s'", s)
+		return 0, 0, fmt.Errorf("invalid user:group '%s'", s)
 	}
 
 	u, err := user.Lookup(match[1])

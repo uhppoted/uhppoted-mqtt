@@ -11,7 +11,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -142,7 +141,7 @@ func (r *RSA) Encrypt(plaintext []byte, clientID string, label string) ([]byte, 
 	hash := sha256.Sum256([]byte(label))
 	pubkey, ok := r.encryptionKeys.clientKeys[clientID]
 	if !ok {
-		return nil, nil, fmt.Errorf("No public key for %s", clientID)
+		return nil, nil, fmt.Errorf("no public key for %s", clientID)
 	}
 
 	key, err := rsa.EncryptOAEP(sha256.New(), rng, pubkey, secretKey, hash[:16])
@@ -204,7 +203,7 @@ func (r *RSA) Decrypt(ciphertext []byte, key []byte, label string) ([]byte, erro
 }
 
 func loadPrivateKey(filepath string) (*rsa.PrivateKey, error) {
-	bytes, err := ioutil.ReadFile(filepath)
+	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +237,7 @@ func loadPublicKeys(dir string) (map[string]*rsa.PublicKey, error) {
 		return keys, fmt.Errorf("%s is not a directory", dir)
 	}
 
-	list, err := ioutil.ReadDir(dir)
+	list, err := os.ReadDir(dir)
 	if err != nil {
 		return keys, err
 	}
@@ -249,7 +248,7 @@ func loadPublicKeys(dir string) (map[string]*rsa.PublicKey, error) {
 		if ext == ".pub" {
 			clientID := strings.TrimSuffix(filename, ext)
 
-			bytes, err := ioutil.ReadFile(filepath.Join(dir, filename))
+			bytes, err := os.ReadFile(filepath.Join(dir, filename))
 			if err != nil {
 				log.Warnf("RSA", "%v", err)
 			}

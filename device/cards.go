@@ -18,7 +18,7 @@ func (d *Device) GetCards(impl uhppoted.IUHPPOTED, request []byte) (interface{},
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetCardsRequest{
@@ -43,7 +43,7 @@ func (d *Device) DeleteCards(impl uhppoted.IUHPPOTED, request []byte) (interface
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	rq := uhppoted.DeleteCardsRequest{
@@ -69,11 +69,11 @@ func (d *Device) GetCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.CardNumber == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card number", nil), fmt.Errorf("Invalid/missing card number")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card number", nil), fmt.Errorf("invalid/missing card number")
 	}
 
 	rq := uhppoted.GetCardRequest{
@@ -108,17 +108,17 @@ func (d *Device) PutCard(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.Card == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card", nil), fmt.Errorf("Invalid/missing card")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card", nil), fmt.Errorf("invalid/missing card")
 	}
 
 	if body.Card.PIN > 999999 {
 		return common.MakeError(uhppoted.StatusBadRequest,
 			"Invalid card PIN",
-			fmt.Errorf("PIN %v out of range", body.Card.PIN)), fmt.Errorf("Invalid card PIN (%v)", body.Card.PIN)
+			fmt.Errorf("PIN %v out of range", body.Card.PIN)), fmt.Errorf("invalid card PIN (%v)", body.Card.PIN)
 	}
 
 	deviceID := uint32(*body.DeviceID)
@@ -201,11 +201,11 @@ func (d *Device) DeleteCard(impl uhppoted.IUHPPOTED, request []byte) (interface{
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.CardNumber == nil {
-		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card number", nil), fmt.Errorf("Invalid/missing card number")
+		return common.MakeError(uhppoted.StatusBadRequest, "Invalid/missing card number", nil), fmt.Errorf("invalid/missing card number")
 	}
 
 	rq := uhppoted.DeleteCardRequest{

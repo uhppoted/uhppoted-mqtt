@@ -51,21 +51,21 @@ func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (interface{}, err
 	}
 
 	if body.URL.ACL == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", nil), fmt.Errorf("Missing/invalid download URL")
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", nil), fmt.Errorf("missing/invalid download URL")
 	}
 
 	uri, err := url.Parse(*body.URL.ACL)
 	if err != nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("Invalid download URL '%v' (%w)", body.URL.ACL, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid download URL", err), fmt.Errorf("invalid download URL '%v' (%w)", body.URL.ACL, err)
 	}
 
 	if body.URL.Report == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", nil), fmt.Errorf("Missing/invalid report URL")
+		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", nil), fmt.Errorf("missing/invalid report URL")
 	}
 
 	rpt, err := url.Parse(*body.URL.Report)
 	if err != nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", err), fmt.Errorf("Invalid report URL '%v' (%w)", body.URL.Report, err)
+		return common.MakeError(StatusBadRequest, "Missing/invalid report URL", err), fmt.Errorf("invalid report URL '%v' (%w)", body.URL.Report, err)
 	}
 
 	acl, err := a.fetch("acl:compare", uri.String(), body.MimeType)

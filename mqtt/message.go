@@ -85,11 +85,11 @@ func (mqttd *MQTTD) unwrap(payload []byte) (*request, error) {
 	}{}
 
 	if err := json.Unmarshal(payload, &message); err != nil {
-		return nil, fmt.Errorf("Error unmarshaling message (%v)", err)
+		return nil, fmt.Errorf("error unmarshaling message (%v)", err)
 	}
 
 	if err := mqttd.verify(message.Message, message.HMAC); err != nil {
-		return nil, fmt.Errorf("Invalid message (%v)", err)
+		return nil, fmt.Errorf("invalid message (%v)", err)
 	}
 
 	body := struct {
@@ -100,7 +100,7 @@ func (mqttd *MQTTD) unwrap(payload []byte) (*request, error) {
 	}{}
 
 	if err := json.Unmarshal(message.Message, &body); err != nil {
-		return nil, fmt.Errorf("Error unmarshaling message body (%v)", err)
+		return nil, fmt.Errorf("error unmarshaling message body (%v)", err)
 	}
 
 	bytes := []byte(body.Request)
@@ -108,7 +108,7 @@ func (mqttd *MQTTD) unwrap(payload []byte) (*request, error) {
 	if body.Key != nil && isBase64(body.Request) {
 		plaintext, err := mqttd.decrypt(bytes, body.IV, *body.Key)
 		if err != nil || plaintext == nil {
-			return nil, fmt.Errorf("Error decrypting message (%v::%v)", err, plaintext)
+			return nil, fmt.Errorf("error decrypting message (%v::%v)", err, plaintext)
 		}
 
 		bytes = plaintext
@@ -122,7 +122,7 @@ func (mqttd *MQTTD) unwrap(payload []byte) (*request, error) {
 	}{}
 
 	if err := json.Unmarshal(bytes, &misc); err != nil {
-		return nil, fmt.Errorf("Error unmarshaling request meta-info (%v)", err)
+		return nil, fmt.Errorf("error unmarshaling request meta-info (%v)", err)
 	}
 
 	authenticated, err := mqttd.authenticate(misc.ClientID, bytes, body.Signature)
@@ -132,7 +132,7 @@ func (mqttd *MQTTD) unwrap(payload []byte) (*request, error) {
 
 	if authenticated {
 		if err := mqttd.Encryption.Nonce.Validate(misc.ClientID, misc.Nonce); err != nil {
-			return nil, fmt.Errorf("Message cannot be authenticated (%v)", err)
+			return nil, fmt.Errorf("message cannot be authenticated (%v)", err)
 		}
 	}
 
@@ -174,7 +174,7 @@ func (m *MQTTD) encrypt(plaintext []byte, clientID *string, msgtype msgType) ([]
 
 	if m.Encryption.EncryptOutgoing {
 		if clientID == nil {
-			return nil, nil, fmt.Errorf("Missing client ID")
+			return nil, nil, fmt.Errorf("missing client ID")
 		}
 
 		ciphertext, key, err := m.Encryption.RSA.Encrypt(plaintext, *clientID, keytype)
@@ -203,17 +203,17 @@ func (m *MQTTD) decrypt(request []byte, iv string, key string) ([]byte, error) {
 
 	ciphertext, err := base64.StdEncoding.DecodeString(crypttext)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid ciphertext (%v)", err)
+		return nil, fmt.Errorf("invalid ciphertext (%v)", err)
 	}
 
 	keyv, err := base64.StdEncoding.DecodeString(strings.ReplaceAll(key, " ", ""))
 	if err != nil {
-		return nil, fmt.Errorf("Invalid key (%v)", err)
+		return nil, fmt.Errorf("invalid key (%v)", err)
 	}
 
 	ivv, err := hex.DecodeString(iv)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid IV (%v)", err)
+		return nil, fmt.Errorf("invalid IV (%v)", err)
 	}
 
 	return m.Encryption.RSA.Decrypt(append(ivv, ciphertext...), keyv, "request")
@@ -223,7 +223,7 @@ func (m *MQTTD) authenticate(clientID *string, request []byte, signature *string
 	if (strings.Contains(m.Authentication, "ANY") || strings.Contains(m.Authentication, "RSA")) && clientID != nil && signature != nil {
 		s, err := base64.StdEncoding.DecodeString(*signature)
 		if err != nil {
-			return false, fmt.Errorf("Invalid request: undecodable RSA signature (%v)", err)
+			return false, fmt.Errorf("invalid request: undecodable RSA signature (%v)", err)
 		}
 
 		if err := m.Encryption.RSA.Validate(*clientID, request, s); err != nil {
@@ -252,10 +252,10 @@ func (m *MQTTD) authenticate(clientID *string, request []byte, signature *string
 	}
 
 	if clientID == nil {
-		return false, fmt.Errorf("Could not authenticate request - missing 'client-id'")
+		return false, fmt.Errorf("could not authenticate request - missing 'client-id'")
 	}
 
-	return false, fmt.Errorf("Could not authenticate request for '%s'", *clientID)
+	return false, fmt.Errorf("could not authenticate request for '%s'", *clientID)
 }
 
 func (m *MQTTD) sign(reply []byte) ([]byte, error) {

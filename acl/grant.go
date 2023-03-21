@@ -24,19 +24,19 @@ func (a *ACL) Grant(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error
 	}
 
 	if body.CardNumber == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("Missing/invalid card number")
+		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("missing/invalid card number")
 	}
 
 	if body.From == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid start date", nil), fmt.Errorf("Missing/invalid start date")
+		return common.MakeError(StatusBadRequest, "Missing/invalid start date", nil), fmt.Errorf("missing/invalid start date")
 	}
 
 	if body.To == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid end date", nil), fmt.Errorf("Missing/invalid end date")
+		return common.MakeError(StatusBadRequest, "Missing/invalid end date", nil), fmt.Errorf("missing/invalid end date")
 	}
 
 	if body.Profile != 0 && (body.Profile < 2 || body.Profile > 254) {
-		return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid time profile (%v)", body.Profile), nil), fmt.Errorf("Invalid time profile (%v)", body.Profile)
+		return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid time profile (%v)", body.Profile), nil), fmt.Errorf("invalid time profile (%v)", body.Profile)
 	}
 
 	err := api.Grant(a.UHPPOTE, a.Devices, *body.CardNumber, *body.From, *body.To, body.Profile, body.Doors)

@@ -18,10 +18,7 @@ type Device struct {
 	AuthorizedCards []string
 }
 
-var protocol string = ""
-
 func SetProtocol(version string) {
-	protocol = version
 }
 
 func unmarshal(bytes []byte, request interface{}) (interface{}, error) {

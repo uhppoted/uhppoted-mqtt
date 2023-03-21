@@ -38,7 +38,7 @@ type Run struct {
 	debug               bool
 	healthCheckInterval time.Duration
 	watchdogInterval    time.Duration
-	lockfile            config.Lockfile
+	//lockfile            config.Lockfile
 }
 
 const LOG_TAG = ""
@@ -70,7 +70,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 	}
 
 	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
-		return fmt.Errorf("Unable to create working directory '%v': %v", cmd.dir, err)
+		return fmt.Errorf("unable to create working directory '%v': %v", cmd.dir, err)
 	}
 
 	// ... create lockfile

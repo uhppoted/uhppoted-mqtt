@@ -37,7 +37,7 @@ func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error)
 	}
 
 	if body.DeviceID == 0 {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	deviceID := body.DeviceID
@@ -91,19 +91,19 @@ func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (any, error) 
 	}
 
 	if body.DeviceID == 0 {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	} else {
 		deviceID = body.DeviceID
 	}
 
 	if body.Index == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing event index", nil), fmt.Errorf("Invalid/missing event index")
+		return common.MakeError(StatusBadRequest, "Invalid/missing event index", nil), fmt.Errorf("invalid/missing event index")
 	}
 
 	// ... parse event index
 
 	if matches := regexp.MustCompile("^([0-9]+|first|last|current|next)$").FindStringSubmatch(fmt.Sprintf("%v", body.Index)); matches == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing event index", nil), fmt.Errorf("Invalid/missing event index")
+		return common.MakeError(StatusBadRequest, "Invalid/missing event index", nil), fmt.Errorf("invalid/missing event index")
 	} else {
 		index = matches[1]
 	}
@@ -130,7 +130,7 @@ func (d *Device) GetEvent(impl uhppoted.IUHPPOTED, request []byte) (any, error) 
 
 	default:
 		if v, err := strconv.ParseUint(index, 10, 32); err != nil {
-			return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid event index (%v)", body.Index), nil), fmt.Errorf("Invalid event index (%v)", index)
+			return common.MakeError(StatusBadRequest, fmt.Sprintf("Invalid event index (%v)", body.Index), nil), fmt.Errorf("invalid event index (%v)", index)
 		} else {
 			return getEvent(impl, deviceID, uint32(v))
 		}
@@ -151,11 +151,11 @@ func (d *Device) RecordSpecialEvents(impl uhppoted.IUHPPOTED, request []byte) (a
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.Enabled == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing 'enabled'", nil), fmt.Errorf("Invalid/missing 'enable'")
+		return common.MakeError(StatusBadRequest, "Invalid/missing 'enabled'", nil), fmt.Errorf("invalid/missing 'enable'")
 	}
 
 	deviceID := uint32(*body.DeviceID)
@@ -184,7 +184,7 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (any, erro
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event %v from %v", index, deviceID), err), err
 	} else if event == nil {
-		return common.MakeError(StatusNotFound, fmt.Sprintf("No event at %v on %v", index, deviceID), nil), fmt.Errorf("No event at %v on %v", index, deviceID)
+		return common.MakeError(StatusNotFound, fmt.Sprintf("No event at %v on %v", index, deviceID), nil), fmt.Errorf("no event at %v on %v", index, deviceID)
 	}
 
 	response := struct {
@@ -210,7 +210,7 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
 	if err != nil {
 		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve event from %v", deviceID), err), err
 	} else if events == nil {
-		return common.MakeError(StatusNotFound, fmt.Sprintf("No 'next' event for %v", deviceID), nil), fmt.Errorf("No 'next' event for %v", deviceID)
+		return common.MakeError(StatusNotFound, fmt.Sprintf("No 'next' event for %v", deviceID), nil), fmt.Errorf("no 'next' event for %v", deviceID)
 	} else if len(events) > 0 {
 		response.Event = Transmogrify(events[0])
 	}

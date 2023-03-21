@@ -73,7 +73,7 @@ func untar(r io.Reader) (map[string][]byte, string, error) {
 		case tar.TypeReg:
 			if filepath.Ext(header.Name) == ".acl" {
 				if _, ok := files["ACL"]; ok {
-					return nil, "", fmt.Errorf("Multiple ACL files in tar.gz")
+					return nil, "", fmt.Errorf("multiple ACL files in tar.gz")
 				}
 
 				var buffer bytes.Buffer
@@ -87,7 +87,7 @@ func untar(r io.Reader) (map[string][]byte, string, error) {
 
 			if header.Name == "signature" {
 				if _, ok := files["signature"]; ok {
-					return nil, "", fmt.Errorf("Multiple signature files in tar.gz")
+					return nil, "", fmt.Errorf("multiple signature files in tar.gz")
 				}
 
 				var buffer bytes.Buffer

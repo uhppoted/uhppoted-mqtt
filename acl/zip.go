@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"path/filepath"
 )
 
@@ -26,7 +25,7 @@ func unzip(r io.Reader) (map[string][]byte, string, error) {
 	files := map[string][]byte{}
 	uname := ""
 
-	b, err := ioutil.ReadAll(r)
+	b, err := io.ReadAll(r)
 	if err != nil {
 		return nil, "", err
 	}
@@ -39,7 +38,7 @@ func unzip(r io.Reader) (map[string][]byte, string, error) {
 	for _, f := range zr.File {
 		if filepath.Ext(f.Name) == ".acl" {
 			if _, ok := files["ACL"]; ok {
-				return nil, "", fmt.Errorf("Multiple ACL files in tar.gz")
+				return nil, "", fmt.Errorf("multiple ACL files in tar.gz")
 			}
 
 			rc, err := f.Open()
@@ -59,7 +58,7 @@ func unzip(r io.Reader) (map[string][]byte, string, error) {
 
 		if f.Name == "signature" {
 			if _, ok := files["signature"]; ok {
-				return nil, "", fmt.Errorf("Multiple signature files in tar.gz")
+				return nil, "", fmt.Errorf("multiple signature files in tar.gz")
 			}
 
 			rc, err := f.Open()

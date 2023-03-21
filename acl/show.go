@@ -19,7 +19,7 @@ func (a *ACL) Show(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error)
 	}
 
 	if body.CardNumber == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("Missing/invalid card number")
+		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("missing/invalid card number")
 	}
 
 	acl, err := api.GetCard(a.UHPPOTE, a.Devices, *body.CardNumber)

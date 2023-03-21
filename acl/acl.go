@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 
@@ -198,7 +198,7 @@ func (a *ACL) fetchHTTP(url string) ([]byte, error) {
 func (a *ACL) fetchS3(uri string) ([]byte, error) {
 	match := regexp.MustCompile("^s3://(.*?)/(.*)").FindStringSubmatch(uri)
 	if len(match) != 3 {
-		return nil, fmt.Errorf("Invalid S3 URI (%s)", uri)
+		return nil, fmt.Errorf("invalid S3 URI (%s)", uri)
 	}
 
 	bucket := match[1]
@@ -226,10 +226,10 @@ func (a *ACL) fetchS3(uri string) ([]byte, error) {
 func (a *ACL) fetchFile(url string) ([]byte, error) {
 	match := regexp.MustCompile("^file://(.*)").FindStringSubmatch(url)
 	if len(match) != 2 {
-		return nil, fmt.Errorf("Invalid file URI (%s)", url)
+		return nil, fmt.Errorf("invalid file URI (%s)", url)
 	}
 
-	return ioutil.ReadFile(match[1])
+	return os.ReadFile(match[1])
 }
 
 func (a *ACL) store(tag, uri, filename string, content []byte) error {
@@ -260,7 +260,6 @@ func (a *ACL) store(tag, uri, filename string, content []byte) error {
 		f = a.storeS3
 	} else if strings.HasPrefix(uri, "file://") {
 		f = a.storeFile
-	} else {
 	}
 
 	if err := f(uri, bytes.NewReader(b.Bytes())); err != nil {
@@ -293,7 +292,7 @@ func (a *ACL) storeHTTP(url string, r io.Reader) error {
 func (a *ACL) storeS3(uri string, r io.Reader) error {
 	match := regexp.MustCompile("^s3://(.*?)/(.*)").FindStringSubmatch(uri)
 	if len(match) != 3 {
-		return fmt.Errorf("Invalid S3 URI (%s)", uri)
+		return fmt.Errorf("invalid S3 URI (%s)", uri)
 	}
 
 	bucket := match[1]
@@ -320,15 +319,15 @@ func (a *ACL) storeS3(uri string, r io.Reader) error {
 func (a *ACL) storeFile(url string, r io.Reader) error {
 	match := regexp.MustCompile("^file://(.*)").FindStringSubmatch(url)
 	if len(match) != 2 {
-		return fmt.Errorf("Invalid file URI (%s)", url)
+		return fmt.Errorf("invalid file URI (%s)", url)
 	}
 
-	b, err := ioutil.ReadAll(r)
+	b, err := io.ReadAll(r)
 	if err != nil {
 		return err
 	}
 
-	return ioutil.WriteFile(match[1], b, 0660)
+	return os.WriteFile(match[1], b, 0660)
 }
 
 func infof(tag, format string, args ...any) {

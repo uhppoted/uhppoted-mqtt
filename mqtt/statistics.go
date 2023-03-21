@@ -11,7 +11,8 @@ type statistics struct {
 
 	disconnects  []uint32
 	disconnected chan uint32
-	tick         <-chan time.Time
+	//tick         <-chan time.Time
+	tick *time.Ticker
 }
 
 var stats = statistics{
@@ -21,7 +22,7 @@ var stats = statistics{
 
 	disconnects:  make([]uint32, 60),
 	disconnected: make(chan uint32),
-	tick:         time.Tick(1 * time.Second),
+	tick:         time.NewTicker(1 * time.Second),
 }
 
 func init() {
@@ -72,10 +73,10 @@ func (s *statistics) monitor() {
 					fatalf("DISCONNECT COUNT %v REACHED MAXIMUM ALLOWED (%v)", count, stats.max)
 				}
 
-			case <-stats.tick:
+			case <-stats.tick.C:
 				N := len(stats.disconnects)
 				step := stats.interval / time.Duration(N)
-				delta := time.Now().Sub(start)
+				delta := time.Since(start)
 				bucket := float64(delta) / float64(step)
 				next := int(bucket) % 60
 

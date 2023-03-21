@@ -20,7 +20,7 @@ func (a *ACL) Revoke(impl uhppoted.IUHPPOTED, request []byte) (interface{}, erro
 	}
 
 	if body.CardNumber == nil {
-		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("Missing/invalid card number")
+		return common.MakeError(StatusBadRequest, "Missing/invalid card number", nil), fmt.Errorf("missing/invalid card number")
 	}
 
 	err := api.Revoke(a.UHPPOTE, a.Devices, *body.CardNumber, body.Doors)

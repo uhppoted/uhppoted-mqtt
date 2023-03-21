@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Updated
+1. Reworked to use cards with pointerless 'from' and 'to' dates 
+2. Added _staticcheck_ linting to build
+
 
 ## [0.8.4](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.4) - 2023-03-17
 

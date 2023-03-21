@@ -376,12 +376,12 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 func (m *MQTTD) authorise(clientID *string, topic string) error {
 	if m.Permissions.Enabled {
 		if clientID == nil {
-			return errors.New("Request without client-id")
+			return errors.New("request without client-id")
 		}
 
 		match := regexp.MustCompile(`.*?/(\w+):(\w+)$`).FindStringSubmatch(topic)
 		if len(match) != 3 {
-			return fmt.Errorf("Invalid resource:action (%s)", topic)
+			return fmt.Errorf("invalid resource:action (%s)", topic)
 		}
 
 		return m.Permissions.Validate(*clientID, match[1], match[2])
@@ -393,7 +393,7 @@ func (m *MQTTD) authorise(clientID *string, topic string) error {
 // TODO: add callback for published/failed
 func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
 	if mqttd.client == nil || !mqttd.client.IsConnected() {
-		return errors.New("No connection to MQTT broker")
+		return errors.New("no connection to MQTT broker")
 	}
 
 	content, err := compose(meta, message)
@@ -451,10 +451,6 @@ func compose(meta *metainfo, content interface{}) (interface{}, error) {
 
 func isBase64(request []byte) bool {
 	return regex.base64.Match(request)
-}
-
-func clean(s string) string {
-	return regex.clean.ReplaceAllString(s, " ")
 }
 
 func debugf(format string, args ...any) {

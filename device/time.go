@@ -18,7 +18,7 @@ func (d *Device) GetTime(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	rq := uhppoted.GetTimeRequest{
@@ -44,11 +44,11 @@ func (d *Device) SetTime(impl uhppoted.IUHPPOTED, request []byte) (interface{}, 
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("Invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
 	}
 
 	if body.DateTime == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing datetime", nil), fmt.Errorf("Invalid/missing datetime")
+		return common.MakeError(StatusBadRequest, "Invalid/missing datetime", nil), fmt.Errorf("invalid/missing datetime")
 	}
 
 	rq := uhppoted.SetTimeRequest{
