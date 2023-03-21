@@ -9,7 +9,7 @@ CLIENTID  ?= QWERTY54
 REPLYTO   ?= uhppoted/reply/97531
 DATETIME  = $(shell date "+%Y-%m-%d %H:%M:%S")
 
-.DEFAULT_GOAL := lint
+.DEFAULT_GOAL := test
 .PHONY: clean
 .PHONY: update
 .PHONY: update-release
@@ -56,10 +56,10 @@ build: format
 test: build
 	go test ./...
 
-vet: build
+vet: 
 	go vet ./...
 
-lint: build
+lint: 
 	env GOOS=darwin  GOARCH=amd64 staticcheck ./...
 	env GOOS=linux   GOARCH=amd64 staticcheck ./...
 	env GOOS=windows GOARCH=amd64 staticcheck ./...
@@ -70,7 +70,7 @@ benchmark: build
 coverage: build
 	go test -cover ./...
 
-build-all: test vet
+build-all: test vet lint
 	mkdir -p dist/$(DIST)/windows
 	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/linux
