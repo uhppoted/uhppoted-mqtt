@@ -514,7 +514,7 @@ acl-revoke:
 acl-upload-file:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:upload' \
                  --message '{ "message": { "request": { \
-                                           "url": "file://../runtime/mqttd/uhppoted.tar.gz", \
+                                           "url": "file://../runtime/uhppoted-mqtt/uhppoted.tar.gz", \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
@@ -538,7 +538,7 @@ acl-upload-http:
 acl-download-file:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
                  --message '{ "message": { "request": { \
-                                           "url": "file://../runtime/mqttd/hogwarts.tar.gz", \
+                                           "url": "file://../runtime/uhppoted-mqtt/hogwarts.tar.gz", \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
                                            "request-id": "AH173635G3" }}}'
@@ -546,7 +546,7 @@ acl-download-file:
 acl-download-tsv:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:download' \
                  --message '{ "message": { "request": { \
-                                           "url": "file://../runtime/mqttd/hogwarts.acl", \
+                                           "url": "file://../runtime/uhppoted-mqtt/hogwarts.acl", \
                                            "mime-type": "text/tab-separated-values", \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \
@@ -596,8 +596,8 @@ acl-compare-file:
 	mqtt publish --topic 'uhppoted/gateway/requests/acl/acl:compare' \
                  --message '{ "message": { "request": { \
                                            "url": { \
-                                           	"acl": "file://../runtime/mqttd/QWERTY54.tar.gz", \
-                                           	"report": "file://../runtime/mqttd/report.tar.gz" \
+                                              "acl": "file://../runtime/uhppoted-mqtt/hogwarts.tar.gz", \
+                                           	  "report": "file://../runtime/uhppoted-mqtt/report.tar.gz" \
                                            	}, \
                                            "client-id": "QWERTY54", \
                                            "reply-to": "uhppoted\/reply\/97531", \

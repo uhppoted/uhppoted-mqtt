@@ -1,5 +1,5 @@
-github.com/aws/aws-sdk-go v1.44.226 h1:lqTNeHJUq0U6dpMGJc9ZcmfTUkuAjklcwewj96RhMlc=
-github.com/aws/aws-sdk-go v1.44.226/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
+github.com/aws/aws-sdk-go v1.44.231 h1:wH/ihcZzBv8F443PyRoUogWnEdDp1KYtSew7ji9LNIY=
+github.com/aws/aws-sdk-go v1.44.231/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/eclipse/paho.mqtt.golang v1.4.2 h1:66wOzfUHSSI1zamx7jR6yMEI5EuHnT1G6rNA5PM12m4=
@@ -15,10 +15,10 @@ github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
-github.com/uhppoted/uhppote-core v0.8.5-0.20230322165916-aad687785fc9 h1:EMwoGz+tU3sAlnBi1z6vh8+pqnOtmVf3A+ky3BWVz1U=
-github.com/uhppoted/uhppote-core v0.8.5-0.20230322165916-aad687785fc9/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
-github.com/uhppoted/uhppoted-lib v0.8.5-0.20230322171048-e6ae4e927070 h1:2kTPlQrsDBI+19GVszHGNcMS3YdkIMrcD6Ndav4o7kU=
-github.com/uhppoted/uhppoted-lib v0.8.5-0.20230322171048-e6ae4e927070/go.mod h1:OWmHV5r3Twesl81rCxufOw+bcBueX0Vpy37CXfV5j+w=
+github.com/uhppoted/uhppote-core v0.8.5-0.20230328170429-e2d237dc75b1 h1:BXmRb9b4OJmWm+2j2fvbASr7acGMTAeHxFmsnShwEcQ=
+github.com/uhppoted/uhppote-core v0.8.5-0.20230328170429-e2d237dc75b1/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
+github.com/uhppoted/uhppoted-lib v0.8.5-0.20230328170917-1841478dba74 h1:tVKrQTe07rh435PUuXvV26GizEv/6mC1rbiVxFT0qT0=
+github.com/uhppoted/uhppoted-lib v0.8.5-0.20230328170917-1841478dba74/go.mod h1:Y9vtzlt4bfJEAw5XGROJyPh9aMPUUuH9MdhoeDxDhmE=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
