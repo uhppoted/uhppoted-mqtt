@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `set-interlock` API function to set controller door interlock mode.
+
 ### Updated
 1. Reworked to use cards with pointerless 'from' and 'to' dates 
 2. Added _staticcheck_ linting to build

@@ -23,6 +23,8 @@
 
 - [`set-door-control`](set-door-control.md)
 
+- [`set-door-interlock`](set-door-interlock.md)
+
 - [`record-special-events`](record-special-events.md)
 
 - [`open-door`](open-door.md)

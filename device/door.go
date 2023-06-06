@@ -21,7 +21,7 @@ func (d *Device) GetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
 	}
 
 	if body.Door == nil {
@@ -39,7 +39,7 @@ func (d *Device) GetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 
 	response, err := impl.GetDoorDelay(rq)
 	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve delay for controller %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	return response, nil
@@ -57,7 +57,7 @@ func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
 	}
 
 	if body.Door == nil {
@@ -81,7 +81,7 @@ func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	delay := *body.Delay
 
 	if err := impl.SetDoorDelay(deviceID, door, delay); err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set delay for controller %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	response := struct {
@@ -108,7 +108,7 @@ func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
 	}
 
 	if body.Door == nil {
@@ -126,7 +126,7 @@ func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 
 	response, err := impl.GetDoorControl(rq)
 	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve control state for device %d, door %d", *body.DeviceID, *body.Door), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not retrieve control state for controller %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	return response, nil
@@ -144,7 +144,7 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
 	}
 
 	if body.Door == nil {
@@ -168,7 +168,7 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 	mode := *body.Control
 
 	if err := impl.SetDoorControl(deviceID, door, mode); err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not setting delay for device %d, door %d", *body.DeviceID, *body.Door), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set delay for controller %d, door %d", *body.DeviceID, *body.Door), err), err
 	}
 
 	response := struct {
@@ -179,6 +179,46 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 		DeviceID: deviceID,
 		Door:     door,
 		Control:  mode,
+	}
+
+	return response, nil
+}
+
+func (d *Device) SetInterlock(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+	body := struct {
+		DeviceID  *uhppoted.DeviceID `json:"device-id"`
+		Interlock *types.Interlock   `json:"interlock"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
+	}
+
+	if body.Interlock == nil {
+		return common.MakeError(StatusBadRequest, "Missing door interlock", nil), fmt.Errorf("missing door interlock: %v", body.Interlock)
+	}
+
+	deviceID := uint32(*body.DeviceID)
+	interlock := *body.Interlock
+
+	if interlock != 0 && interlock != 1 && interlock != 2 && interlock != 3 && interlock != 4 && interlock != 8 {
+		return common.MakeError(StatusBadRequest, "Invalid door interlock", nil), fmt.Errorf("invalid door interlock: %v", interlock)
+	}
+
+	if err := impl.SetInterlock(deviceID, interlock); err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set interlock for controller %v", *body.DeviceID), err), err
+	}
+
+	response := struct {
+		DeviceID  uint32          `json:"device-id"`
+		Interlock types.Interlock `json:"interlock"`
+	}{
+		DeviceID:  deviceID,
+		Interlock: interlock,
 	}
 
 	return response, nil
@@ -196,7 +236,7 @@ func (d *Device) OpenDoor(impl uhppoted.IUHPPOTED, request []byte) (interface{},
 	}
 
 	if body.DeviceID == nil {
-		return common.MakeError(StatusBadRequest, "Invalid/missing device ID", nil), fmt.Errorf("invalid/missing device ID")
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
 	}
 
 	if body.Card == nil {
@@ -213,12 +253,12 @@ func (d *Device) OpenDoor(impl uhppoted.IUHPPOTED, request []byte) (interface{},
 
 	if !d.authorized(card) {
 		return common.MakeError(StatusUnauthorized, fmt.Sprintf("Card %v is not authorized for door %v", card, door), nil),
-			fmt.Errorf("card %v is not authorized for device %v, door %v", card, deviceID, door)
+			fmt.Errorf("card %v is not authorized for controller %v, door %v", card, deviceID, door)
 	}
 
 	if err := validate(impl, deviceID, card, door); err != nil {
 		return common.MakeError(StatusUnauthorized, fmt.Sprintf("Card %v is not authorized for door %v", card, door), nil),
-			fmt.Errorf("failed to validate access for card %v to device %v, door %v (%v)", card, deviceID, door, err)
+			fmt.Errorf("failed to validate access for card %v to controller %v, door %v (%v)", card, deviceID, door, err)
 	}
 
 	rq := uhppoted.OpenDoorRequest{
@@ -228,7 +268,7 @@ func (d *Device) OpenDoor(impl uhppoted.IUHPPOTED, request []byte) (interface{},
 
 	response, err := impl.OpenDoor(rq)
 	if err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not open device %d, door %d with card %v", *body.DeviceID, *body.Door, *body.Card), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not open controller %d, door %d with card %v", *body.DeviceID, *body.Door, *body.Card), err), err
 	}
 
 	return response, nil
@@ -255,7 +295,7 @@ func validate(impl uhppoted.IUHPPOTED, deviceID uint32, cardNumber uint32, door 
 	if err != nil {
 		return err
 	} else if response == nil {
-		return fmt.Errorf("GetCard returned <nil> for card %v, device %v", cardNumber, deviceID)
+		return fmt.Errorf("GetCard returned <nil> for card %v, controller %v", cardNumber, deviceID)
 	}
 
 	card := response.Card
@@ -322,11 +362,11 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile type
 	today := types.Date(now)
 
 	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
-		return fmt.Errorf("card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
+		return fmt.Errorf("card %v: time profile %v on controller %v is not valid for %v", cardNumber, profileID, deviceID, today)
 	}
 
 	if !profile.Weekdays[today.Weekday()] {
-		return fmt.Errorf("card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, today.Weekday())
+		return fmt.Errorf("card %v: time profile %v on controller %v is not authorized for %v", cardNumber, profileID, deviceID, today.Weekday())
 	}
 
 	for _, p := range []uint8{1, 2, 3} {
@@ -337,5 +377,5 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile type
 		}
 	}
 
-	return fmt.Errorf("card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, hhmm)
+	return fmt.Errorf("card %v: time profile %v on controller %v is not authorized for %v", cardNumber, profileID, deviceID, hhmm)
 }

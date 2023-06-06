@@ -252,6 +252,14 @@ set-door-control:
                                                      "door":       3, \
                                                      "control":    "normally closed" }}}'
 
+set-door-interlock:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/door/interlock:set' \
+               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                      "client-id":  "$(CLIENTID)", \
+                                                      "reply-to":   "$(REPLYTO)", \
+                                                      "device-id":  $(SERIALNO), \
+                                                      "interlock":  4 }}}'
+
 record-special-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
