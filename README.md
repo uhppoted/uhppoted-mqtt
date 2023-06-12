@@ -22,6 +22,7 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.5    | Added `set-interlock` command to set controller door interlock mode                       |
 | v0.8.4    | Added support for card keypad PINs                                                        |
 | v0.8.3    | Reworked lockfiles to use `flock` _syscall_                                               |
 | v0.8.2    | Added softlock for client connection and first draft of command documentation             |
