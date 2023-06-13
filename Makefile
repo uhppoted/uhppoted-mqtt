@@ -35,6 +35,11 @@ update:
 update-release:
 	go get -u github.com/uhppoted/uhppote-core
 	go get -u github.com/uhppoted/uhppoted-lib
+	go mod tidy
+
+update-all:
+	go get -u github.com/uhppoted/uhppote-core
+	go get -u github.com/uhppoted/uhppoted-lib
 	go get -u github.com/aws/aws-sdk-go
 	go get -u github.com/eclipse/paho.mqtt.golang
 	go get -u github.com/gorilla/websocket
