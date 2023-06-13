@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.8.5](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.5) - 2023-04-14
+## [0.8.5](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.5) - 2023-04-13
 
 ### Added
 1. `set-interlock` API function to set controller door interlock mode.
