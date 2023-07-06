@@ -2,11 +2,11 @@
 
 ### IN PROGRESS
 
-- [x] `set-interlock` (cf. https://github.com/uhppoted/uhppote-core/issues/14)
-       - [x] set-interlock API function
-       - [x] CHANGELOG
-       - [x] README
-       - [x] codegen
+- [x] `activate-keypads` (cf. https://github.com/uhppoted/uhppoted/issues/35)
+      - [x] API function
+      - [x] Documentation
+      - [x] CHANGELOG
+      - [x] README
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging

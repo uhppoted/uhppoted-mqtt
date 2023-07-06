@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `set-door-keypads` command to activate/deactivate reader access keypads.
+
 
 ## [0.8.5](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.5) - 2023-04-13
 

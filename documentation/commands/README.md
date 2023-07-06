@@ -211,6 +211,8 @@ e.g. for the _get-device_ command:
 
 - [`set-door-interlock`](set-door-interlock.md)
 
+- [`set-door-keypads`](set-door-keypads.md)
+
 - [`record-special-events`](record-special-events.md)
 
 - [`open-door`](open-door.md)

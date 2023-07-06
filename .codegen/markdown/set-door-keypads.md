@@ -1,7 +1,7 @@
-{{- with .set_door_interlock -}}
+{{- with .set_door_keypads -}}
 ### `{{.command}}`
 
-Sets the door interlock mode for a controller.
+Activates/deactivates the reader access keypads for a controller.
 
 {{template "request"  . -}}
 {{template "response" . }}
@@ -15,7 +15,12 @@ topic: uhppoted/gateway/requests/{{ .request.topic }}
     "request": {
 {{- template "request-preamble"}}
       "device-id": 405419896,
-      "interlock": 4
+      "keypads": {
+        "1": true,
+        "2": true,
+        "3": false,
+        "4": true
+      }
     }
   }
 }
@@ -24,10 +29,15 @@ topic: uhppoted/gateway/requests/{{ .request.topic }}
   "message": {
     "reply": {
 {{- template "response-preamble"}}
-      "method": "set-door-interlock",
+      "method": "set-door-keypads",
       "response": {
         "device-id": 405419896,
-        "interlock": 4
+        "keypads": {
+          "1": true,
+          "2": true,
+          "3": false,
+          "4": true
+        }
       }
     }
   }

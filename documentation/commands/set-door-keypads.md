@@ -1,12 +1,12 @@
-### `set-door-interlock`
+### `activate-keypads`
 
-Sets the door interlock mode for a controller.
+Activates/deactivates the reader access keypads for a controller.
 
 
 ```
 Request:
 
-topic: <root>/<requests>/device/door/interlock:set
+topic: <root>/<requests>/device/door/keypads:set
 
 message:
 {
@@ -16,7 +16,7 @@ message:
             "client-id": "<client-id>",
             "reply-to": "<topic>",
             "device-id": "<controller-id>",
-            "interlock": "<interlock>",
+            "keypads": "map[uint8]bool",
         }
     }
 }
@@ -26,7 +26,7 @@ client-id    (required) client ID for authentication and authorisation (if enabl
 reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the
                         configured reply topic) if not provided.
 device-id    (required) controller serial number
-interlock    door interlock mode (0: none, 1:doors 1&2, 2:doors 3&4, 3:doors 1&2 and doors 3&4, 4:doors 1&2&3, 8:doors 1&2&3&4
+keypads      map of activated readers (unlisted readers are deactivated)
 ```
 
 ```
@@ -36,10 +36,10 @@ Response:
     "reply": {
       "request-id": <request-id>,
       "client-id": <client-id>,
-      "method": "set-door-interlock",
+      "method": "activate-keypads",
       "response": {
             "device-id": "<controller-id>",
-            "interlock": "<interlock>",
+            "keypads": "map[uint8]bool",
       },
       ...
     }
@@ -50,13 +50,13 @@ Response:
 request-id   message ID from the request
 client-id    client ID from the request
 device-id    controller serial number
-interlock    door interlock mode (from request)
+keypads      map of readers to activated status
 ```
 
 
 Example:
 ```
-topic: uhppoted/gateway/requests/device/door/interlock:set
+topic: uhppoted/gateway/requests/device/door/keypads:set
 
 {
   "message": {
@@ -65,7 +65,12 @@ topic: uhppoted/gateway/requests/device/door/interlock:set
       "request-id": "AH173635G3",
       "reply-to": "uhppoted/reply/97531",
       "device-id": 405419896,
-      "interlock": 4
+      "keypads": {
+        "1": true,
+        "2": true,
+        "3": false,
+        "4": true
+      }
     }
   }
 }
@@ -76,10 +81,15 @@ topic: uhppoted/gateway/requests/device/door/interlock:set
       "server-id": "uhppoted"
       "client-id": "QWERTY",
       "request-id": "AH173635G3",
-      "method": "set-door-interlock",
+      "method": "set-door-keypads",
       "response": {
         "device-id": 405419896,
-        "interlock": 4
+        "keypads": {
+          "1": true,
+          "2": true,
+          "3": false,
+          "4": true
+        }
       }
     }
   }

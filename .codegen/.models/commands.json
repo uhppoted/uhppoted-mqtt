@@ -28,6 +28,9 @@
       "command": "set-door-interlock"
     },
     {
+      "command": "set-door-keypads"
+    },
+    {
       "command": "record-special-events"
     },
     {

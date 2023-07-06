@@ -1,0 +1,34 @@
+{
+  "set_door_keypads": {
+    "command": "activate-keypads",
+    "request": {
+      "topic": "device/door/keypads:set",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "(required) controller serial number"
+        },
+        {
+          "field": "keypads",
+          "value": "map[uint8]bool",
+          "description": "map of activated readers (unlisted readers are deactivated)"
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "keypads",
+          "value": "map[uint8]bool",
+          "description": "map of readers to activated status"
+        }
+      ]
+    }
+  }
+}

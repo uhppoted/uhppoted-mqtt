@@ -265,6 +265,15 @@ set-door-interlock:
                                                       "device-id":  $(SERIALNO), \
                                                       "interlock":  4 }}}'
 
+activate-keypads:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/door/keypads:set' \
+               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                      "client-id":  "$(CLIENTID)", \
+                                                      "reply-to":   "$(REPLYTO)", \
+                                                      "device-id":  $(SERIALNO), \
+                                                      "keypads":    { "1":true, "2":true, "3": false,"4":true } \
+                                                      }}}'
+
 record-special-events:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/special-events:set' \
                  --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \

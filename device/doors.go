@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) GetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Door     *uint8             `json:"door"`
@@ -45,7 +45,7 @@ func (d *Device) GetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	return response, nil
 }
 
-func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Door     *uint8             `json:"door"`
@@ -97,7 +97,7 @@ func (d *Device) SetDoorDelay(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	return response, nil
 }
 
-func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Door     *uint8             `json:"door"`
@@ -132,7 +132,7 @@ func (d *Device) GetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 	return response, nil
 }
 
-func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID  `json:"device-id"`
 		Door     *uint8              `json:"door"`
@@ -184,7 +184,7 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (interf
 	return response, nil
 }
 
-func (d *Device) SetInterlock(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetInterlock(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID  *uhppoted.DeviceID `json:"device-id"`
 		Interlock *types.Interlock   `json:"interlock"`
@@ -210,7 +210,7 @@ func (d *Device) SetInterlock(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	}
 
 	if err := impl.SetInterlock(deviceID, interlock); err != nil {
-		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set interlock for controller %v", *body.DeviceID), err), err
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set interlock for controller %v", deviceID), err), err
 	}
 
 	response := struct {
@@ -224,7 +224,46 @@ func (d *Device) SetInterlock(impl uhppoted.IUHPPOTED, request []byte) (interfac
 	return response, nil
 }
 
-func (d *Device) OpenDoor(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) SetKeypads(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
+	body := struct {
+		DeviceID *uhppoted.DeviceID `json:"device-id"`
+		Keypads  map[uint8]bool     `json:"keypads"`
+	}{
+		Keypads: map[uint8]bool{},
+	}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
+	}
+
+	deviceID := uint32(*body.DeviceID)
+	keypads := map[uint8]bool{
+		1: body.Keypads[1],
+		2: body.Keypads[2],
+		3: body.Keypads[3],
+		4: body.Keypads[4],
+	}
+
+	if err := impl.ActivateKeypads(deviceID, keypads); err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not activate/deactivate keypads for controller %v", deviceID), err), err
+	}
+
+	response := struct {
+		DeviceID uint32         `json:"device-id"`
+		Keypads  map[uint8]bool `json:"keypads"`
+	}{
+		DeviceID: deviceID,
+		Keypads:  keypads,
+	}
+
+	return response, nil
+}
+
+func (d *Device) OpenDoor(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uhppoted.DeviceID `json:"device-id"`
 		Card     *uint32            `json:"card-number"`
