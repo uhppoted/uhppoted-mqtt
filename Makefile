@@ -424,12 +424,20 @@ set-task-list:
                                                         "device-id":   $(SERIALNO),    \
                                                         "tasks":       [ \
                                                                          { \
-                                                                           "task": "trigger once",     \
-                                                                           "door": 3,                  \
-                                                                           "start-date": "2023-01-01", \
-                                                                           "end-date":   "2023-12-31", \
-                                                                           "weekdays":   "Monday,Wednesday,Friday", \
-                                                                           "start":      "08:27" \
+                                                                           "task": "enable card, no password",     \
+                                                                           "door": 1,                  \
+                                                                           "start-date": "2023-07-01", \
+                                                                           "end-date":   "2023-07-31", \
+                                                                           "weekdays":   "Friday", \
+                                                                           "start":      "09:50" \
+                                                                         }, \
+                                                                         { \
+                                                                           "task": "enable card+password",     \
+                                                                           "door": 1,                  \
+                                                                           "start-date": "2023-07-01", \
+                                                                           "end-date":   "2023-07-31", \
+                                                                           "weekdays":   "Friday", \
+                                                                           "start":      "09:55" \
                                                                          } \
                                                                        ]\
                                                          }}}'
