@@ -13,6 +13,7 @@ DATETIME  = $(shell date "+%Y-%m-%d %H:%M:%S")
 .PHONY: clean
 .PHONY: update
 .PHONY: update-release
+.PHONY: docker
 
 all: test      \
 	 benchmark \
@@ -119,6 +120,19 @@ debug: build
 
 godoc:
 	godoc -http=:80	-index_interval=60s
+
+docker:
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o ./docker ./...
+	docker image     prune -f
+	docker container prune -f
+	cd ./docker/ && docker build -f Dockerfile -t uhppoted/mqtt .
+
+docker-run:
+	# docker run --name mqttd --rm uhppoted/mqtt
+	docker run --detach --name mqttd --rm uhppoted/mqtt
+
+docker-shell:
+	docker exec -it mqttd /bin/sh
 
 version: build
 	./bin/uhppoted-mqtt version

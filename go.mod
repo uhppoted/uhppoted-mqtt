@@ -3,10 +3,10 @@ module github.com/uhppoted/uhppoted-mqtt
 go 1.20
 
 require (
-	github.com/aws/aws-sdk-go v1.44.300
+	github.com/aws/aws-sdk-go v1.44.308
 	github.com/eclipse/paho.mqtt.golang v1.4.3
-	github.com/uhppoted/uhppote-core v0.8.6-0.20230704172216-7b1de80f03b5
-	github.com/uhppoted/uhppoted-lib v0.8.6-0.20230705170904-7837b1a58426
+	github.com/uhppoted/uhppote-core v0.8.6-0.20230714164141-912d472ef6df
+	github.com/uhppoted/uhppoted-lib v0.8.6-0.20230714155133-57e68f2d1360
 	golang.org/x/sys v0.10.0
 )
 
