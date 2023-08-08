@@ -128,8 +128,8 @@ docker:
 	cd ./docker/ && docker build -f Dockerfile -t uhppoted/mqtt .
 
 docker-run:
-	# docker run --name mqttd --rm uhppoted/mqtt
-	docker run --detach --name mqttd --rm uhppoted/mqtt
+	docker run --name mqttd --rm uhppoted/mqtt
+#	docker run --detach --name mqttd --rm uhppoted/mqtt
 
 docker-shell:
 	docker exec -it mqttd /bin/sh

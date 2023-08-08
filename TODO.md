@@ -3,10 +3,8 @@
 ### IN PROGRESS
 
 - [x] `activate-keypads` (cf. https://github.com/uhppoted/uhppoted/issues/35)
-      - [x] API function
-      - [x] Documentation
-      - [x] CHANGELOG
-      - [x] README
+- [x] Dockerfile (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/13)
+
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
@@ -14,6 +12,7 @@
 
 ## TODO
 
+- [ ] [Sparkplug B](https://github.com/eclipse-sparkplug/sparkplug)
 - [ ] [MQTT Dash](https://iot.stackexchange.com/questions/6561/generic-mobile-applications-for-smart-home-devices)
 - [ ] [UCANs](https://ucan.xyz/)
 - [ ] (optionally) Generate uhppoted.conf if it doesn't exist

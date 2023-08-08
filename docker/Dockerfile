@@ -8,12 +8,19 @@ RUN mkdir -p /etc/uhppoted/mqtt/rsa/encryption
 
 RUN mkdir -p /var/uhppoted
 
-COPY uhppoted.conf                   /etc/uhppoted
-COPY hivemq.pem                      /etc/uhppoted
-COPY secure/client.key               /etc/uhppoted/mqtt
-COPY secure/client.cert              /etc/uhppoted/mqtt
-COPY secure/rsa/signing/mqttd.key    /etc/uhppoted/mqtt/rsa/signing
-COPY secure/rsa/encryption/mqttd.key /etc/uhppoted/mqtt/rsa/encryption
+# uhppoted configuration file
+COPY uhppoted.conf /etc/uhppoted
+
+# MQTT broker TLS certificate
+# COPY broker.pem    /etc/uhppoted
+
+# MQTT broker TLS client key and certificate (if client authentication enabled)
+# COPY secure/client.key  /etc/uhppoted/mqtt
+# COPY secure/client.cert /etc/uhppoted/mqtt
+
+# uhppoted-mqtt RSA signing and encryption keys (for public MQTT brokers)
+# COPY secure/rsa/signing/mqttd.key    /etc/uhppoted/mqtt/rsa/signing
+# COPY secure/rsa/encryption/mqttd.key /etc/uhppoted/mqtt/rsa/encryption
 
 WORKDIR /opt/uhppoted 
 COPY     uhppoted-mqtt .
