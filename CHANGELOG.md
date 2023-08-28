@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.6](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.6) - 2023-08-30
 
 ### Added
 1. `set-door-keypads` command to activate/deactivate reader access keypads.
@@ -8,7 +8,7 @@
 3. Preliminary documentation for _uhppoted.conf_ configuration file.
 
 
-## [0.8.5](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.5) - 2023-04-13
+## [0.8.5](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.5) - 2023-06-13
 
 ### Added
 1. `set-interlock` API function to set controller door interlock mode.
