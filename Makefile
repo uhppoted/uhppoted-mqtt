@@ -26,11 +26,6 @@ clean:
 update:
 	go get -u github.com/uhppoted/uhppote-core@master
 	go get -u github.com/uhppoted/uhppoted-lib@master
-	go get -u github.com/aws/aws-sdk-go
-	go get -u github.com/eclipse/paho.mqtt.golang
-	go get -u github.com/gorilla/websocket
-	go get -u golang.org/x/net
-	go get -u golang.org/x/sys
 	go mod tidy
 
 update-release:
