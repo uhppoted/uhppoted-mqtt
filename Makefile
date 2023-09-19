@@ -266,6 +266,15 @@ set-door-control:
                                                      "door":       3, \
                                                      "control":    "normally closed" }}}'
 
+set-door-passcodes:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/door/passcodes:set' \
+              --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                     "client-id":  "$(CLIENTID)", \
+                                                     "reply-to":   "$(REPLYTO)", \
+                                                     "device-id":  $(SERIALNO), \
+                                                     "door":       3, \
+                                                     "passcodes":  [12345,0,99999,54321] }}}'
+
 set-door-interlock:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/door/interlock:set' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \

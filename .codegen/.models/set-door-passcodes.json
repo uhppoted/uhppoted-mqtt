@@ -1,0 +1,44 @@
+{
+  "set_door_passcodes": {
+    "command": "set-door-passcodes",
+    "request": {
+      "topic": "device/door/passcodes:set",
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "(required) controller serial number"
+        },
+        {
+          "field": "door",
+          "value": "<door-id>",
+          "description": "(required) door (1..4)"
+        },
+        {
+          "field": "passcodes",
+          "value": "<passcodes>",
+          "description": "array of passcodes ([1..999999]). Only the first four entries are used."
+        }
+      ]
+    },
+    "response": {
+      "fields": [
+        {
+          "field": "device-id",
+          "value": "<controller-id>",
+          "description": "controller serial number"
+        },
+        {
+          "field": "door",
+          "value": "<door-id>",
+          "description": "door (1..4) from the request"
+        },
+        {
+          "field": "passcodes",
+          "value": "<passcodes>",
+          "description": "passcodes assigned to door"
+        }
+      ]
+    }
+  }
+}

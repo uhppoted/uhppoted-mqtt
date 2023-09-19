@@ -184,6 +184,64 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (any, e
 	return response, nil
 }
 
+// Sets the supervisor passcodes for a door.
+//
+// Each door may be individually assigned up to four passcodes, with valid passcodes
+// being in the range [1..999999]. The function uses the first four codes from the
+// supplied list and invalid passcodes are set to 0 (no code).
+//
+// The controller, door and assigned passcodes in the response.
+func (d *Device) SetDoorPasscodes(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
+	body := struct {
+		DeviceID  *uhppoted.DeviceID `json:"device-id"`
+		Door      *uint8             `json:"door"`
+		Passcodes []uint32           `json:"passcodes"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
+	}
+
+	if body.Door == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("invalid/missing door: %v", body.Door)
+	} else if *body.Door < 1 || *body.Door > 4 {
+		return common.MakeError(StatusBadRequest, "Invalid/missing door", nil), fmt.Errorf("invalid/missing door: %v", *body.Door)
+	}
+
+	deviceID := uint32(*body.DeviceID)
+	door := *body.Door
+	passcodes := []uint32{}
+
+	for i := 0; i < 4 && i < len(body.Passcodes); i++ {
+		passcode := body.Passcodes[i]
+		if passcode > 0 && passcode < 1000000 {
+			passcodes = append(passcodes, passcode)
+		} else {
+			passcodes = append(passcodes, 0)
+		}
+	}
+
+	if err := impl.SetDoorPasscodes(deviceID, door, passcodes...); err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not set passcodes for controller %d, door %d", deviceID, door), err), err
+	}
+
+	response := struct {
+		DeviceID  uint32   `json:"device-id"`
+		Door      uint8    `json:"door"`
+		Passcodes []uint32 `json:"passcodes"`
+	}{
+		DeviceID:  deviceID,
+		Door:      door,
+		Passcodes: passcodes,
+	}
+
+	return response, nil
+}
+
 func (d *Device) SetInterlock(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID  *uhppoted.DeviceID `json:"device-id"`

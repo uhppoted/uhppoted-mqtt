@@ -2,10 +2,11 @@
 
 ### IN PROGRESS
 
-- [x] `activate-keypads` (cf. https://github.com/uhppoted/uhppoted/issues/35)
-- [x] Dockerfile (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/13)
-- [x] uhppoted.conf (cf. https://github.com/uhppoted/uhppoted/issues/31)
-
+- [x] `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
+      - [x] API function
+      - [x] CHANGELOG
+      - [x] README
+      - [x] doc
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging

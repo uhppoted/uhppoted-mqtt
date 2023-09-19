@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ## Unreleased
+1. `set-door-passcodes` command to set supervisor passcodes for a door.
 
+
+### Added
 
 ## [0.8.6](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.6) - 2023-08-30
 
