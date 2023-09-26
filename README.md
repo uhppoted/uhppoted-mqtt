@@ -70,7 +70,7 @@ eventually be) documented in [uhppoted](https://github.com/uhppoted/uhppoted). `
 - the _MQTT_ section to define the configuration for the MQTT client connection and endpoint
 - the _devices_ section to resolve non-local controller IP addresses and door to controller door identities.
 
-A sample [uhppoted.conf](https://github.com/uhppoted/uhppoted/blob/master/runtime/simulation/405419896.conf) file
+A sample [uhppoted.conf](https://github.com/uhppoted/uhppoted/blob/main/runtime/simulation/405419896.conf) file
 is included in the `uhppoted` distribution. Alternatively, a starter `uhppoted.conf` file can be created by executing:
 ```
 uhppoted-mqtt config > uhppoted.conf

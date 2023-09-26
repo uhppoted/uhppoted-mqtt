@@ -226,7 +226,7 @@ You need the following certificate components (in PEM format):
 - MQTT client key
 
 1. The AWS Root CA certificates and client certificate and key can be downloaded from the _AWS IoT_ console while creating 
-the _uhppoted-mqtt_ `thing` (see [Provision a thing device for uhppoted-mqtt](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/greengrass/provisioning.md#provision-a-thing-device-for-uhppoted-mqtt)). Copy the certificates
+the _uhppoted-mqtt_ `thing` (see [Provision a thing device for uhppoted-mqtt](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/greengrass/provisioning.md#provision-a-thing-device-for-uhppoted-mqtt)). Copy the certificates
 and key to:
 
 | File                       | Folder                                           |
@@ -266,13 +266,13 @@ mqtt.connection.client.key = /usr/local/etc/com.github.uhppoted/mqtt/greengrass/
 
 _(this assumes you included the _IPDetector_ module in the AWS Greengrass setup)_
 
-_tl;dr; The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system._
+_tl;dr; The documentation folder contains a [sample script](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/uhppoted-setup.sh) (contributed by Tim Irwin) for provisioning the certificates from the AWS certificate server which can be customized to match your system._
 
 
 ## References
 
 1. [Minimal IAM policy for installer to provision resources](https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html)
 2. [Stackoverflow:How can I make a topic/action to be allowed only to authorized users?](https://iot.stackexchange.com/questions/5640/how-can-i-make-a-topic-action-to-be-allowed-only-to-authorized-users)
-3. [AWS Lambda tar.gz](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/aws-lambda-tar.py)
+3. [AWS Lambda tar.gz](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/aws-lambda-tar.py)
 4. [Add docs about manual connection of client devices to GG Core without cloud discovery](https://github.com/awsdocs/aws-iot-greengrass-v2-developer-guide/issues/20)
 
