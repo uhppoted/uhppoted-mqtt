@@ -307,6 +307,13 @@ get-status:
                                                         "reply-to":   "$(REPLYTO)", \
                                                         "device-id":  $(SERIALNO) }}}'
 
+	mqtt publish --topic 'uhppoted/gateway/requests/device/status:get' \
+                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                        "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
+                                                        "device-id":  303986753 }}}'
+
+
 get-cards:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/cards:get' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \

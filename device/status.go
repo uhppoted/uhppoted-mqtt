@@ -66,9 +66,9 @@ func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 		response.Status.DoorButton[k] = v
 	}
 
-	if reply.Event != nil {
-		event := Transmogrify(*reply.Event)
-		response.Status.Event = &event
+	if !reply.Event.IsZero() {
+		event := Transmogrify(reply.Event)
+		response.Status.Event = event
 	}
 
 	return &response, nil
