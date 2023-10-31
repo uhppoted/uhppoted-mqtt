@@ -8,6 +8,7 @@
 ### Updated
 1. Renamed _master_ branch to _main_ in line with current development practice.
 2. Replaced `nil` event pointer in `get-status` with zero value.
+3. Fixed _double_ events in `events::Listen` (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/15)
 
 
 ## [0.8.6](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.6) - 2023-08-30

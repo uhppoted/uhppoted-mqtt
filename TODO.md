@@ -4,6 +4,8 @@
 
 - [x] `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
 - [x] Replace Event pointer in GetStatusResponse with zero value (cf. https://github.com/uhppoted/uhppote-core/issues/18)
+- [x] Fix [old event published on each card swipe](https://github.com/uhppoted/uhppoted-mqtt/issues/15)
+      - [x] Fix event retrieval
       - [x] CHANGELOG
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
