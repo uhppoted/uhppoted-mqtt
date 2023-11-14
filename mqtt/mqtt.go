@@ -191,7 +191,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 	}
 
 	if err := mqttd.listen(&api, u); err != nil {
-		return fmt.Errorf("ERROR: Failed to bind to listen port '%d': %v", 12345, err)
+		return fmt.Errorf("ERROR: Failed to bind to MQTT listen port '%d': %v", 12345, err)
 	}
 
 	return nil
@@ -281,11 +281,6 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
 	infof("listening on %v", u.ListenAddr())
 	infof("publishing events to %s", m.Topics.Events)
 
-	last := uhppoted.NewEventMap(m.EventMap)
-	if err := last.Load(); err != nil {
-		warnf("error loading event map [%v]", err)
-	}
-
 	handler := func(e uhppoted.Event) bool {
 		event := struct {
 			Event any `json:"event"`
@@ -303,9 +298,7 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
 
 	m.interrupt = make(chan os.Signal)
 
-	go func() {
-		api.Listen(handler, last, m.interrupt)
-	}()
+	device.Listen(*api, m.EventMap, handler, m.interrupt)
 
 	return nil
 }

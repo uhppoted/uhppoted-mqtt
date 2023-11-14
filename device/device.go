@@ -5,6 +5,7 @@ import (
 
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-mqtt/common"
+	"github.com/uhppoted/uhppoted-mqtt/log"
 )
 
 const (
@@ -27,4 +28,12 @@ func unmarshal(bytes []byte, request interface{}) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+func infof(format string, args ...any) {
+	log.Infof("mqttd", format, args...)
+}
+
+func warnf(format string, args ...any) {
+	log.Warnf("mqttd", format, args...)
 }

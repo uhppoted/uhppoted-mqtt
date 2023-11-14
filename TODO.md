@@ -8,6 +8,12 @@
       - [x] Fix event retrieval
       - [x] CHANGELOG
 
+- [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
+      - [ ] Publish only received events to _events_ topic
+      - [ ] Publish all events to __events/feed_ topic
+      - [ ] README
+      - [ ] CHANGELOG
+
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
 - [ ] MQTT v5
