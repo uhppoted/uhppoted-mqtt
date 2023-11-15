@@ -1,26 +1,25 @@
 package device
 
 import (
-	// "bufio"
+	"bufio"
 	"fmt"
 	"os"
-	// "regexp"
-	// "strconv"
-	// "strings"
-	// "sync"
+	"regexp"
+	"strconv"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
-	// "github.com/uhppoted/uhppoted-lib/log"
-	// lib "github.com/uhppoted/uhppoted-lib/os"
+	// libos "github.com/uhppoted/uhppoted-lib/os"
 	lib "github.com/uhppoted/uhppoted-lib/uhppoted"
 )
 
-// type EventMap struct {
-//     file      string
-//     retrieved map[uint32]uint32
-// }
-//
+type EventMap struct {
+	file      string
+	retrieved map[uint32]uint32
+}
+
 // type EventHandler func(Event) bool
 
 type listener struct {
@@ -47,58 +46,86 @@ func (l *listener) OnError(err error) bool {
 
 // const BATCHSIZE = 32
 
-func Listen(api lib.UHPPOTED, events string, handler lib.EventHandler, interrupt chan os.Signal) {
-	received := lib.NewEventMap(events)
+func Listen(api lib.UHPPOTED, eventsMap string, handler lib.EventHandler, interrupt chan os.Signal) {
+	received := NewEventMap(eventsMap)
 	if err := received.Load(); err != nil {
 		warnf("error loading event map [%v]", err)
 	}
 
 	go func() {
-		// var wg sync.WaitGroup
-		//
-		// devices := u.UHPPOTE.DeviceList()
-		//
-		// for _, d := range devices {
-		//     deviceID := d.ID()
-		//     wg.Add(1)
-		//     go func() {
-		//         defer wg.Done()
-		//         u.retrieve(deviceID, received, handler)
-		//     }()
-		// }
-		//
-		// wg.Wait()
-
 		listen(api, handler, interrupt)
+	}()
+
+	// ... historical events
+	queue := make(chan struct{})
+
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				queue <- struct{}{}
+
+			case <-interrupt:
+				return
+			}
+		}
+	}()
+
+	go func() {
+		for range queue {
+			var wg sync.WaitGroup
+
+			devices := api.UHPPOTE.DeviceList()
+
+			for _, d := range devices {
+				controller := d.ID()
+				wg.Add(1)
+				go func() {
+					defer wg.Done()
+					retrieve(api, controller, received, handler)
+				}()
+			}
+
+			wg.Wait()
+		}
 	}()
 }
 
-// func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHandler) {
-//     if index, ok := received.retrieved[deviceID]; ok {
-//         u.info("listen", fmt.Sprintf("Fetching unretrieved events for device ID %v", deviceID))
-//
-//         event, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff)
-//         if err != nil {
-//             u.warn("listen", fmt.Errorf("unable to retrieve events for device ID %v (%w)", deviceID, err))
-//             return
-//         }
-//
-//         if event.Index == uint32(index) {
-//             u.info("listen", fmt.Sprintf("No unretrieved events for device ID %v", deviceID))
-//             return
-//         }
-//
-//         from := index
-//         to := event.Index
-//
-//         if retrieved := u.fetch(deviceID, from+1, to, handler); retrieved != 0 {
-//             received.retrieved[deviceID] = retrieved
-//             if err := received.store(); err != nil {
-//                 u.warn("listen", err)
-//             }
-//         }
-//     }
-// }
+func retrieve(api lib.UHPPOTED, controller uint32, received *EventMap, handler lib.EventHandler) {
+	if index, ok := received.retrieved[controller]; ok {
+		debugf("checking for unretrieved events from controller %v (index:%v)", controller, index)
+
+		event, err := api.UHPPOTE.GetEvent(controller, 0xffffffff)
+		if err != nil {
+			warnf("unable to retrieve events for controller %v (%w)", controller, err)
+		} else if event.Index == index {
+			infof("no unretrieved events for controller %v", controller)
+		} else {
+			from := index + 1
+			to := min(event.Index, from+3)
+
+			infof("fetching unretrieved events from controller %v", controller)
+			debugf("controller %v  current event index:%v  last event index:%v", controller, event.Index, index)
+
+			if events, err := api.FetchEvents(controller, from, to); err != nil {
+				warnf("error fetching events from controller %v (%w)", controller, err)
+			} else {
+				infof("fetched %v events from controller %v", len(events), controller)
+
+				//	    if retrieved := u.fetch(deviceID, from+1, to, handler); retrieved != 0 {
+				//	        received.retrieved[deviceID] = retrieved
+				//	        if err := received.store(); err != nil {
+				//	            u.warn("listen", err)
+				//	        }
+				//	    }
+			}
+		}
+	}
+}
 
 func listen(api lib.UHPPOTED, handler lib.EventHandler, q chan os.Signal) {
 	infof("initialising event listener")
@@ -295,70 +322,70 @@ func get(api lib.UHPPOTED, controller uint32, index uint32, handler lib.EventHan
 //     return
 // }
 
-// func NewEventMap(file string) *EventMap {
-//     return &EventMap{
-//         file:      file,
-//         retrieved: map[uint32]uint32{},
-//     }
-// }
+func NewEventMap(file string) *EventMap {
+	return &EventMap{
+		file:      file,
+		retrieved: map[uint32]uint32{},
+	}
+}
 
-// func (m *EventMap) Load() error {
-//     if m.file == "" {
-//         return nil
-//     }
-//
-//     f, err := os.Open(m.file)
-//     if err != nil {
-//         if os.IsNotExist(err) {
-//             return nil
-//         }
-//
-//         return err
-//     }
-//
-//     defer f.Close()
-//
-//     re := regexp.MustCompile(`^\s*(.*?)(?::\s*|\s*=\s*|\s+)(\S.*)\s*`)
-//     s := bufio.NewScanner(f)
-//     for s.Scan() {
-//         match := re.FindStringSubmatch(s.Text())
-//         if len(match) == 3 {
-//             key := strings.TrimSpace(match[1])
-//             value := strings.TrimSpace(match[2])
-//
-//             if device, err := strconv.ParseUint(key, 10, 32); err != nil {
-//                 log.Warnf("error parsing event map entry '%s': %v", s.Text(), err)
-//             } else if eventID, err := strconv.ParseUint(value, 10, 32); err != nil {
-//                 log.Warnf("error parsing event map entry '%s': %v", s.Text(), err)
-//             } else {
-//                 m.retrieved[uint32(device)] = uint32(eventID)
-//             }
-//         }
-//     }
-//
-//     return s.Err()
-// }
+func (m *EventMap) Load() error {
+	if m.file == "" {
+		return nil
+	}
+
+	f, err := os.Open(m.file)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+
+		return err
+	}
+
+	defer f.Close()
+
+	re := regexp.MustCompile(`^\s*(.*?)(?::\s*|\s*=\s*|\s+)(\S.*)\s*`)
+	s := bufio.NewScanner(f)
+	for s.Scan() {
+		match := re.FindStringSubmatch(s.Text())
+		if len(match) == 3 {
+			key := strings.TrimSpace(match[1])
+			value := strings.TrimSpace(match[2])
+
+			if device, err := strconv.ParseUint(key, 10, 32); err != nil {
+				warnf("error parsing event map entry '%s': %v", s.Text(), err)
+			} else if eventID, err := strconv.ParseUint(value, 10, 32); err != nil {
+				warnf("error parsing event map entry '%s': %v", s.Text(), err)
+			} else {
+				m.retrieved[uint32(device)] = uint32(eventID)
+			}
+		}
+	}
+
+	return s.Err()
+}
 
 // func (m *EventMap) store() error {
-//     if m.file == "" || IsDevNull(m.file) {
-//         return nil
-//     }
-//
-//     f, err := os.CreateTemp(os.TempDir(), "uhppoted*.tmp")
-//     if err != nil {
-//         return err
-//     }
-//
-//     defer os.Remove(f.Name())
-//
-//     for key, value := range m.retrieved {
-//         if _, err := fmt.Fprintf(f, "%-16d %v\n", key, value); err != nil {
-//             f.Close()
-//             return err
-//         }
-//     }
-//
-//     f.Close()
-//
-//     return lib.Rename(f.Name(), m.file)
+// 	if m.file == "" || lib.IsDevNull(m.file) {
+// 		return nil
+// 	}
+
+// 	f, err := os.CreateTemp(os.TempDir(), "uhppoted*.tmp")
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	defer os.Remove(f.Name())
+
+// 	for key, value := range m.retrieved {
+// 		if _, err := fmt.Fprintf(f, "%-16d %v\n", key, value); err != nil {
+// 			f.Close()
+// 			return err
+// 		}
+// 	}
+
+// 	f.Close()
+
+// 	return libos.Rename(f.Name(), m.file)
 // }

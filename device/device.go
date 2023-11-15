@@ -30,6 +30,10 @@ func unmarshal(bytes []byte, request interface{}) (interface{}, error) {
 	return nil, nil
 }
 
+func debugf(format string, args ...any) {
+	log.Debugf("mqttd", format, args...)
+}
+
 func infof(format string, args ...any) {
 	log.Infof("mqttd", format, args...)
 }

@@ -9,8 +9,12 @@
       - [x] CHANGELOG
 
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
-      - [ ] Publish only received events to _events_ topic
+      - [x] Publish only received events to _events_ topic
       - [ ] Publish all events to __events/feed_ topic
+            - [ ] Limit pending queue size
+            - [ ] Move IsDevNull to lib.os
+            - [ ] Make EventMap private to _listen_
+            - [ ] Cleanup uhppoted-lib listen/events
       - [ ] README
       - [ ] CHANGELOG
 
