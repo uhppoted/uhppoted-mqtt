@@ -281,11 +281,11 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
 	infof("listening on %v", u.ListenAddr())
 	infof("publishing events to %s", m.Topics.Events)
 
-	handler := func(e uhppoted.Event) bool {
+	handler := func(e any, queue string) bool {
 		event := struct {
 			Event any `json:"event"`
 		}{
-			Event: device.Transmogrify(e),
+			Event: e,
 		}
 
 		if err := m.send(&m.Encryption.EventsKeyID, m.Topics.Events, nil, event, msgEvent, true); err != nil {

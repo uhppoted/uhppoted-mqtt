@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
-	// libos "github.com/uhppoted/uhppoted-lib/os"
+	libos "github.com/uhppoted/uhppoted-lib/os"
 	lib "github.com/uhppoted/uhppoted-lib/uhppoted"
 )
 
@@ -20,13 +20,28 @@ type EventMap struct {
 	retrieved map[uint32]uint32
 }
 
-// type EventHandler func(Event) bool
+type EventHandler func(event any, queue string) bool
 
 type listener struct {
 	onConnected func()
 	onEvent     func(*types.Status)
 	onError     func(error) bool
 }
+
+type event struct {
+	Controller uint32         `json:"device-id"`
+	Index      uint32         `json:"event-id"`
+	Type       uint8          `json:"event-type"`
+	Granted    bool           `json:"access-granted"`
+	Door       uint8          `json:"door-id"`
+	Direction  uint8          `json:"direction"`
+	CardNumber uint32         `json:"card-number"`
+	Timestamp  types.DateTime `json:"timestamp"`
+	Reason     uint8          `json:"event-reason"`
+}
+
+const EventsBatchSize = 32
+const EventsBatchInterval = 30 * time.Second
 
 func (l *listener) OnConnected() {
 	go func() {
@@ -44,9 +59,7 @@ func (l *listener) OnError(err error) bool {
 	return l.onError(err)
 }
 
-// const BATCHSIZE = 32
-
-func Listen(api lib.UHPPOTED, eventsMap string, handler lib.EventHandler, interrupt chan os.Signal) {
+func Listen(api lib.UHPPOTED, eventsMap string, handler EventHandler, interrupt chan os.Signal) {
 	received := NewEventMap(eventsMap)
 	if err := received.Load(); err != nil {
 		warnf("error loading event map [%v]", err)
@@ -60,7 +73,7 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler lib.EventHandler, interr
 	queue := make(chan struct{})
 
 	go func() {
-		ticker := time.NewTicker(30 * time.Second)
+		ticker := time.NewTicker(EventsBatchInterval)
 
 		defer ticker.Stop()
 
@@ -95,39 +108,7 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler lib.EventHandler, interr
 	}()
 }
 
-func retrieve(api lib.UHPPOTED, controller uint32, received *EventMap, handler lib.EventHandler) {
-	if index, ok := received.retrieved[controller]; ok {
-		debugf("checking for unretrieved events from controller %v (index:%v)", controller, index)
-
-		event, err := api.UHPPOTE.GetEvent(controller, 0xffffffff)
-		if err != nil {
-			warnf("unable to retrieve events for controller %v (%w)", controller, err)
-		} else if event.Index == index {
-			infof("no unretrieved events for controller %v", controller)
-		} else {
-			from := index + 1
-			to := min(event.Index, from+3)
-
-			infof("fetching unretrieved events from controller %v", controller)
-			debugf("controller %v  current event index:%v  last event index:%v", controller, event.Index, index)
-
-			if events, err := api.FetchEvents(controller, from, to); err != nil {
-				warnf("error fetching events from controller %v (%w)", controller, err)
-			} else {
-				infof("fetched %v events from controller %v", len(events), controller)
-
-				//	    if retrieved := u.fetch(deviceID, from+1, to, handler); retrieved != 0 {
-				//	        received.retrieved[deviceID] = retrieved
-				//	        if err := received.store(); err != nil {
-				//	            u.warn("listen", err)
-				//	        }
-				//	    }
-			}
-		}
-	}
-}
-
-func listen(api lib.UHPPOTED, handler lib.EventHandler, q chan os.Signal) {
+func listen(api lib.UHPPOTED, handler EventHandler, q chan os.Signal) {
 	infof("initialising event listener")
 
 	backoffs := []time.Duration{
@@ -205,7 +186,7 @@ func listen(api lib.UHPPOTED, handler lib.EventHandler, q chan os.Signal) {
 //     }
 // }
 
-func get(api lib.UHPPOTED, controller uint32, index uint32, handler lib.EventHandler) (uint32, error) {
+func get(api lib.UHPPOTED, controller uint32, index uint32, handler EventHandler) (uint32, error) {
 	record, err := api.UHPPOTE.GetEvent(controller, index)
 
 	if err != nil {
@@ -215,8 +196,8 @@ func get(api lib.UHPPOTED, controller uint32, index uint32, handler lib.EventHan
 	} else if record.Index != index {
 		return 0, fmt.Errorf("no event record for controller %v, event %v", controller, index)
 	} else {
-		event := lib.Event{
-			DeviceID:   uint32(record.SerialNumber),
+		e := event{
+			Controller: uint32(record.SerialNumber),
 			Index:      record.Index,
 			Type:       record.Type,
 			Granted:    record.Granted,
@@ -227,7 +208,7 @@ func get(api lib.UHPPOTED, controller uint32, index uint32, handler lib.EventHan
 			Reason:     record.Reason,
 		}
 
-		if !handler(event) {
+		if !handler(transmogrify(e), "current") {
 			return 0, fmt.Errorf("failed to dispatch received event")
 		}
 
@@ -235,92 +216,56 @@ func get(api lib.UHPPOTED, controller uint32, index uint32, handler lib.EventHan
 	}
 }
 
-// func (u *UHPPOTED) fetch(deviceID uint32, from, to uint32, handler EventHandler) (retrieved uint32) {
-//     batchSize := BATCHSIZE
-//     if u.ListenBatchSize > 0 {
-//         batchSize = u.ListenBatchSize
-//     }
-//
-//     first, err := u.UHPPOTE.GetEvent(deviceID, 0)
-//     if err != nil {
-//         u.warn("listen", fmt.Errorf("failed to retrieve 'first' event for device %d (%w)", deviceID, err))
-//         return
-//     } else if first == nil {
-//         u.warn("listen", fmt.Errorf("no 'first' event record returned for device %d", deviceID))
-//         return
-//     }
-//
-//     last, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff)
-//     if err != nil {
-//         u.warn("listen", fmt.Errorf("failed to retrieve 'last' event for device %d (%w)", deviceID, err))
-//         return
-//     } else if first == nil {
-//         u.warn("listen", fmt.Errorf("no 'last' event record returned for device %d", deviceID))
-//         return
-//     }
-//
-//     if last.Index >= first.Index {
-//         if uint32(from) < first.Index || uint32(from) > last.Index {
-//             from = first.Index
-//         }
-//
-//         if uint32(to) < first.Index || uint32(to) > last.Index {
-//             to = last.Index
-//         }
-//     } else {
-//         if uint32(from) < first.Index && uint32(from) > last.Index {
-//             from = first.Index
-//         }
-//
-//         if uint32(to) < first.Index && uint32(to) > last.Index {
-//             to = last.Index
-//         }
-//     }
-//
-//     count := 0
-//     index := from
-//     for {
-//         count += 1
-//         if count > batchSize {
-//             return
-//         }
-//
-//         record, err := u.UHPPOTE.GetEvent(deviceID, uint32(index))
-//         if err != nil {
-//             u.warn("listen", fmt.Errorf("failed to retrieve event for device %d, ID %d (%w)", deviceID, index, err))
-//         } else if record == nil {
-//             u.warn("listen", fmt.Errorf("no event record for device %d, ID %d", deviceID, index))
-//         } else if record.Index != uint32(index) {
-//             u.warn("listen", fmt.Errorf("no event record for device %d, ID %d", deviceID, index))
-//         } else {
-//             event := Event{
-//                 DeviceID:   uint32(record.SerialNumber),
-//                 Index:      record.Index,
-//                 Type:       record.Type,
-//                 Granted:    record.Granted,
-//                 Door:       record.Door,
-//                 Direction:  record.Direction,
-//                 CardNumber: record.CardNumber,
-//                 Timestamp:  record.Timestamp,
-//                 Reason:     record.Reason,
-//             }
-//
-//             if !handler(event) {
-//                 break
-//             }
-//
-//             retrieved = record.Index
-//         }
-//
-//         if index == to {
-//             break
-//         }
-//
-//         index++
-//     }
-//
-//     return
-// }
+func retrieve(api lib.UHPPOTED, controller uint32, received *EventMap, handler EventHandler) {
+	if last, ok := received.retrieved[controller]; ok {
+		debugf("checking for unretrieved events from controller %v (index:%v)", controller, last)
+
+		evt, err := api.UHPPOTE.GetEvent(controller, 0xffffffff)
+		if err != nil {
+			warnf("unable to retrieve events for controller %v (%w)", controller, err)
+		} else if evt.Index == last {
+			infof("no unretrieved events for controller %v", controller)
+		} else {
+			from := last + 1
+			to := min(evt.Index, EventsBatchSize)
+
+			infof("fetching unretrieved events from controller %v", controller)
+			debugf("controller %v  current event index:%v  last event index:%v", controller, evt.Index, last)
+
+			if events, err := api.FetchEvents(controller, from, to); err != nil {
+				warnf("error fetching events from controller %v (%w)", controller, err)
+			} else {
+				infof("fetched %v events from controller %v", len(events), controller)
+
+				for _, evt := range events {
+					e := event{
+						Controller: uint32(evt.SerialNumber),
+						Index:      evt.Index,
+						Type:       evt.Type,
+						Granted:    evt.Granted,
+						Door:       evt.Door,
+						Direction:  evt.Direction,
+						CardNumber: evt.CardNumber,
+						Timestamp:  evt.Timestamp,
+						Reason:     evt.Reason,
+					}
+
+					if !handler(transmogrify(e), "feed") {
+						warnf("failed to dispatch retrieved event")
+						return
+					}
+
+					last = max(last, e.Index)
+				}
+
+				received.retrieved[controller] = last
+				if err := received.store(); err != nil {
+					warnf("error updating retrieved events map for controller %v (%v)", controller, err)
+				}
+			}
+		}
+	}
+}
 
 func NewEventMap(file string) *EventMap {
 	return &EventMap{
@@ -366,26 +311,26 @@ func (m *EventMap) Load() error {
 	return s.Err()
 }
 
-// func (m *EventMap) store() error {
-// 	if m.file == "" || lib.IsDevNull(m.file) {
-// 		return nil
-// 	}
+func (m *EventMap) store() error {
+	if m.file == "" || libos.IsDevNull(m.file) {
+		return nil
+	}
 
-// 	f, err := os.CreateTemp(os.TempDir(), "uhppoted*.tmp")
-// 	if err != nil {
-// 		return err
-// 	}
+	f, err := os.CreateTemp(os.TempDir(), "uhppoted*.tmp")
+	if err != nil {
+		return err
+	}
 
-// 	defer os.Remove(f.Name())
+	defer os.Remove(f.Name())
 
-// 	for key, value := range m.retrieved {
-// 		if _, err := fmt.Fprintf(f, "%-16d %v\n", key, value); err != nil {
-// 			f.Close()
-// 			return err
-// 		}
-// 	}
+	for key, value := range m.retrieved {
+		if _, err := fmt.Fprintf(f, "%-16d %v\n", key, value); err != nil {
+			f.Close()
+			return err
+		}
+	}
 
-// 	f.Close()
+	f.Close()
 
-// 	return libos.Rename(f.Name(), m.file)
-// }
+	return libos.Rename(f.Name(), m.file)
+}

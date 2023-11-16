@@ -11,21 +11,6 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-type Event struct {
-	DeviceID      uint32         `json:"device-id"`
-	Index         uint32         `json:"event-id"`
-	Type          uint8          `json:"event-type"`
-	TypeText      string         `json:"event-type-text"`
-	Granted       bool           `json:"access-granted"`
-	Door          uint8          `json:"door-id"`
-	Direction     uint8          `json:"direction"`
-	DirectionText string         `json:"direction-text"`
-	CardNumber    uint32         `json:"card-number"`
-	Timestamp     types.DateTime `json:"timestamp"`
-	Reason        uint8          `json:"event-reason"`
-	ReasonText    string         `json:"event-reason-text"`
-}
-
 func (d *Device) GetEvents(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID uint32 `json:"device-id"`
@@ -218,6 +203,7 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (any, error) {
 	return &response, nil
 }
 
+// FIXME remove when uhppoted-lib::Event is removed
 func Transmogrify(e uhppoted.Event) any {
 	lookup := func(key string) string {
 		if v, ok := locales.Lookup(key); ok {
@@ -227,8 +213,59 @@ func Transmogrify(e uhppoted.Event) any {
 		return ""
 	}
 
-	return Event{
+	return struct {
+		DeviceID      uint32         `json:"device-id"`
+		Index         uint32         `json:"event-id"`
+		Type          uint8          `json:"event-type"`
+		TypeText      string         `json:"event-type-text"`
+		Granted       bool           `json:"access-granted"`
+		Door          uint8          `json:"door-id"`
+		Direction     uint8          `json:"direction"`
+		DirectionText string         `json:"direction-text"`
+		CardNumber    uint32         `json:"card-number"`
+		Timestamp     types.DateTime `json:"timestamp"`
+		Reason        uint8          `json:"event-reason"`
+		ReasonText    string         `json:"event-reason-text"`
+	}{
 		DeviceID:      e.DeviceID,
+		Index:         e.Index,
+		Type:          e.Type,
+		TypeText:      lookup(fmt.Sprintf("event.type.%v", e.Type)),
+		Granted:       e.Granted,
+		Door:          e.Door,
+		Direction:     e.Direction,
+		DirectionText: lookup(fmt.Sprintf("event.direction.%v", e.Direction)),
+		CardNumber:    e.CardNumber,
+		Timestamp:     e.Timestamp,
+		Reason:        e.Reason,
+		ReasonText:    lookup(fmt.Sprintf("event.reason.%v", e.Reason)),
+	}
+}
+
+func transmogrify(e event) any {
+	lookup := func(key string) string {
+		if v, ok := locales.Lookup(key); ok {
+			return v
+		}
+
+		return ""
+	}
+
+	return struct {
+		ControllerID  uint32         `json:"device-id"`
+		Index         uint32         `json:"event-id"`
+		Type          uint8          `json:"event-type"`
+		TypeText      string         `json:"event-type-text"`
+		Granted       bool           `json:"access-granted"`
+		Door          uint8          `json:"door-id"`
+		Direction     uint8          `json:"direction"`
+		DirectionText string         `json:"direction-text"`
+		CardNumber    uint32         `json:"card-number"`
+		Timestamp     types.DateTime `json:"timestamp"`
+		Reason        uint8          `json:"event-reason"`
+		ReasonText    string         `json:"event-reason-text"`
+	}{
+		ControllerID:  e.Controller,
 		Index:         e.Index,
 		Type:          e.Type,
 		TypeText:      lookup(fmt.Sprintf("event.type.%v", e.Type)),
