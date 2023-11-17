@@ -15,12 +15,12 @@ import (
 	lib "github.com/uhppoted/uhppoted-lib/uhppoted"
 )
 
-type EventMap struct {
+type eventMap struct {
 	file      string
 	retrieved map[uint32]uint32
 }
 
-type EventHandler func(event any, queue string) bool
+type eventHandler func(event any, queue string) bool
 
 type listener struct {
 	onConnected func()
@@ -59,9 +59,13 @@ func (l *listener) OnError(err error) bool {
 	return l.onError(err)
 }
 
-func Listen(api lib.UHPPOTED, eventsMap string, handler EventHandler, interrupt chan os.Signal) {
-	received := NewEventMap(eventsMap)
-	if err := received.Load(); err != nil {
+func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt chan os.Signal) {
+	received := eventMap{
+		file:      eventsMap,
+		retrieved: map[uint32]uint32{},
+	}
+
+	if err := received.load(); err != nil {
 		warnf("error loading event map [%v]", err)
 	}
 
@@ -99,7 +103,7 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler EventHandler, interrupt 
 				wg.Add(1)
 				go func() {
 					defer wg.Done()
-					retrieve(api, controller, received, handler)
+					retrieve(api, controller, &received, handler)
 				}()
 			}
 
@@ -108,7 +112,7 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler EventHandler, interrupt 
 	}()
 }
 
-func listen(api lib.UHPPOTED, handler EventHandler, q chan os.Signal) {
+func listen(api lib.UHPPOTED, handler eventHandler, q chan os.Signal) {
 	infof("initialising event listener")
 
 	backoffs := []time.Duration{
@@ -186,7 +190,7 @@ func listen(api lib.UHPPOTED, handler EventHandler, q chan os.Signal) {
 //     }
 // }
 
-func get(api lib.UHPPOTED, controller uint32, index uint32, handler EventHandler) (uint32, error) {
+func get(api lib.UHPPOTED, controller uint32, index uint32, handler eventHandler) (uint32, error) {
 	record, err := api.UHPPOTE.GetEvent(controller, index)
 
 	if err != nil {
@@ -216,7 +220,7 @@ func get(api lib.UHPPOTED, controller uint32, index uint32, handler EventHandler
 	}
 }
 
-func retrieve(api lib.UHPPOTED, controller uint32, received *EventMap, handler EventHandler) {
+func retrieve(api lib.UHPPOTED, controller uint32, received *eventMap, handler eventHandler) {
 	if last, ok := received.retrieved[controller]; ok {
 		debugf("checking for unretrieved events from controller %v (index:%v)", controller, last)
 
@@ -267,14 +271,7 @@ func retrieve(api lib.UHPPOTED, controller uint32, received *EventMap, handler E
 	}
 }
 
-func NewEventMap(file string) *EventMap {
-	return &EventMap{
-		file:      file,
-		retrieved: map[uint32]uint32{},
-	}
-}
-
-func (m *EventMap) Load() error {
+func (m *eventMap) load() error {
 	if m.file == "" {
 		return nil
 	}
@@ -311,7 +308,7 @@ func (m *EventMap) Load() error {
 	return s.Err()
 }
 
-func (m *EventMap) store() error {
+func (m *eventMap) store() error {
 	if m.file == "" || libos.IsDevNull(m.file) {
 		return nil
 	}
