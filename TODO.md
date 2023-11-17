@@ -12,7 +12,7 @@
       - [x] Publish only received events to _events_ topic
       - [ ] Publish all events to _events/feed_ topic
             - [x] Move IsDevNull to lib.os
-            - [ ] Seperate _current_ and _feed_ topics
+            - [x] Seperate _live_ and _feed_ topics
             - [ ] Limit retrieve task queue size
             - [ ] Make EventMap private to _listen_
             - [ ] Cleanup uhppoted-lib listen/events
@@ -20,6 +20,9 @@
 
       - [ ] README
       - [ ] CHANGELOG
+  ```
+  2023/11/17 09:09:39 WARN   watchdog     %v%!(EXTRA monitoring.Errors=2 errors)
+  ```
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging

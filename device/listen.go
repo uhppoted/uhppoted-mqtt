@@ -208,7 +208,7 @@ func get(api lib.UHPPOTED, controller uint32, index uint32, handler EventHandler
 			Reason:     record.Reason,
 		}
 
-		if !handler(transmogrify(e), "current") {
+		if !handler(transmogrify(e), "real-time") {
 			return 0, fmt.Errorf("failed to dispatch received event")
 		}
 

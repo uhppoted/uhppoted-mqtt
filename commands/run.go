@@ -151,8 +151,14 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		Topics: mqtt.Topics{
 			Requests: c.Topics.Resolve(c.Topics.Requests),
 			Replies:  c.Topics.Resolve(c.Topics.Replies),
-			Events:   c.Topics.Resolve(c.Topics.Events),
-			System:   c.Topics.Resolve(c.Topics.System),
+			Events: struct {
+				Feed     string
+				RealTime string
+			}{
+				Feed:     c.Topics.Resolve(c.Topics.EventsFeed),
+				RealTime: c.Topics.Resolve(c.Topics.RealTimeEvents),
+			},
+			System: c.Topics.Resolve(c.Topics.System),
 		},
 		Alerts: mqtt.Alerts{
 			QOS:      c.Alerts.QOS,

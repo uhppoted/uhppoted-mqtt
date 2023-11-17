@@ -51,8 +51,11 @@ type Connection struct {
 type Topics struct {
 	Requests string
 	Replies  string
-	Events   string
-	System   string
+	Events   struct {
+		Feed     string
+		RealTime string
+	}
+	System string
 }
 
 type Alerts struct {
@@ -288,7 +291,16 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
 			Event: e,
 		}
 
-		if err := m.send(&m.Encryption.EventsKeyID, m.Topics.Events, nil, event, msgEvent, true); err != nil {
+		topic := m.Topics.Events.Feed
+		switch queue {
+		case "real-time":
+			topic = m.Topics.Events.RealTime
+
+		case "feed":
+			topic = m.Topics.Events.Feed
+		}
+
+		if err := m.send(&m.Encryption.EventsKeyID, topic, nil, event, msgEvent, true); err != nil {
 			warnf("%v", err)
 			return false
 		}
