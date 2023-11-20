@@ -42,6 +42,7 @@ type event struct {
 
 const EventsBatchSize = 32
 const EventsBatchInterval = 30 * time.Second
+const EventsRateLimit = 2500 * time.Millisecond
 
 func (l *listener) OnConnected() {
 	go func() {
@@ -60,6 +61,8 @@ func (l *listener) OnError(err error) bool {
 }
 
 func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt chan os.Signal) {
+	queue := make(chan struct{}, 4)
+
 	received := eventMap{
 		file:      eventsMap,
 		retrieved: map[uint32]uint32{},
@@ -70,11 +73,10 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt 
 	}
 
 	go func() {
-		listen(api, handler, &received, interrupt)
+		listen(api, handler, queue, interrupt)
 	}()
 
 	// ... historical events
-	queue := make(chan struct{})
 
 	go func() {
 		ticker := time.NewTicker(EventsBatchInterval)
@@ -84,7 +86,12 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt 
 		for {
 			select {
 			case <-ticker.C:
-				queue <- struct{}{}
+				select {
+				case queue <- struct{}{}:
+					debugf("fetch-events - added to event task queue")
+				default:
+					warnf("fetch-events - event task queue full")
+				}
 
 			case <-interrupt:
 				return
@@ -108,11 +115,12 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt 
 			}
 
 			wg.Wait()
+			time.Sleep(EventsRateLimit)
 		}
 	}()
 }
 
-func listen(api lib.UHPPOTED, handler eventHandler, received *eventMap, q chan os.Signal) {
+func listen(api lib.UHPPOTED, handler eventHandler, queue chan struct{}, q chan os.Signal) {
 	infof("initialising event listener")
 
 	backoffs := []time.Duration{
@@ -139,12 +147,17 @@ func listen(api lib.UHPPOTED, handler eventHandler, received *eventMap, q chan o
 
 			go func() {
 				if index, err := get(api, controller, evt, handler); err != nil {
-					warnf("listen:get-event - %v", err)
+					warnf("get-event - %v", err)
 				} else {
-					infof("listen:get-event - dispatched event %v", index)
+					infof("get-event - dispatched event %v", index)
 				}
 
-				retrieve(api, controller, received, handler)
+				select {
+				case queue <- struct{}{}:
+					debugf("get-event - added %v to event task queue", evt)
+				default:
+					warnf("get-event - event task queue full")
+				}
 			}()
 		},
 
