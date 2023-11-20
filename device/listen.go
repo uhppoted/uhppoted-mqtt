@@ -70,7 +70,7 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt 
 	}
 
 	go func() {
-		listen(api, handler, interrupt)
+		listen(api, handler, &received, interrupt)
 	}()
 
 	// ... historical events
@@ -112,7 +112,7 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt 
 	}()
 }
 
-func listen(api lib.UHPPOTED, handler eventHandler, q chan os.Signal) {
+func listen(api lib.UHPPOTED, handler eventHandler, received *eventMap, q chan os.Signal) {
 	infof("initialising event listener")
 
 	backoffs := []time.Duration{
@@ -137,11 +137,15 @@ func listen(api lib.UHPPOTED, handler eventHandler, q chan os.Signal) {
 			controller := uint32(e.SerialNumber)
 			evt := e.Event.Index
 
-			if index, err := get(api, controller, evt, handler); err != nil {
-				warnf("listen:get-event - %v", err)
-			} else {
-				infof("listen:get-event - dispatched event %v", index)
-			}
+			go func() {
+				if index, err := get(api, controller, evt, handler); err != nil {
+					warnf("listen:get-event - %v", err)
+				} else {
+					infof("listen:get-event - dispatched event %v", index)
+				}
+
+				retrieve(api, controller, received, handler)
+			}()
 		},
 
 		onError: func(err error) bool {
@@ -169,26 +173,6 @@ func listen(api lib.UHPPOTED, handler eventHandler, q chan os.Signal) {
 		break
 	}
 }
-
-// func onEvent(e *types.Status, received *EventMap, handler EventHandler) {
-//     infof("event %+v", e))
-//
-//     deviceID := uint32(e.SerialNumber)
-//     last := e.Event.Index
-//     first := e.Event.Index
-//
-//     retrieved, ok := received.retrieved[deviceID]
-//     if ok && retrieved < uint32(last) {
-//         first = retrieved + 1
-//     }
-//
-//     if eventID := u.fetch(deviceID, first, last, handler); eventID != 0 {
-//         received.retrieved[deviceID] = eventID
-//         if err := received.store(); err != nil {
-//             u.warn("listen", err)
-//         }
-//     }
-// }
 
 func get(api lib.UHPPOTED, controller uint32, index uint32, handler eventHandler) (uint32, error) {
 	record, err := api.UHPPOTE.GetEvent(controller, index)

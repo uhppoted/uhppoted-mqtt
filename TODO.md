@@ -14,8 +14,10 @@
             - [x] Move IsDevNull to lib.os
             - [x] Seperate _live_ and _feed_ topics
             - [x] Make EventMap private to _listen_
-            - [ ] Queue retrieve task on swipe event
-            - [ ] Limit retrieve task queue size
+            - [ ] Retrieve events on swipe event
+                  - [x] Retrieve events
+                  - [ ] Task queue
+                  - [ ] Limit retrieve task queue size
             - [ ] Cleanup uhppoted-lib listen/events
             - [ ] Merge to _main_
       - [ ] README
