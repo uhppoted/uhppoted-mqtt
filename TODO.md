@@ -17,8 +17,8 @@
                   - [x] Task queue
                   - [x] Limit retrieve task queue size
                   - [x] Rate limit task queue
+            - [x] Merge to _main_
             - [ ] Cleanup uhppoted-lib listen/events
-            - [ ] Merge to _main_
       - [ ] README
       - [ ] CHANGELOG
 
