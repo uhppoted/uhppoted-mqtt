@@ -8,7 +8,7 @@
 
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [x] Publish only received events to _events_ topic
-      - [ ] Publish all events to _events/feed_ topic
+      - [x] Publish all events to _events/feed_ topic
             - [x] Move IsDevNull to lib.os
             - [x] Seperate _live_ and _feed_ topics
             - [x] Make EventMap private to _listen_
@@ -18,7 +18,7 @@
                   - [x] Limit retrieve task queue size
                   - [x] Rate limit task queue
             - [x] Merge to _main_
-            - [ ] Cleanup uhppoted-lib listen/events
+            - [x] Cleanup uhppoted-lib listen/events
       - [ ] README
       - [ ] CHANGELOG
 
