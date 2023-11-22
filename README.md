@@ -180,7 +180,7 @@ The topics are configurable in _uhppoted.conf_:
 …
 mqtt.topic.root = uhppoted/gateway
 mqtt.topic.events = ./events
-mqtt.topic.events.real-time = ./events/live
+mqtt.topic.events.live = ./events/live
 …
 ```
 

@@ -152,11 +152,11 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 			Requests: c.Topics.Resolve(c.Topics.Requests),
 			Replies:  c.Topics.Resolve(c.Topics.Replies),
 			Events: struct {
-				Feed     string
-				RealTime string
+				Feed string
+				Live string
 			}{
-				Feed:     c.Topics.Resolve(c.Topics.EventsFeed),
-				RealTime: c.Topics.Resolve(c.Topics.RealTimeEvents),
+				Feed: c.Topics.Resolve(c.Topics.EventsFeed),
+				Live: c.Topics.Resolve(c.Topics.LiveEvents),
 			},
 			System: c.Topics.Resolve(c.Topics.System),
 		},

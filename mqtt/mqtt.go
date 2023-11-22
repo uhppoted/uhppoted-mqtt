@@ -52,8 +52,8 @@ type Topics struct {
 	Requests string
 	Replies  string
 	Events   struct {
-		Feed     string
-		RealTime string
+		Feed string
+		Live string
 	}
 	System string
 }
@@ -293,8 +293,8 @@ func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
 
 		topic := m.Topics.Events.Feed
 		switch queue {
-		case "real-time":
-			topic = m.Topics.Events.RealTime
+		case "live":
+			topic = m.Topics.Events.Live
 
 		case "feed":
 			topic = m.Topics.Events.Feed
