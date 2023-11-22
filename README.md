@@ -159,6 +159,31 @@ Command line:
 
 `uhppoted-mqtt undaemonize `
 
+## Notes
+
+### Events
+
+_uhppoted-mqtt_ publishes controller events to two topics:
+
+- `uhppoted/gateway/events`
+- `uhppoted/gateway/events/live`
+
+The `uhppoted/gateway/events` topic is an events _feed_ that attempts to ensure that all events are published to the topic at least 
+once, including events that may have occurred while the service was offline. Events are retrieved in small batches so if there is a
+significant backlog the event published in the feed may lag significantly behind the current event.
+
+The `uhppoted/gateway/events/live` topic is an events _feed_ that publishes controller events as they are received. However, events
+that occur while the service is offline won't be published to this topic.
+
+The topics are configurable in _uhppoted.conf_:
+```
+…
+mqtt.topic.root = uhppoted/gateway
+mqtt.topic.events = ./events
+mqtt.topic.events.real-time = ./events/live
+…
+```
+
 
 
 

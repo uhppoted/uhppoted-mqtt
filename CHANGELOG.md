@@ -4,11 +4,13 @@
 
 ### Added
 1. `set-door-passcodes` command to set supervisor passcodes for a door.
+2. Published received events to the _live_ events topic.
 
 ### Updated
 1. Renamed _master_ branch to _main_ in line with current development practice.
 2. Replaced `nil` event pointer in `get-status` with zero value.
 3. Fixed _double_ events in `events::Listen` (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/15)
+4. Reworked events _feed_ to poll for unretrieved events.
 
 
 ## [0.8.6](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.6) - 2023-08-30

@@ -5,8 +5,7 @@
 - [x] `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
 - [x] Replace Event pointer in GetStatusResponse with zero value (cf. https://github.com/uhppoted/uhppote-core/issues/18)
 - [x] Fix [old event published on each card swipe](https://github.com/uhppoted/uhppoted-mqtt/issues/15)
-
-- [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
+- [x] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [x] Publish only received events to _events_ topic
       - [x] Publish all events to _events/feed_ topic
             - [x] Move IsDevNull to lib.os
@@ -19,8 +18,8 @@
                   - [x] Rate limit task queue
             - [x] Merge to _main_
             - [x] Cleanup uhppoted-lib listen/events
-      - [ ] README
-      - [ ] CHANGELOG
+      - [x] README
+      - [x] CHANGELOG
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
