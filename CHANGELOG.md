@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.7](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.7) - 2023-12-01
 
 ### Added
 1. `set-door-passcodes` command to set supervisor passcodes for a door.
@@ -116,3 +116,23 @@
    -  `set-task-list`
 
 2. Migrated to IUHPPOTED interface + implementation
+
+
+## Older
+
+| *Version* | *Description*                                                                             |
+| --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.1    | Added `set-task-list` command to manage the controller task list                          |
+| v0.7.0    | Added support time profiles from the extended API                                         |
+| v0.6.12   | Added support for `nil` events in response to `get-status`                                |
+| v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
+| v0.6.8    | Maintenance release for version compatibility with `uhppote-core` `v0.6.8`                |
+| v0.6.7    | Implements `special-events` message to enable/disable door events                         |
+| v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
+| v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
+| v0.6.3    | Implements ACL commands                                                                   |
+| v0.6.2    | Maintenance release to update module dependencies                                         |
+| v0.6.1    | Maintenance release to update module dependencies                                         |
+| v0.6.0    | Maintenance release to update module dependencies                                         |
+| v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
+
