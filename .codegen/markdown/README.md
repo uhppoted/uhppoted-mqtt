@@ -25,13 +25,13 @@ mqtt.security.outgoing.encrypt = false
 
 The security can then be increased incrementally as required. The details are described in:
 
-- [HMAC](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#hmac)
-- [Authentication](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#authentication)
-    - [HOTP](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#hotp)
-    - [RSA](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#rsa)
-- [Authorisation](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#authorisation)
-- [Encryption](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#encryption)
-- [Nonce](https://github.com/uhppoted/uhppoted-mqtt/blob/master/documentation/commands/security.md#nonce)
+- [HMAC](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#hmac)
+- [Authentication](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#authentication)
+    - [HOTP](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#hotp)
+    - [RSA](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#rsa)
+- [Authorisation](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#authorisation)
+- [Encryption](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#encryption)
+- [Nonce](https://github.com/uhppoted/uhppoted-mqtt/blob/main/documentation/commands/security.md#nonce)
 
 ## Command structure
 

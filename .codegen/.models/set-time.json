@@ -12,7 +12,7 @@
         {
           "field": "date-time",
           "value": "<datetime>",
-          "description": "date and time to set"
+          "description": "(required) date and time to set (YYYY-mm-dd HH:mm:ss)"
         }
       ]
     },
@@ -26,7 +26,7 @@
         {
           "field": "date-time",
           "value": "<datetime>",
-          "description": "controller system date and time"
+          "description": "controller system date and time (YYYY-mm-dd HH:mm:ss)"
         }
       ]
     }

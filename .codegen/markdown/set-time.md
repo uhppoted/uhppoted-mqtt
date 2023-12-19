@@ -1,4 +1,4 @@
-{{- with .get_time -}}
+{{- with .set_time -}}
 ### `{{.command}}`
 
 Sets the controller date and time.

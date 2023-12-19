@@ -16,7 +16,7 @@ message:
             "client-id": "<client-id>",
             "reply-to": "<topic>",
             "device-id": "<controller-id>",
-            "date-time": "YYYY-mm-dd hh:mm:ss"
+            "date-time": "<datetime>",
         }
     }
 }
@@ -26,7 +26,7 @@ client-id    (required) client ID for authentication and authorisation (if enabl
 reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the
                         configured reply topic) if not provided.
 device-id    (required) controller serial number
-date-time    (required) set controller system date and time in this format: YYYY-mm-dd hh:mm:ss
+date-time    (required) date and time to set (YYYY-mm-dd HH:mm:ss)
 ```
 
 ```
@@ -36,7 +36,7 @@ Response:
     "reply": {
       "request-id": <request-id>,
       "client-id": <client-id>,
-      "method": "get-time",
+      "method": "set-time",
       "response": {
             "device-id": "<controller-id>",
             "date-time": "<datetime>",
@@ -50,13 +50,13 @@ Response:
 request-id   message ID from the request
 client-id    client ID from the request
 device-id    controller serial number
-date-time    controller system date and time
+date-time    controller system date and time (YYYY-mm-dd HH:mm:ss)
 ```
 
 
 Example:
 ```
-topic: uhppoted/gateway/requests/device/time:get
+topic: uhppoted/gateway/requests/device/time:set
 
 {
   "message": {
