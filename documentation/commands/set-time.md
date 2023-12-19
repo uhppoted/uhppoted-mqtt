@@ -1,4 +1,4 @@
-### `get-time`
+### `set-time`
 
 Sets the controller date and time.
 
@@ -6,7 +6,7 @@ Sets the controller date and time.
 ```
 Request:
 
-topic: <root>/<requests>/device/time:get
+topic: <root>/<requests>/device/time:set
 
 message:
 {
@@ -16,6 +16,7 @@ message:
             "client-id": "<client-id>",
             "reply-to": "<topic>",
             "device-id": "<controller-id>",
+            "date-time": "YYYY-mm-dd hh:mm:ss"
         }
     }
 }
@@ -25,6 +26,7 @@ client-id    (required) client ID for authentication and authorisation (if enabl
 reply-to     (optional) topic for reply message. Defaults to uhppoted/gateway/replies (or the
                         configured reply topic) if not provided.
 device-id    (required) controller serial number
+date-time    (required) set controller system date and time in this format: YYYY-mm-dd hh:mm:ss
 ```
 
 ```
