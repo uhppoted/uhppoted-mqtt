@@ -2,24 +2,12 @@
 
 ### IN PROGRESS
 
-- [x] `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
-- [x] Replace Event pointer in GetStatusResponse with zero value (cf. https://github.com/uhppoted/uhppote-core/issues/18)
-- [x] Fix [old event published on each card swipe](https://github.com/uhppoted/uhppoted-mqtt/issues/15)
-- [x] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
-      - [x] Publish only received events to _events_ topic
-      - [x] Publish all events to _events/feed_ topic
-            - [x] Move IsDevNull to lib.os
-            - [x] Seperate _live_ and _feed_ topics
-            - [x] Make EventMap private to _listen_
-            - [x] Retrieve events on swipe event
-                  - [x] Retrieve events
-                  - [x] Task queue
-                  - [x] Limit retrieve task queue size
-                  - [x] Rate limit task queue
-            - [x] Merge to _main_
-            - [x] Cleanup uhppoted-lib listen/events
-      - [x] README
-      - [x] CHANGELOG
+- [ ] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+      - [ ] API function
+      - [ ] doc
+      - [ ] CHANGELOG
+      - [ ] README
+
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging

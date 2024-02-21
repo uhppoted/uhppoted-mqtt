@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+### Updated
+1. Bumped Go version to 1.22.
+
 
 ## [0.8.7](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.7) - 2023-12-01
 
