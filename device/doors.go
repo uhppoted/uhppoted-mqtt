@@ -190,7 +190,7 @@ func (d *Device) SetDoorControl(impl uhppoted.IUHPPOTED, request []byte) (any, e
 // being in the range [1..999999]. The function uses the first four codes from the
 // supplied list and invalid passcodes are set to 0 (no code).
 //
-// The controller, door and assigned passcodes in the response.
+// The controller, door and assigned passcodes are included in the response.
 func (d *Device) SetDoorPasscodes(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID  *uhppoted.DeviceID `json:"device-id"`

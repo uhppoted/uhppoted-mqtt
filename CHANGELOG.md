@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+1. `restore-default-parameters` API function to reset a controller to the manufacturer default
+    configuration.
 
 ### Updated
 1. Bumped Go version to 1.22.

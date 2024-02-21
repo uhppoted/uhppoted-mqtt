@@ -232,6 +232,14 @@ set-time:
                                                         "device-id":  $(SERIALNO), \
                                                         "date-time":  "$(DATETIME)" }}}'
 
+restore-default-parameters:
+	mqtt publish --topic 'uhppoted/gateway/requests/device:reset' \
+               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                      "client-id":  "$(CLIENTID)", \
+                                                      "reply-to":   "$(REPLYTO)", \
+                                                      "device-id":  $(SERIALNO) }}}'
+
+
 get-door-delay:
 	mqtt publish --topic 'uhppoted/gateway/requests/device/door/delay:get' \
               --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \

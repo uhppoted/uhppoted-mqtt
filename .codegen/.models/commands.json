@@ -13,6 +13,9 @@
       "command": "set-time"
     },
     {
+      "command": "restore-default-parameters"
+    },
+    {
       "command": "get-door-delay"
     },
     {

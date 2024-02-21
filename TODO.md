@@ -2,11 +2,11 @@
 
 ### IN PROGRESS
 
-- [ ] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
-      - [ ] API function
-      - [ ] doc
-      - [ ] CHANGELOG
-      - [ ] README
+- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+      - [x] API function
+      - [x] doc
+      - [x] CHANGELOG
+      - [x] README
 
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.

@@ -222,8 +222,11 @@ func retrieve(api lib.UHPPOTED, controller uint32, received *eventMap, handler e
 		debugf("checking for unretrieved events from controller %v (index:%v)", controller, last)
 
 		evt, err := api.UHPPOTE.GetEvent(controller, 0xffffffff)
+
 		if err != nil {
 			warnf("unable to retrieve events for controller %v (%w)", controller, err)
+		} else if evt == nil {
+			infof("no events for controller %v", controller)
 		} else if evt.Index == last {
 			infof("no unretrieved events for controller %v", controller)
 		} else {

@@ -15,6 +15,8 @@
 
 - [`set-time`](set-time.md)
 
+- [`restore-default-parameters`](restore-default-parameters.md)
+
 - [`get-door-delay`](get-door-delay.md)
 
 - [`set-door-delay`](set-door-delay.md)

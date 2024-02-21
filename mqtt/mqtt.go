@@ -152,6 +152,7 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 		table: map[string]fdispatch{
 			mqttd.Topics.Requests + "/devices:get":                 fdispatch{"get-devices", dev.GetDevices},
 			mqttd.Topics.Requests + "/device:get":                  fdispatch{"get-device", dev.GetDevice},
+			mqttd.Topics.Requests + "/device:reset":                fdispatch{"restore-default-parameters", dev.RestoreDefaultParameters},
 			mqttd.Topics.Requests + "/device/status:get":           fdispatch{"get-status", dev.GetStatus},
 			mqttd.Topics.Requests + "/device/time:get":             fdispatch{"get-time", dev.GetTime},
 			mqttd.Topics.Requests + "/device/time:set":             fdispatch{"set-time", dev.SetTime},

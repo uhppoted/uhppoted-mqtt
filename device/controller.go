@@ -42,3 +42,34 @@ func (d *Device) GetDevice(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 
 	return response, nil
 }
+
+// Resets a controller to the manufacturer default configuration.
+func (d *Device) RestoreDefaultParameters(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
+	body := struct {
+		DeviceID *uhppoted.DeviceID `json:"device-id"`
+	}{}
+
+	if response, err := unmarshal(request, &body); err != nil {
+		return response, err
+	}
+
+	if body.DeviceID == nil {
+		return common.MakeError(StatusBadRequest, "Invalid/missing controller ID", nil), fmt.Errorf("invalid/missing controller ID")
+	}
+
+	controller := uint32(*body.DeviceID)
+
+	if err := impl.RestoreDefaultParameters(controller); err != nil {
+		return common.MakeError(StatusInternalServerError, fmt.Sprintf("Could not reset controller %d to manufacturer default configuration", controller), err), err
+	}
+
+	response := struct {
+		DeviceID uint32 `json:"device-id"`
+		Reset    bool   `json:"reset"`
+	}{
+		DeviceID: controller,
+		Reset:    true,
+	}
+
+	return response, nil
+}
