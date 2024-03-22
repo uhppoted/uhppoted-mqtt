@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     image: ghcr.io/uhppoted/mqttd:latest
     volumes:
-      - uhppoted:/var/uhppoted
+      - uhppoted:/usr/local/etc/uhppoted
     network_mode: "bridge"
 
 volumes:

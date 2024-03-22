@@ -5,17 +5,9 @@
 - [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
        - [x] docker-dev
        - [x] docker-ghcr
-             - [ ] use /usr/local/etc/uhppoted
-       - [ ] compose.yml
-```
-docker cp docker/compose/etc/mqtt/broker.pem uhppoted-mqtt:/var/uhppoted/etc/mqtt/
-docker cp docker/compose/etc/uhppoted.conf uhppoted-mqtt:/var/uhppoted/etc/
-docker cp docker/compose/etc/uhppoted.conf uhppoted-mqtt:/var/uhppoted/etc/
-docker cp docker/compose/etc/mqtt/client.cert uhppoted-mqtt:/var/uhppoted/etc/mqtt/
-docker cp docker/compose/etc/mqtt/client.key uhppoted-mqtt:/var/uhppoted/etc/mqtt/ 
-``` 
-       - [ ] README
-       - [ ] CHANGELOG
+       - [x] compose.yml
+       - [x] README
+       - [x] CHANGELOG
        - [ ] Update uhppote to use uhppoted-rest docker
        - [ ] `Incorrect listener address`
 

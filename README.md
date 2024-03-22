@@ -86,6 +86,63 @@ go build -trimpath -o bin ./...
 The above commands build the `'uhppoted-mqtt` executable to the `bin` directory.
 
 
+### Docker
+
+A public _Docker_ image is published to [ghcr.io](https://github.com/uhppoted?tab=packages&repo_name=uhppoted-mqtt). 
+
+The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
+
+#### `docker compose`
+
+A sample Docker `compose` configuration is provided in the [`scripts/docker/compose`](scripts/docker/compose) folder. 
+
+To run the example, download and extract the [zipped](script/docker/compose.zip) scripts and supporting files into folder
+of your choice and then:
+```
+cd <compose folder>
+docker compose up
+```
+
+The MQTT server can be tested using an MQTT client, e.g. _mqtt_:
+```
+mqtt publish --topic 'uhppoted/gateway/requests/devices:get' \
+              --message '{ "message": { "request": { "request-id": "AH173635G3",     \
+                                                     "client-id":  "QWERTY54",       \
+                                                     "reply-to":   "uhppoted/reply", \
+                                                      "nonce":     5 }}}'
+
+```
+
+The default image is configured for TCP only. To enable a TLS connection to the MQTT broker, enable it in the _uhppoted.conf_ file
+on the Docker volume mapped to _/usr/local/etc/uhppoted_ and copy the certificates and keys to the _/usr/local/etc/uhppoted/mqtt_ folder on 
+the Docker volume mapped to _/usr/local/etc/uhppoted_, e.g.
+```
+docker cp broker.pem  mqttd:/usr/local/etc/uhppoted/mqtt
+docker cp client.key  mqttd:/usr/local/etc/uhppoted/mqtt
+docker cp client.cert mqttd:/usr/local/etc/uhppoted/mqtt
+```
+
+#### `docker run`
+
+To start a REST server using Docker `run`:
+```
+docker pull ghcr.io/uhppoted/restd:latest
+docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
+```
+
+The REST server can be tested using _curl_, e.g.:
+```
+curl -X 'GET' 'http://127.0.0.1:8080/uhppote/device' -H 'accept: application/json' | jq .
+```
+
+#### `docker build`
+
+For inclusion in a Dockerfile:
+```
+FROM ghcr.io/uhppoted/restd:latest
+```
+
+
 ### Building from source
 
 #### Dependencies
