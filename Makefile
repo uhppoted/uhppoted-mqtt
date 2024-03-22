@@ -1,6 +1,7 @@
 DEBUG   ?= --debug
 DIST    ?= development
 CODEGEN ?= ../uhppoted-codegen/bin/uhppoted-codegen
+DOCKER  ?= ghcr.io/uhppoted/mqttd:latest
 
 SERIALNO  ?= 405419896
 CARD      ?= 8165538
@@ -128,22 +129,22 @@ docker-dev: build
 	cp docker/dev/uhppoted.conf dist/docker/dev
 	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-mqtt-dev .
 
-# docker-ghcr: build
-# 	rm -rf dist/docker/ghcr/*
-# 	mkdir -p dist/docker/ghcr
-# 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
-# 	cp docker/ghcr/Dockerfile    dist/docker/ghcr
-# 	cp docker/ghcr/uhppoted.conf dist/docker/ghcr
-# 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/restd:latest .
+docker-ghcr: build
+	rm -rf dist/docker/ghcr/*
+	mkdir -p dist/docker/ghcr
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
+	cp docker/ghcr/Dockerfile    dist/docker/ghcr
+	cp docker/ghcr/uhppoted.conf dist/docker/ghcr
+	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
 
 docker-run-dev:
 	# docker run --detach --publish 8080:8080 --name mqttd --rm uhppoted/uhppoted-mqtt-dev
 	docker run --publish 8080:8080 --name mqttd --rm uhppoted/uhppoted-mqtt-dev
 	sleep 1
 
-# docker-run-ghcr:
-# 	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
-# 	sleep 1
+docker-run-ghcr:
+	docker run --publish 8080:8080 --publish 8443:8443 --name mqttd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/mqttd
+	sleep 1
 
 # docker-compose:
 # 	cd docker/compose && docker compose up
