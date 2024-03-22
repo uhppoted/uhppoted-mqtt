@@ -2,12 +2,15 @@
 
 ### IN PROGRESS
 
-- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
-      - [x] API function
-      - [x] doc
-      - [x] CHANGELOG
-      - [x] README
+- [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
+       - [ ] docker-dev
+       - [ ] docker-ghcr
+       - [ ] compose.yml
+       - [ ] README
+       - [ ] CHANGELOG
+       - [ ] Update uhppote to use uhppoted-rest docker
 
+- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging

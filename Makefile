@@ -120,7 +120,7 @@ docker:
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o ./docker ./...
 	docker image     prune -f
 	docker container prune -f
-	cd ./docker/ && docker build -f Dockerfile -t uhppoted/mqtt .
+	cd ./docker/doc && docker build -f Dockerfile -t uhppoted/mqtt .
 
 docker-run:
 	docker run --name mqttd --rm uhppoted/mqtt
