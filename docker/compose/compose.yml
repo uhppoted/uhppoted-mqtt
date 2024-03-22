@@ -1,0 +1,14 @@
+version: "0.0"
+
+services:
+  uhppoted-mqtt:
+    container_name: uhppoted-mqtt
+    restart: unless-stopped
+    image: ghcr.io/uhppoted/mqttd:latest
+    volumes:
+      - uhppoted:/var/uhppoted
+    network_mode: "bridge"
+
+volumes:
+  uhppoted:
+    name: uhppoted

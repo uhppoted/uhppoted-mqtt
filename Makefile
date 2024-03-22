@@ -139,15 +139,15 @@ docker-ghcr: build
 
 docker-run-dev:
 	# docker run --detach --publish 8080:8080 --name mqttd --rm uhppoted/uhppoted-mqtt-dev
-	docker run --publish 8080:8080 --name mqttd --rm uhppoted/uhppoted-mqtt-dev
+	docker run --name mqttd --rm uhppoted/uhppoted-mqtt-dev
 	sleep 1
 
 docker-run-ghcr:
-	docker run --publish 8080:8080 --publish 8443:8443 --name mqttd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/mqttd
+	docker run --name mqttd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/mqttd
 	sleep 1
 
-# docker-compose:
-# 	cd docker/compose && docker compose up
+docker-compose:
+	cd docker/compose && docker compose up
 
 docker-clean:
 	docker image     prune -f

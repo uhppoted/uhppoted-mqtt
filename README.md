@@ -1,4 +1,5 @@
 ![build](https://github.com/uhppoted/uhppoted-mqtt/workflows/build/badge.svg)
+![build](https://github.com/uhppoted/uhppoted-mqtt/workflows/ghcr/badge.svg)
 
 # uhppoted-mqtt
 
