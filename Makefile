@@ -116,15 +116,41 @@ debug: build
 godoc:
 	godoc -http=:80	-index_interval=60s
 
-docker:
-	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o ./docker ./...
+# docker:
+# 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o ./docker/doc ./...
+# 	cd ./docker/doc && docker build -f Dockerfile -t uhppoted/mqtt .
+
+docker-dev: build
+	rm -rf dist/docker/dev/*
+	mkdir -p dist/docker/dev
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/dev ./...
+	cp docker/dev/Dockerfile    dist/docker/dev
+	cp docker/dev/uhppoted.conf dist/docker/dev
+	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-mqtt-dev .
+
+# docker-ghcr: build
+# 	rm -rf dist/docker/ghcr/*
+# 	mkdir -p dist/docker/ghcr
+# 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
+# 	cp docker/ghcr/Dockerfile    dist/docker/ghcr
+# 	cp docker/ghcr/uhppoted.conf dist/docker/ghcr
+# 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/restd:latest .
+
+docker-run-dev:
+	# docker run --detach --publish 8080:8080 --name mqttd --rm uhppoted/uhppoted-mqtt-dev
+	docker run --publish 8080:8080 --name mqttd --rm uhppoted/uhppoted-mqtt-dev
+	sleep 1
+
+# docker-run-ghcr:
+# 	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
+# 	sleep 1
+
+# docker-compose:
+# 	cd docker/compose && docker compose up
+
+docker-clean:
 	docker image     prune -f
 	docker container prune -f
-	cd ./docker/doc && docker build -f Dockerfile -t uhppoted/mqtt .
-
-docker-run:
-	docker run --name mqttd --rm uhppoted/mqtt
-#	docker run --detach --name mqttd --rm uhppoted/mqtt
 
 docker-shell:
 	docker exec -it mqttd /bin/sh
