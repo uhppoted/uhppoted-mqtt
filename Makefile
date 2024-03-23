@@ -117,10 +117,6 @@ debug: build
 godoc:
 	godoc -http=:80	-index_interval=60s
 
-# docker:
-# 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o ./docker/doc ./...
-# 	cd ./docker/doc && docker build -f Dockerfile -t uhppoted/mqtt .
-
 docker-dev: build
 	rm -rf dist/docker/dev/*
 	mkdir -p dist/docker/dev

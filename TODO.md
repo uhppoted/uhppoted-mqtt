@@ -8,8 +8,9 @@
        - [x] compose.yml
        - [x] README
        - [x] CHANGELOG
-       - [ ] Update uhppote to use uhppoted-rest docker
+       - [x] Update uhppote to use uhppoted-rest docker
        - [ ] `Incorrect listener address`
+             - https://stackoverflow.com/questions/22944631/how-to-get-the-ip-address-of-the-docker-host-from-inside-a-docker-container
 
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 
