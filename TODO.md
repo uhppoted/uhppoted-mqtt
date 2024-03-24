@@ -9,6 +9,7 @@
        - [x] README
        - [x] CHANGELOG
        - [x] Update uhppote to use uhppoted-rest docker
+       - [x] Expose port 60001
        - [ ] `Incorrect listener address`
              - https://stackoverflow.com/questions/22944631/how-to-get-the-ip-address-of-the-docker-host-from-inside-a-docker-container
 

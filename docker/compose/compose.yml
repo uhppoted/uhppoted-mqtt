@@ -8,6 +8,8 @@ services:
     volumes:
       - uhppoted:/usr/local/etc/uhppoted
     network_mode: "bridge"
+    ports:
+      - "60001:60001/udp"
 
 volumes:
   uhppoted:

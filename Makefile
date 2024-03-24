@@ -134,11 +134,11 @@ docker-ghcr: build
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
 
 docker-run-dev:
-	docker run --name mqttd --rm uhppoted/uhppoted-mqtt-dev
+	docker run --publish 60001:60001/udp --name mqttd --rm uhppoted/uhppoted-mqtt-dev
 	sleep 1
 
 docker-run-ghcr:
-	docker run --name mqttd --mount source=uhppoted,target=/usr/local/etc/uhppoted --rm ghcr.io/uhppoted/mqttd
+	docker run --publish 60001:60001/udp --mount source=uhppoted-mqtt,target=/usr/local/etc/uhppoted --name mqttd --rm ghcr.io/uhppoted/mqttd
 	sleep 1
 
 docker-compose:

@@ -1,6 +1,6 @@
 FROM alpine
 
-EXPOSE 8080
+EXPOSE 60001/udp
 
 RUN mkdir -p /usr/local/etc/uhppoted/mqtt
 RUN mkdir -p /usr/local/etc/uhppoted/mqtt/rsa

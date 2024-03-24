@@ -19,6 +19,18 @@ Supported operating systems:
 It also facilitates integration of access control with IoT systems based on e.g. [AWS IoT](https://aws.amazon.com/iot),
 [Google Cloud IoT](https://cloud.google.com/solutions/iot) or the [IBM Watson IoT Platform](https://internetofthings.ibmcloud.com).
 
+---
+### Contents
+
+- [Release Notes](#release-notes)
+- [Installation](#installation)
+   - [Docker](#docker)
+   - [Building from source](#building-from-source)
+- [Command line](#uhppoted-mqtt)
+- [Notes](#notes)
+---
+
+
 ## Release Notes
 
 ### Current Release
@@ -63,28 +75,6 @@ is included in the `uhppoted` distribution. Alternatively, a starter `uhppoted.c
 ```
 uhppoted-mqtt config > uhppoted.conf
 ```
-
-
-### Building from source
-
-Assuming you have `Go` and `make` installed:
-
-```
-git clone https://github.com/uhppoted/uhppoted-mqtt.git
-cd uhppoted-mqtt
-make build
-```
-
-If you prefer not to use `make`:
-```
-git clone https://github.com/uhppoted/uhppoted-mqtt.git
-cd uhppoted-mqtt
-mkdir bin
-go build -trimpath -o bin ./...
-```
-
-The above commands build the `'uhppoted-mqtt` executable to the `bin` directory.
-
 
 ### Docker
 
@@ -141,6 +131,27 @@ For inclusion in a Dockerfile:
 ```
 FROM ghcr.io/uhppoted/restd:latest
 ```
+
+
+### Building from source
+
+Assuming you have `Go` and `make` installed:
+
+```
+git clone https://github.com/uhppoted/uhppoted-mqtt.git
+cd uhppoted-mqtt
+make build
+```
+
+If you prefer not to use `make`:
+```
+git clone https://github.com/uhppoted/uhppoted-mqtt.git
+cd uhppoted-mqtt
+mkdir bin
+go build -trimpath -o bin ./...
+```
+
+The above commands build the `'uhppoted-mqtt` executable to the `bin` directory.
 
 
 ### Building from source
