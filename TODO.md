@@ -2,7 +2,7 @@
 
 ### IN PROGRESS
 
-- [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
+- [x] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
        - [x] docker-dev
        - [x] docker-ghcr
        - [x] compose.yml
@@ -10,8 +10,6 @@
        - [x] CHANGELOG
        - [x] Update uhppote to use uhppoted-rest docker
        - [x] Expose port 60001
-       - [ ] `Incorrect listener address`
-             - https://stackoverflow.com/questions/22944631/how-to-get-the-ip-address-of-the-docker-host-from-inside-a-docker-container
 
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 
