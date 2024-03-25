@@ -117,6 +117,9 @@ debug: build
 godoc:
 	godoc -http=:80	-index_interval=60s
 
+docker: docker-dev docker-ghcr
+	cd docker && find . -name .DS_Store -delete && rm -f compose.zip && zip --recurse-paths compose.zip compose
+
 docker-dev: build
 	rm -rf dist/docker/dev/*
 	mkdir -p dist/docker/dev

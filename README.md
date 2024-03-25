@@ -35,14 +35,11 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 ### Current Release
 
-**[v0.8.7](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.7) - 2023-12-01**
+**[v0.8.8](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.8) - 2024-03-27**
 
-1. `set-door-passcodes` command to set supervisor passcodes for a door.
-2. Published received events to the _live_ events topic.
-3. Renamed _master_ branch to _main_ in line with current development practice.
-4. Replaced `nil` event pointer in `get-status` with zero value.
-5. Fixed _double_ events in `events::Listen` (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/15)
-6. Reworked events _feed_ to poll for unretrieved events.
+1. `restore-default-parameters` API function to reset a controller to the manufacturer default configuration.
+2. Added public Docker image to ghcr.io.
+3. Bumped Go version to 1.22.
 
 
 ## Installation
@@ -84,9 +81,9 @@ The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file 
 
 #### `docker compose`
 
-A sample Docker `compose` configuration is provided in the [`scripts/docker/compose`](scripts/docker/compose) folder. 
+A sample Docker `compose` configuration is provided in the [`docker/compose`](docker) folder. 
 
-To run the example, download and extract the [zipped](script/docker/compose.zip) scripts and supporting files into folder
+To run the example, download and extract the [compose.zip](docker) scripts and supporting files into folder
 of your choice and then:
 ```
 cd <compose folder>
