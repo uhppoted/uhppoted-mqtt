@@ -121,14 +121,9 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		listen = *c.ListenAddress
 	}
 
-	devices := []uhppote.Device{}
-	for id, d := range c.Devices {
-		if device := uhppote.NewDevice(d.Name, id, d.Address, d.Protocol, d.Doors); device != nil {
-			devices = append(devices, *device)
-		}
-	}
+	controllers := c.Devices.ToControllers()
 
-	u := uhppote.NewUHPPOTE(bind, broadcast, listen, c.Timeout, devices, cmd.debug)
+	u := uhppote.NewUHPPOTE(bind, broadcast, listen, c.Timeout, controllers, cmd.debug)
 
 	permissions, err := auth.NewPermissions(
 		c.MQTT.Permissions.Enabled,
@@ -287,7 +282,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 	}
 
 	// ... listen
-	err = cmd.listen(u, &mqttd, devices, &healthcheck, cards, logger, interrupt)
+	err = cmd.listen(u, &mqttd, controllers, &healthcheck, cards, logger, interrupt)
 	if err != nil {
 		log.Errorf(LOG_TAG, "%v", err)
 	}
