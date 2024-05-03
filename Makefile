@@ -25,7 +25,7 @@ clean:
 	rm -rf bin
 
 update:
-	go get -u github.com/uhppoted/uhppote-core@master
+	go get -u github.com/uhppoted/uhppote-core@main
 	go get -u github.com/uhppoted/uhppoted-lib@main
 	go mod tidy
 

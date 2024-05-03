@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"net/netip"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -191,7 +192,7 @@ func (cmd *Daemonize) execute() error {
 	fmt.Println()
 	fmt.Println("   The firewall may need additional rules to allow UDP broadcast e.g. for UFW:")
 	fmt.Println()
-	fmt.Printf("     > sudo ufw allow from %s to any port 60000 proto udp\n", bind.IP)
+	fmt.Printf("     > sudo ufw allow from %s to any port 60000 proto udp\n", netip.AddrPort(bind).Addr()) // FIXME BindAddr.Addr()
 	fmt.Println()
 	fmt.Println("   Please replace the default RSA keys for event and system messages:")
 	fmt.Printf("     - %s\n", filepath.Join(filepath.Dir(cmd.config), "mqtt", "rsa", "encryption", "event.pub"))
