@@ -282,8 +282,17 @@ func (m *MQTTD) subscribeAndServe(d *dispatcher) (paho.Client, error) {
 }
 
 func (m *MQTTD) listen(api *uhppoted.UHPPOTED, u uhppote.IUHPPOTE) error {
-	infof("listening on %v", u.ListenAddr())
-	infof("publishing events to %s", m.Topics.Events)
+	list := u.ListenAddrList()
+
+	if list == nil {
+		infof("no event listener")
+	} else if len(list) == 1 {
+		infof("listening on %v", list[0])
+		infof("publishing events to %s", m.Topics.Events)
+	} else {
+		infof("listening on %v", list)
+		infof("publishing events to %s", m.Topics.Events)
+	}
 
 	handler := func(e any, queue string) bool {
 		event := struct {
