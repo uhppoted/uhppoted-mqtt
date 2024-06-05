@@ -458,7 +458,7 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile type
 	hhmm := types.HHmmFromTime(now)
 	today := types.Date(now)
 
-	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
+	if profile.From.IsZero() || profile.To.IsZero() || today.Before(profile.From) || today.After(profile.To) {
 		return fmt.Errorf("card %v: time profile %v on controller %v is not valid for %v", cardNumber, profileID, deviceID, today)
 	}
 
