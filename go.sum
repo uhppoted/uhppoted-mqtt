@@ -14,10 +14,10 @@ github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
-github.com/uhppoted/uhppote-core v0.8.9-0.20240606155158-a18316ae7528 h1:vNa68NNnTJITeZCfbreLiNT9OCbKQ3EUGByZ6PicEDc=
-github.com/uhppoted/uhppote-core v0.8.9-0.20240606155158-a18316ae7528/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
-github.com/uhppoted/uhppoted-lib v0.8.9-0.20240606160456-0430d2c98f6d h1:tc5XXgrJMMZT8kogXpBJkt4QMO/UYbOIyLVRtxzbp24=
-github.com/uhppoted/uhppoted-lib v0.8.9-0.20240606160456-0430d2c98f6d/go.mod h1:9o0r7f2N16ZF4ryNQZOa84e9bByEkP/5YwCwLim0Q3s=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240617170953-4d35e4f646db h1:5ewkOnvyvGwN+t0wl9TyNWAEHNf7JrLcYV/0QoE1UVs=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240617170953-4d35e4f646db/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240617172854-6a8488c7ac5d h1:g/swcrEdpnTaStqL2OBGTTw7Wd864R6jvRy4JxHeTsw=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240617172854-6a8488c7ac5d/go.mod h1:2Q4sb+VcmC1gKSH/pIWmlUi/CqA84dGKiN6oetiiBs4=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
