@@ -2,16 +2,8 @@
 
 ### IN PROGRESS
 
-- [x] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
-       - [x] docker-dev
-       - [x] docker-ghcr
-       - [x] compose.yml
-       - [x] README
-       - [x] CHANGELOG
-       - [x] Update uhppote to use uhppoted-rest docker
-       - [x] Expose port 60001
-
-- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+- [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
+- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
