@@ -2,14 +2,13 @@
 
 ### IN PROGRESS
 
-- [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
-- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
+- [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
 - [ ] MQTT v5
 
-## TODO
+## To Be Done
 
 - [ ] [Sparkplug B](https://github.com/eclipse-sparkplug/sparkplug)
 - [ ] [MQTT Dash](https://iot.stackexchange.com/questions/6561/generic-mobile-applications-for-smart-home-devices)
