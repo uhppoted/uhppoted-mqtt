@@ -33,41 +33,41 @@ jobs:
     - name: Upload Linux artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/linux/uhppote-cli
-        name: uhppote-cli_linux-nightly
+        path: dist/development/linux/uhppoted-mqtt
+        name: uhppoted-mqtt_linux-nightly
 
     - name: Upload MacOS Intel artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/darwin-x64/uhppote-cli
-        name: uhppote-cli_darwin-x64-nightly
+        path: dist/development/darwin-x64/uhppoted-mqtt
+        name: uhppoted-mqtt_darwin-x64-nightly
 
     - name: Upload MacOS Apple silicon artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/darwin-arm64/uhppote-cli
-        name: uhppote-cli_darwin-arm64-nightly
+        path: dist/development/darwin-arm64/uhppoted-mqtt
+        name: uhppoted-mqtt_darwin-arm64-nightly
 
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/windows/uhppote-cli.exe
-        name: uhppote-cli_windows-nightly.exe
+        path: dist/development/windows/uhppoted-mqtt.exe
+        name: uhppoted-mqtt_windows-nightly.exe
 
     - name: Upload ARM64 artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/arm/uhppote-cli
-        name: uhppote-cli_arm-nightly
+        path: dist/development/arm/uhppoted-mqtt
+        name: uhppoted-mqtt_arm-nightly
 
     - name: Upload ARMv7 artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/arm7/uhppote-cli
-        name: uhppote-cli_arm7-nightly
+        path: dist/development/arm7/uhppoted-mqtt
+        name: uhppoted-mqtt_arm7-nightly
 
     - name: Upload ARMv6 artifact
       uses: actions/upload-artifact@v4
       with:
-        path: dist/development/arm6/uhppote-cli
-        name: uhppote-cli_arm6-nightly
+        path: dist/development/arm6/uhppoted-mqtt
+        name: uhppoted-mqtt_arm6-nightly
