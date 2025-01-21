@@ -3,6 +3,7 @@
 ### IN PROGRESS
 
 - [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
+- [x] ARM6 target (cf. https://github.com/uhppoted/uhppoted/issues/55)
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging

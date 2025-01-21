@@ -43,7 +43,9 @@ jobs:
     - name: Push versioned Docker image to ghcr.io
       if: github.event_name == 'release' && github.event.action == 'published'
       run: |
-        echo ">>>>>> build Docker image version ${{ github.event.release.tag_name }}"
-        make docker-ghcr DOCKER=ghcr.io/uhppoted/mqttd:0.8.8
+        TAG="${{ github.event.release.tag_name }}"
+        VERSION=${TAG#v}
+        echo ">>>>>> build Docker image version ${VERSION}"
+        make docker-ghcr DOCKER=ghcr.io/uhppoted/mqttd:${VERSION}
         docker images
-        docker push ghcr.io/uhppoted/mqttd:0.8.8
+        docker push ghcr.io/uhppoted/mqttd:${VERSION}
