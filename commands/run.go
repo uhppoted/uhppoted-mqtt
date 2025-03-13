@@ -138,7 +138,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger, interrupt chan os.S
 		ServerID: c.ServerID,
 		TLS:      &tls.Config{},
 		Connection: mqtt.Connection{
-			Broker:   fmt.Sprintf(c.Connection.Broker),
+			Broker:   fmt.Sprintf("%v", c.Connection.Broker),
 			ClientID: c.Connection.ClientID,
 			UserName: c.Connection.Username,
 			Password: c.Connection.Password,
