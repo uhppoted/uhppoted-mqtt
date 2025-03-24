@@ -156,6 +156,8 @@ func (mqttd *MQTTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, authorized
 			mqttd.Topics.Requests + "/device/status:get":           fdispatch{"get-status", dev.GetStatus},
 			mqttd.Topics.Requests + "/device/time:get":             fdispatch{"get-time", dev.GetTime},
 			mqttd.Topics.Requests + "/device/time:set":             fdispatch{"set-time", dev.SetTime},
+			mqttd.Topics.Requests + "/device/antipassback:get":     fdispatch{"get-antipassback", dev.GetAntiPassback},
+			mqttd.Topics.Requests + "/device/antipassback:set":     fdispatch{"set-antipassback", dev.SetAntiPassback},
 			mqttd.Topics.Requests + "/device/door/delay:get":       fdispatch{"get-door-delay", dev.GetDoorDelay},
 			mqttd.Topics.Requests + "/device/door/delay:set":       fdispatch{"set-door-delay", dev.SetDoorDelay},
 			mqttd.Topics.Requests + "/device/door/control:get":     fdispatch{"get-door-control", dev.GetDoorControl},

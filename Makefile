@@ -271,6 +271,21 @@ set-time:
                                                         "device-id":  $(SERIALNO), \
                                                         "date-time":  "$(DATETIME)" }}}'
 
+get-antipassback:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/antipassback:get' \
+                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                        "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
+                                                        "device-id":  $(SERIALNO) }}}'
+
+set-antipassback:
+	mqtt publish --topic 'uhppoted/gateway/requests/device/antipassback:set' \
+                 --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \
+                                                        "client-id":  "$(CLIENTID)", \
+                                                        "reply-to":   "$(REPLYTO)", \
+                                                        "device-id":  $(SERIALNO), \
+                                                        "anti-passback":  "(1,3):(2,4)" }}}'
+
 restore-default-parameters:
 	mqtt publish --topic 'uhppoted/gateway/requests/device:reset' \
                --message '{ "message": { "request": { "request-id": "$(REQUESTID)", \

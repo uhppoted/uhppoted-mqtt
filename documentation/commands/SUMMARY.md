@@ -61,6 +61,10 @@
 
 - [`set-task-list`](set-task-list.md)
 
+- [`get-antipassback`](get-antipassback.md)
+
+- [`set-antipassback`](set-antipassback.md)
+
 - [`acl-show`](acl-show.md)
 
 - [`acl-grant`](acl-grant.md)

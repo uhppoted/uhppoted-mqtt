@@ -2,8 +2,13 @@
 
 ### IN PROGRESS
 
-- [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
-- [x] ARM6 target (cf. https://github.com/uhppoted/uhppoted/issues/55)
+- [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
+      - [x] `get-antipassback`
+      - [x] `set-antipassback`
+      - [x] Docker
+      - [x] documentation
+      - [x] CHANGELOG
+      - [x] README
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
@@ -41,21 +46,20 @@
 
 ### Other
 
-1.  github project page
-2.  Integration tests
-3.  Verify fields in listen events/status replies against SDK:
+1.  Integration tests
+2.  Verify fields in listen events/status replies against SDK:
     - battery status can be (at least) 0x00, 0x01 and 0x04
-4.  EventLogger 
+3.  EventLogger 
     - MacOS: use [system logging](https://developer.apple.com/documentation/os/logging)
     - Windows: event logging
-5.  Update file watchers to fsnotify when that is merged into the standard library (1.4 ?)
+4.  Update file watchers to fsnotify when that is merged into the standard library (1.4 ?)
     - https://github.com/golang/go/issues/4068
-6. [Teserakt E2E encryption](https://teserakt.io)
-7. [Fernet encryption](https://asecuritysite.com/encryption/fernet)
-8. [IoT standards](https://iot.stackexchange.com/questions/5363/mqtt-json-format-for-process-automation-industry)
-9. [StackExchange: MQTT security tests](https://iot.stackexchange.com/questions/452/what-simple-security-tests-can-i-perform-on-my-mqtt-network)
-10. [VerneMQ](https://vernemq.com)
-11. [SparkplugB](https://cogentdatahub.com/connect/mqtt/sparkplug-b)
+5. [Teserakt E2E encryption](https://teserakt.io)
+6. [Fernet encryption](https://asecuritysite.com/encryption/fernet)
+7. [IoT standards](https://iot.stackexchange.com/questions/5363/mqtt-json-format-for-process-automation-industry)
+8. [StackExchange: MQTT security tests](https://iot.stackexchange.com/questions/452/what-simple-security-tests-can-i-perform-on-my-mqtt-network)
+9. [VerneMQ](https://vernemq.com)
+10.[SparkplugB](https://cogentdatahub.com/connect/mqtt/sparkplug-b)
 
 ## NOTES
 
