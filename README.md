@@ -35,10 +35,10 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 ### Current Release
 
-**[v0.8.10](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.10) - 2025-01-30**
+**[v0.8.11](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.8.11) - 2025-07-01**
 
-1. ARMv6 build target (RaspberryPi ZeroW).
-2. Added support for event _auto-send interval_.
+1. Added `get/set-antipassback` API function to get or set a controller anti-passback mode.
+2. Updated to Go 1.24.
 
 
 ## Installation
