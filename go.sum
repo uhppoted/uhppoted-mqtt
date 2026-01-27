@@ -13,10 +13,10 @@ github.com/jmespath/go-jmespath/internal/testify v1.5.1/go.mod h1:L3OGu8Wl2/fWfC
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
-github.com/uhppoted/uhppote-core v0.8.12-0.20260126210809-bb9fa275a0ab h1:Z6qOIu0npeLhICYMylFDrdrPuUpYO3Ns7IWhQr4w8bQ=
-github.com/uhppoted/uhppote-core v0.8.12-0.20260126210809-bb9fa275a0ab/go.mod h1:GJkiDMJuWfEKHuEoJYpW+5KIjRoMXWcQjNZqw2Fc4VE=
-github.com/uhppoted/uhppoted-lib v0.8.13-0.20260126210911-425be6bee6e6 h1:mk7CGofdxe3EigmR78X2s4XBd0Z2zJb6iN31VxCEXVI=
-github.com/uhppoted/uhppoted-lib v0.8.13-0.20260126210911-425be6bee6e6/go.mod h1:HcEUJ+v+gduhsOauEZp7uBnS1W20THmXO0UtA/puYLk=
+github.com/uhppoted/uhppote-core v0.9.0 h1:oFzx3ugUikVe97KNfivNXCrPRpJciHQ8jW0K4znFXOY=
+github.com/uhppoted/uhppote-core v0.9.0/go.mod h1:GJkiDMJuWfEKHuEoJYpW+5KIjRoMXWcQjNZqw2Fc4VE=
+github.com/uhppoted/uhppoted-lib v0.9.0 h1:vzEqI7ylBlGhr9NeYKybUS4n3qbMW+q6PJyKPFvW1Gs=
+github.com/uhppoted/uhppoted-lib v0.9.0/go.mod h1:+cEbfc6M4kXCSvjzOzSad08c7kU1AevbvJRZMfYtzq4=
 golang.org/x/net v0.44.0 h1:evd8IRDyfNBMBTTY5XRF1vaZlD+EmWx6x8PkhR04H/I=
 golang.org/x/net v0.44.0/go.mod h1:ECOoLqd5U3Lhyeyo/QDCEVQ4sNgYsqvCZ722XogGieY=
 golang.org/x/sync v0.17.0 h1:l60nONMj9l5drqw6jlhIELNv9I0A4OFgRsG9k2oT9Ug=
