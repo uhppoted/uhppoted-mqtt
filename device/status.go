@@ -2,6 +2,7 @@ package device
 
 import (
 	"fmt"
+	"maps"
 
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
@@ -20,7 +21,7 @@ type Status struct {
 	Event          any            `json:"event,omitempty"`
 }
 
-func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID uint32 `json:"device-id"`
 	}{}
@@ -58,13 +59,9 @@ func (d *Device) GetStatus(impl uhppoted.IUHPPOTED, request []byte) (interface{}
 		},
 	}
 
-	for k, v := range reply.DoorState {
-		response.Status.DoorState[k] = v
-	}
+	maps.Copy(response.Status.DoorState, reply.DoorState)
 
-	for k, v := range reply.DoorButton {
-		response.Status.DoorButton[k] = v
-	}
+	maps.Copy(response.Status.DoorButton, reply.DoorButton)
 
 	if !reply.Event.IsZero() {
 		event := Transmogrify(reply.Event)

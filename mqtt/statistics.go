@@ -34,11 +34,7 @@ func SetDisconnectsEnabled(enabled bool) {
 }
 
 func SetDisconnectsInterval(interval time.Duration) {
-	if interval > 60*time.Second {
-		stats.interval = interval
-	} else {
-		stats.interval = 60 * time.Second
-	}
+	stats.interval = max(interval, 60*time.Second)
 }
 
 func SetMaxDisconnects(N uint32) {

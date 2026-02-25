@@ -22,7 +22,7 @@ type Device struct {
 func SetProtocol(version string) {
 }
 
-func unmarshal(bytes []byte, request interface{}) (interface{}, error) {
+func unmarshal(bytes []byte, request any) (any, error) {
 	if err := json.Unmarshal(bytes, request); err != nil {
 		return common.MakeError(StatusBadRequest, "Cannot parse request", err), err
 	}

@@ -205,8 +205,8 @@ func (a *ACL) fetchS3(uri string) ([]byte, error) {
 	bucket := match[1]
 	key := match[2]
 	object := s3.GetObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
+		Bucket: new(bucket),
+		Key:    new(key),
 	}
 
 	cfg := aws.NewConfig().
@@ -300,8 +300,8 @@ func (a *ACL) storeS3(uri string, r io.Reader) error {
 	key := match[2]
 
 	object := s3manager.UploadInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
+		Bucket: new(bucket),
+		Key:    new(key),
 		Body:   r,
 	}
 

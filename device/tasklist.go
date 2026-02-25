@@ -8,7 +8,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (d *Device) PutTaskList(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (d *Device) PutTaskList(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		DeviceID *uint32      `json:"device-id"`
 		Tasks    []types.Task `json:"tasks"`

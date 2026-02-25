@@ -11,7 +11,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (a *ACL) Upload(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (a *ACL) Upload(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		URL *string `json:"url"`
 	}{}

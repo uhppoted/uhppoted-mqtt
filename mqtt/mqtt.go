@@ -84,7 +84,7 @@ type ACL struct {
 
 type fdispatch struct {
 	method string
-	f      func(uhppoted.IUHPPOTED, []byte) (interface{}, error)
+	f      func(uhppoted.IUHPPOTED, []byte) (any, error)
 }
 
 type dispatcher struct {
@@ -369,7 +369,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 				warnf("%-20v %v", fn.method, err)
 				if response != nil {
 					reply := struct {
-						Error interface{} `json:"error"`
+						Error any `json:"error"`
 					}{
 						Error: response,
 					}
@@ -380,7 +380,7 @@ func (d *dispatcher) dispatch(client paho.Client, msg paho.Message) {
 				}
 			} else if response != nil {
 				reply := struct {
-					Response interface{} `json:"response"`
+					Response any `json:"response"`
 				}{
 					Response: response,
 				}
@@ -411,7 +411,7 @@ func (m *MQTTD) authorise(clientID *string, topic string) error {
 }
 
 // TODO: add callback for published/failed
-func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message interface{}, msgtype msgType, critical bool) error {
+func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message any, msgtype msgType, critical bool) error {
 	if mqttd.client == nil || !mqttd.client.IsConnected() {
 		return errors.New("no connection to MQTT broker")
 	}
@@ -443,8 +443,8 @@ func (mqttd *MQTTD) send(destID *string, topic string, meta *metainfo, message i
 	return nil
 }
 
-func compose(meta *metainfo, content interface{}) (interface{}, error) {
-	reply := make(map[string]interface{})
+func compose(meta *metainfo, content any) (any, error) {
+	reply := make(map[string]any)
 
 	s, err := json.Marshal(meta)
 	if err != nil {

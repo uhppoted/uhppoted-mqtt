@@ -18,7 +18,7 @@ const (
 	msgSystem
 )
 
-func (mqttd *MQTTD) wrap(msgtype msgType, content interface{}, destID *string) ([]byte, error) {
+func (mqttd *MQTTD) wrap(msgtype msgType, content any, destID *string) ([]byte, error) {
 	bytes, err := json.Marshal(content)
 	if err != nil {
 		return nil, err

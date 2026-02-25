@@ -10,7 +10,7 @@ import (
 	"github.com/uhppoted/uhppoted-mqtt/common"
 )
 
-func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (a *ACL) Download(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		URL      *string `json:"url"`
 		MimeType string  `json:"mime-type"`

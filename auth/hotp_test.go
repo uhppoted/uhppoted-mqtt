@@ -10,12 +10,12 @@ import (
 func TestValidateHOTPWithValidOTP(t *testing.T) {
 	hotp := HOTP{
 		increment: 8,
-		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (interface{}, error) { return v, nil }),
+		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (any, error) { return v, nil }),
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
 		}{
-			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
+			kvs.NewKeyValueStore("test:counters", func(v string) (any, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
 		},
 	}
@@ -34,12 +34,12 @@ func TestValidateHOTPWithValidOTP(t *testing.T) {
 func TestValidateHOTPWithOutOfOrderOTP(t *testing.T) {
 	hotp := HOTP{
 		increment: 8,
-		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (interface{}, error) { return v, nil }),
+		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (any, error) { return v, nil }),
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
 		}{
-			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
+			kvs.NewKeyValueStore("test:counters", func(v string) (any, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
 		},
 	}
@@ -58,12 +58,12 @@ func TestValidateHOTPWithOutOfOrderOTP(t *testing.T) {
 func TestValidateHOTPWithOutOfRangeOTP(t *testing.T) {
 	hotp := HOTP{
 		increment: 2,
-		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (interface{}, error) { return v, nil }),
+		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (any, error) { return v, nil }),
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
 		}{
-			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
+			kvs.NewKeyValueStore("test:counters", func(v string) (any, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
 		},
 	}
@@ -78,12 +78,12 @@ func TestValidateHOTPWithOutOfRangeOTP(t *testing.T) {
 func TestValidateHOTPWithInvalidOTP(t *testing.T) {
 	hotp := HOTP{
 		increment: 8,
-		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (interface{}, error) { return v, nil }),
+		secrets:   kvs.NewKeyValueStore("test:secrets", func(v string) (any, error) { return v, nil }),
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
 		}{
-			kvs.NewKeyValueStore("test:counters", func(v string) (interface{}, error) { return strconv.ParseUint(v, 10, 64) }),
+			kvs.NewKeyValueStore("test:counters", func(v string) (any, error) { return strconv.ParseUint(v, 10, 64) }),
 			"",
 		},
 	}

@@ -28,11 +28,11 @@ type HOTP struct {
 const DIGITS = 6
 
 func NewHOTP(increment uint64, secrets string, counters string) (*HOTP, error) {
-	u := func(value string) (interface{}, error) {
+	u := func(value string) (any, error) {
 		return value, nil
 	}
 
-	v := func(value string) (interface{}, error) {
+	v := func(value string) (any, error) {
 		return strconv.ParseUint(value, 10, 64)
 	}
 

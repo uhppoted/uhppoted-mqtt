@@ -107,11 +107,9 @@ func Listen(api lib.UHPPOTED, eventsMap string, handler eventHandler, interrupt 
 
 			for _, d := range devices {
 				controller := d.ID()
-				wg.Add(1)
-				go func() {
-					defer wg.Done()
+				wg.Go(func() {
 					retrieve(api, controller, &received, handler)
-				}()
+				})
 			}
 
 			wg.Wait()

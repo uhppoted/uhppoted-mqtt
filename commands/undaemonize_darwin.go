@@ -52,7 +52,7 @@ func (cmd *Undaemonize) Help() {
 	helpOptions(cmd.FlagSet())
 }
 
-func (cmd *Undaemonize) Execute(args ...interface{}) error {
+func (cmd *Undaemonize) Execute(args ...any) error {
 	fmt.Println("   ... undaemonizing")
 
 	executable, err := cmd.launchd()

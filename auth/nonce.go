@@ -24,7 +24,7 @@ type Nonce struct {
 func NewNonce(verify bool, server, clients string) (*Nonce, error) {
 	var err error
 
-	var f = func(value string) (interface{}, error) {
+	var f = func(value string) (any, error) {
 		return strconv.ParseUint(value, 10, 64)
 	}
 

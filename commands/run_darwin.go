@@ -40,7 +40,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 	return flagset
 }
 
-func (r *Run) Execute(args ...interface{}) error {
+func (r *Run) Execute(args ...any) error {
 	log.Infof("", "%s service %s - %s (PID %d)\n", SERVICE, uhppote.VERSION, "MacOS", os.Getpid())
 
 	f := func(c *config.Config) error {

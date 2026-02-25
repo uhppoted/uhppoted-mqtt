@@ -26,11 +26,11 @@ func (p permission) String() string {
 func NewPermissions(enabled bool, users, groups string) (*Permissions, error) {
 	separator := regexp.MustCompile(`\s*,\s*`)
 
-	u := func(value string) (interface{}, error) {
+	u := func(value string) (any, error) {
 		return separator.Split(value, -1), nil
 	}
 
-	g := func(value string) (interface{}, error) {
+	g := func(value string) (any, error) {
 		permissions := []permission{}
 		re := regexp.MustCompile(`(.*?):(.*)`)
 		tokens := separator.Split(value, -1)

@@ -35,7 +35,7 @@ type Report struct {
 	Diffs    map[uint32]api.Diff
 }
 
-func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (interface{}, error) {
+func (a *ACL) Compare(impl uhppoted.IUHPPOTED, request []byte) (any, error) {
 	body := struct {
 		URL struct {
 			ACL    *string `json:"acl"`

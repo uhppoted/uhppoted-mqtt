@@ -33,6 +33,7 @@ update-release:
 	go get -u github.com/uhppoted/uhppote-core
 	go get -u github.com/uhppoted/uhppoted-lib
 	go mod tidy
+	go fix ./...
 
 update-all:
 	go get -u github.com/uhppoted/uhppote-core
@@ -43,6 +44,7 @@ update-all:
 	go get -u golang.org/x/net
 	go get -u golang.org/x/sys
 	go mod tidy
+	go fix ./...
 
 regen:
 	find .codegen/.models -name "*.json" -exec sh -c 'jq . {} | sponge {}' \;

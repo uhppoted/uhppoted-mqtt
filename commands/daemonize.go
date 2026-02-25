@@ -25,7 +25,7 @@ func hmac() (string, error) {
 		return "", err
 	}
 
-	for i := 0; i < len(bytes); i++ {
+	for i := range bytes {
 		bytes[i] = chars[bytes[i]]
 	}
 
