@@ -18,7 +18,6 @@ aws.credentials = /etc/uhppoted/aws.credentials
 _aws.credentials_:
 ```
 [default]
-aws_access_key_id = AKIAQMNWIVKBYA57IRWH
 aws_access_key_id = AKIZ.............QYV
 aws_secret_access_key = FRE................................zuyqt
 
