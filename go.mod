@@ -7,12 +7,12 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.5.1
 	github.com/uhppoted/uhppote-core v0.9.1-0.20260427190340-f12943c7cd8f
 	github.com/uhppoted/uhppoted-lib v0.9.1-0.20260413153439-864cae69b6e0
-	golang.org/x/sys v0.43.0
+	golang.org/x/sys v0.45.0
 )
 
 require (
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	golang.org/x/net v0.44.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
 )
