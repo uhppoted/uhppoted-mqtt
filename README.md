@@ -36,9 +36,15 @@ It also facilitates integration of access control with IoT systems based on e.g.
 
 ### Current Release
 
-**[v0.9.0](https://codeberg.org/uhppoted/uhppoted-mqtt/releases/tag/v0.9.0) - 2026-01-27**
+## [0.9.1](https://codeberg.org/uhppoted/uhppoted-mqtt/releases/tag/v0.9.1) - 2026-10-08
 
-1. Updated to Go 1.25.
+1. Migrated from _github_ to _codeberg_.
+2. Updated to Go 1.27.
+3. Added `set-firstcard` API function to manage the _first card_ swipe configuration for a controller door.
+4. Included (optional) _PIN_ and _first-card_ fields in ACL APIs.
+5. Included (optional) _PIN_ and _first-card privileges_ in `get-card` and `put-card` APIs.
+6. Added `mqtt.PIN.enabled` and `mqtt.firstcard.enabled` to _uhppoted.conf_.
+7. _docker-dev_ container now uses HiveMQ public MQTT broker.
 
 
 ## Installation

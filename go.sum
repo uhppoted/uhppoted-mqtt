@@ -1,7 +1,7 @@
-codeberg.org/uhppoted/uhppoted-core v0.9.1-0.20261001173143-860675f9c219 h1:1vO4vcCMWMz2XjtXDNO8MU0xErrMSv5Z3gLJvoruZtU=
-codeberg.org/uhppoted/uhppoted-core v0.9.1-0.20261001173143-860675f9c219/go.mod h1:EVFvPdCbbCe6svMwMNBYO8SuA/MxGfWo4blhZIJICZc=
-codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20261001184412-e96a37c5413e h1:qNnhuQGiHTbNuQUgY6+CMxgIcUhXoRufAXhR3xeuHsQ=
-codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20261001184412-e96a37c5413e/go.mod h1:TBi5EXHSy2tUdamaeK0P+HHWQogkX0XG4X36VJKUoaA=
+codeberg.org/uhppoted/uhppoted-core v0.9.1 h1:j+w7D/KthXTTGJ9fLLsO0VcyEGgUBAF2GZFcJjPmG5E=
+codeberg.org/uhppoted/uhppoted-core v0.9.1/go.mod h1:EVFvPdCbbCe6svMwMNBYO8SuA/MxGfWo4blhZIJICZc=
+codeberg.org/uhppoted/uhppoted-lib v0.9.1 h1:QDDnDbYYgFqmvY3jeIshMcKVi1o/PXaZMUVDqa9M908=
+codeberg.org/uhppoted/uhppoted-lib v0.9.1/go.mod h1:sM8xQklPnNw1qLzJORFOHitaWW6DevmlaoVAnAm97Vs=
 github.com/aws/aws-sdk-go v1.55.6 h1:cSg4pvZ3m8dgYcgqB97MrcdjUmZ1BeMYKUxMMB89IPk=
 github.com/aws/aws-sdk-go v1.55.6/go.mod h1:eRwEWoyTWFMVYVQzKMNHWP5/RV4xIUGMQfXQHfHkpNU=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
