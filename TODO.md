@@ -1,12 +1,13 @@
 # TODO
 
-### IN PROGRESS
+## In Progress
+
+
+## To Be Done
 
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
 - [ ] MQTT v5
-
-## To Be Done
 
 - [ ] [Sparkplug B](https://github.com/eclipse-sparkplug/sparkplug)
 - [ ] [MQTT Dash](https://iot.stackexchange.com/questions/6561/generic-mobile-applications-for-smart-home-devices)
