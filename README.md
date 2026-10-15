@@ -1,5 +1,6 @@
-![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-mqtt.json)
-![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-mqtt-docker.json)
+![build](https://github.com/uhppoted/uhppoted-mqtt/workflows/build/badge.svg)
+![docker](https://github.com/uhppoted/uhppoted-mqtt/workflows/docker/badge.svg)
+![ghcr](https://github.com/uhppoted/uhppoted-mqtt/workflows/ghcr/badge.svg)
 
 
 # uhppoted-mqtt
@@ -80,9 +81,12 @@ uhppoted-mqtt config > uhppoted.conf
 
 ### Docker
 
-A public _Docker_ image is published to [ghcr.io](https://codeberg.org/uhppoted?tab=packages&repo_name=uhppoted-mqtt). 
+Public _Docker_ images are published to:
+- [docker.io](https://hub.docker.com/repository/docker/uhppoted/mqttd/general)
+- [ghcr.io](https://github.com/uhppoted/uhppoted-mqtt/pkgs/container/mqttd)
 
-The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
+The images are configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
+
 
 #### `docker compose`
 

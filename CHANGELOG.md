@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Unreleased
+
+
 ## [0.9.1](https://codeberg.org/uhppoted/uhppoted-mqtt/releases/tag/v0.9.1) - 2026-10-08
 
 ### Added
@@ -15,7 +18,7 @@
 6. Added (optional) _PIN_ and _first-card privileges_ to `get-card` and `put-card` APIs.
 
 
-## [0.9.0](https://codeberg.org/uhppoted/uhppoted-mqtt/releases/tag/v0.9.0) - 2026-01-27
+## [0.9.0](https://github.com/uhppoted/uhppoted-mqtt/releases/tag/v0.9.0) - 2026-01-27
 
 ### Updated
 1. Updated to Go 1.25.

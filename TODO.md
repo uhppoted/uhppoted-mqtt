@@ -2,10 +2,6 @@
 
 ### IN PROGRESS
 
-- [x] Update Docker certificates
-- [x] 'first card' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
-- [x] add first-card privilege to `get-card` and `put-card`(cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
-
 - [ ] Remove startup warnings for missing encryption/signing/etc files if auth is not enabled.
 - [ ] Clean up Paho logging
 - [ ] MQTT v5
